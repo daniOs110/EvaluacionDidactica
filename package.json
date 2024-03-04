@@ -1,0 +1,27 @@
+{
+  "name": "tt-2024-a081",
+  "version": "1.0.0",
+  "description": "Desarrollo backend del TT 2024-A081 titulado aplicación web para la creación y aplicación de evaluaciones didacticas",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniOs110/EvaluacionDidactica.git"
+  },
+  "keywords": [
+    "nodeJs",
+    "mysql",
+    "express"
+  ],
+  "author": "Daniel",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daniOs110/EvaluacionDidactica/issues"
+  },
+  "homepage": "https://github.com/daniOs110/EvaluacionDidactica#readme",
+  "dependencies": {
+    "express": "^4.18.3"
+  }
+}
