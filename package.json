@@ -1,0 +1,28 @@
+{
+  "name": "evaluaciondidactica",
+  "version": "1.0.0",
+  "description": "Desarrollo backend del proyecto TT2 titulado aplicacion web para la creación y aplicación de evaluaciones didacticas",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./src/router/index.js",
+    "dev": "npx nodemon ./src/router/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/daniOs110/EvaluacionDidactica.git"
+  },
+  "author": "Daniel Osorio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/daniOs110/EvaluacionDidactica/issues"
+  },
+  "homepage": "https://github.com/daniOs110/EvaluacionDidactica#readme",
+  "dependencies": {
+    "express": "4.19.2",
+    "faker": "^6.6.6",
+    "morgan": "^1.10.0",
+    "mysql2": "^3.9.4",
+    "sequelize": "6.37.2"
+  }
+}
