@@ -1,10 +1,11 @@
-const {Sequelize, Model, DataTypes} = require("sequelize")
+const {Sequelize, Model, DataTypes} = require("sequelize");
+const sequelize = require("../config/database");
 
-const sequelize = new Sequelize("evaluacionesdidacticas", "root", "12345678", {
-    host: "localhost",
-    dialect: "mysql",
-    port: "3306"
-})
+// const sequelize = new Sequelize("evaluacionesdidacticas", "root", "12345678", {
+//     host: "localhost",
+//     dialect: "mysql",
+//     port: "3306"
+// })
 
 class Product extends Model {}
 
