@@ -2,14 +2,14 @@ CREATE SCHEMA IF NOT EXISTS `evaluaciones_didacticas` DEFAULT CHARACTER SET utf8
 
 USE `evaluaciones_didacticas`;
 
-CREATE TABLE IF NOT EXISTS `roles_de_usuario` (
+CREATE TABLE IF NOT EXISTS `roles_de_usuarios` (
   `id_roles_de_usuario` INT NOT NULL AUTO_INCREMENT,
   `rol_de_usuario` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_roles_de_usuario`)
 ) ENGINE = InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS `credenciales_usuario` (
+CREATE TABLE IF NOT EXISTS `credenciales_usuarios` (
   `id_credenciales_usuario` INT NOT NULL AUTO_INCREMENT,
   `hash_password` VARCHAR(255) NOT NULL,
   `salt` VARCHAR(45) NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS `credenciales_usuario` (
   INDEX `id_roles_de_usuario_idx` (`id_roles_de_usuario` ASC),
   CONSTRAINT `fk_credenciales_usuario_roles_de_usuario`
     FOREIGN KEY (`id_roles_de_usuario`)
-    REFERENCES `roles_de_usuario` (`id_roles_de_usuario`)
+    REFERENCES `roles_de_usuarios` (`id_roles_de_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
@@ -61,7 +61,7 @@ CREATE TABLE IF NOT EXISTS `evaluaciones` (
   INDEX `id_dinamica_idx` (`id_dinamica` ASC),
   CONSTRAINT `fk_evaluaciones_credenciales_usuario`
     FOREIGN KEY (`id_usuario`)
-    REFERENCES `credenciales_usuario` (`id_credenciales_usuario`)
+    REFERENCES `credenciales_usuarios` (`id_credenciales_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_evaluaciones_dinamicas`
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS `preguntas` (
 ) ENGINE = InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS `tipo_respuesta` (
+CREATE TABLE IF NOT EXISTS `tipo_respuestas` (
   `id_tipo_respuesta` INT NOT NULL AUTO_INCREMENT,
   `tipo_respuesta` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`id_tipo_respuesta`)
@@ -111,7 +111,7 @@ CREATE TABLE IF NOT EXISTS `respuestas` (
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_respuestas_tipo_respuesta`
     FOREIGN KEY (`id_tipo_respuesta`)
-    REFERENCES `tipo_respuesta` (`id_tipo_respuesta`)
+    REFERENCES `tipo_respuestas` (`id_tipo_respuesta`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
@@ -125,7 +125,7 @@ CREATE TABLE IF NOT EXISTS `usuarios_invitados` (
   INDEX `id_roles_de_usuario_idx` (`id_roles_de_usuario_invitado` ASC),
   CONSTRAINT `fk_usuarios_invitados_roles_de_usuario`
     FOREIGN KEY (`id_roles_de_usuario_invitado`)
-    REFERENCES `roles_de_usuario` (`id_roles_de_usuario`)
+    REFERENCES `roles_de_usuarios` (`id_roles_de_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
@@ -173,7 +173,7 @@ CREATE TABLE IF NOT EXISTS `info_usuarios` (
   UNIQUE INDEX `nombre_usuario_UNIQUE` (`nombre_usuario` ASC),
   CONSTRAINT `fk_info_usuarios_credenciales_usuario`
     FOREIGN KEY (`id_usuario`)
-    REFERENCES `credenciales_usuario` (`id_credenciales_usuario`)
+    REFERENCES `credenciales_usuarios` (`id_credenciales_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;

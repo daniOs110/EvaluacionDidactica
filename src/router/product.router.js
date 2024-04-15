@@ -3,7 +3,18 @@ const { route } = require("../app/app");
 const Product = require("../model/product.model");
 //const { faker } = require("@faker-js/faker")
 
-const Products = require("../model/product.model")
+const Products = require("../model/product.model");
+const UserRoll = require("../model/schema/user.roll.schema");
+
+router.get("/roll/get", async (req, res) => {
+    const userRoll = await UserRoll.findAll()
+    res.status(200).json({
+        ok: true,
+        status: 200,
+        body: userRoll,
+    });
+    //res.send("I am a Router");
+});
 
 router.get("/products/get", async (req, res) => {
     const products = await Products.findAll()
