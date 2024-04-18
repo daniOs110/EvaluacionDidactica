@@ -9,3 +9,13 @@ Proyecto backend de una aplicacion web  para la generación y aplicación de eva
 - npm install mysql2
 
 - npm install nodemon -D
+
+- npm install dotenv
+
+- npm install picocolors (opcional pero falta configurarlo)
+
+- npm install standard -D
+
+- npm install express-validator
+
+- npm install validation
