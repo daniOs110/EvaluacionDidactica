@@ -1,24 +1,23 @@
-const { Sequelize, Model, DataTypes } = require('sequelize');
-const sequelize = require("../../config/database");
+const { Sequelize, Model, DataTypes } = require('sequelize')
+const sequelize = require('../../config/database')
 
-class ResponseType extends Model{}
+class ResponseType extends Model {}
 
 ResponseType.init({
-    id_tipo_respuesta: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    tipo_respuesta: {
-        type: DataTypes.STRING,
-        allowNull: false
-    }
+  id_tipo_respuesta: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
+  tipo_respuesta: {
+    type: DataTypes.STRING,
+    allowNull: false
+  }
 },
 {
-    sequelize,
-    modelName: 'tipo_respuestas',
-    timestamps: false
-});
+  sequelize,
+  modelName: 'tipo_respuestas',
+  timestamps: false
+})
 
-module.exports = ResponseType;
-
+module.exports = ResponseType
