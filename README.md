@@ -19,3 +19,5 @@ Proyecto backend de una aplicacion web  para la generación y aplicación de eva
 - npm install express-validator
 
 - npm install validation
+
+- npm install bcryptjs
