@@ -5,12 +5,13 @@ const RolDeUsuario = require('./user.roll.schema')
 class UserCredentials extends Model {}
 
 UserCredentials.init({
-  idCredencialesUsuario: {
+  id_credenciales_usuario: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
+    defaultValue: 0
   },
-  hashPassword: {
+  hash_password: {
     type: DataTypes.STRING,
     allowNull: false
   },
@@ -22,8 +23,8 @@ UserCredentials.init({
 {
   sequelize,
   modelName: 'credenciales_usuarios',
-  timestamps: true
+  timestamps: false
 })
 
-UserCredentials.belongsTo(RolDeUsuario, { foreignKey: 'idRolesDeUsuario', as: 'role' })
+UserCredentials.belongsTo(RolDeUsuario, { foreignKey: 'id_roles_de_usuario', as: 'role' })
 module.exports = UserCredentials

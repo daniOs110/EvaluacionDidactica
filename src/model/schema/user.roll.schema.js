@@ -7,7 +7,8 @@ RolDeUsuario.init({
   id_roles_de_usuario: {
     type: DataTypes.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
+    defaultValue: 1
   },
   rol_de_usuario: {
     type: DataTypes.STRING,

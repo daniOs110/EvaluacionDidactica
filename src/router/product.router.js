@@ -1,17 +1,20 @@
 const router = require('express').Router()
-const { route } = require('../app/app')
-const Product = require('../model/product.model')
+// const { route } = require('../app/app')
+// const Product = require('../model/product.model')
 // const { faker } = require("@faker-js/faker")
 
 const Products = require('../model/product.model')
 const UserRoll = require('../model/schema/user.roll.schema')
+const authMiddleware = require('../middleware/session')
 
-router.get('/roll/get', async (req, res) => {
+router.get('/roll/get', authMiddleware, async (req, res) => {
   const userRoll = await UserRoll.findAll()
+  const user = req.user
   res.status(200).json({
     ok: true,
     status: 200,
-    body: userRoll
+    body: userRoll,
+    user
   })
   // res.send("I am a Router");
 })

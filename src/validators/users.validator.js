@@ -1,16 +1,24 @@
 const { check } = require('express-validator')
-// const { validateResult } =
+const { validateResult } = require('../helpers/validate.helper')
+const ErrorMessages = require('../utils/errorMessages')
 
-const validateCreateUser = [
-  check('name').exists().not().isEmpty(),
-  check('firstName').exists().not().isEmpty(),
-  check('lastName').exists().not().isEmpty(),
-  check('email').exists().isEmail().notEmpty,
-  check('password').exists().notEmpty().isStrongPassword(),
+const validateRegisterUser = [
+  check('name').exists().notEmpty().isAlpha().withMessage(ErrorMessages.NAME_REQUIRED),
+  check('firstName').exists().notEmpty().isAlpha().withMessage(ErrorMessages.FIRST_NAME_REQUIRED),
+  check('lastName').isAlpha().withMessage(ErrorMessages.LAST_NAME_REQUIRED),
+  check('email').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
+  check('password').exists().notEmpty().isLength({ min: 3, max: 15 }).withMessage(ErrorMessages.PASSWORD_FORMAT),
   check('confirmPassword').exists().notEmpty(),
   (req, res, next) => {
-
+    return validateResult(req, res, next)
+  }
+]
+const validateLoginUser = [
+  check('email').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
+  check('password').exists().notEmpty().isLength({ min: 3, max: 15 }),
+  (req, res, next) => {
+    return validateResult(req, res, next)
   }
 ]
 
-module.exports = { validateCreateUser }
+module.exports = { validateRegisterUser, validateLoginUser }

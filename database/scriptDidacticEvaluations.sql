@@ -164,13 +164,13 @@ CREATE TABLE IF NOT EXISTS `info_usuarios` (
   `id_info_usuario` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
   `apellido_paterno` VARCHAR(45) NOT NULL,
-  `apellido_materno` VARCHAR(45) NOT NULL,
+  `apellido_materno` VARCHAR(45) NULL,
   `correo` VARCHAR(45) NOT NULL,
   `id_usuario` INT NOT NULL,
-  `nombre_usuario` VARCHAR(45) NOT NULL,
+  'verificado' BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id_info_usuario`),
   UNIQUE INDEX `id_usuario_UNIQUE` (`id_usuario` ASC),
-  UNIQUE INDEX `nombre_usuario_UNIQUE` (`nombre_usuario` ASC),
+  UNIQUE INDEX `correo_UNIQUE` (`correo` ASC),
   CONSTRAINT `fk_info_usuarios_credenciales_usuario`
     FOREIGN KEY (`id_usuario`)
     REFERENCES `credenciales_usuarios` (`id_credenciales_usuario`)
