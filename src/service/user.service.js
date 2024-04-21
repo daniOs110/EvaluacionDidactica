@@ -5,7 +5,7 @@ const { encrypt, compare } = require('../helpers/handler.bcrypt')
 const UserInfo = require('../model/schema/user.info.schema')
 const ErrorMessages = require('../utils/errorMessages')
 const { tokenSign } = require('../helpers/handlerJwt')
-const { use } = require('../controller/users.controller')
+const LOG = require('../app/logger')
 
 class UserService {
   async createUser (userData) {
@@ -36,7 +36,7 @@ class UserService {
       const token = await tokenSign(newUser, newCredentials)
       return { credentials: newCredentials, info: newUser, token }
     } catch (error) {
-      console.log(error)
+      LOG.error(error)
       if (transaction) await transaction.rollback()
       throw new Error('Error al crear el usuario:' + error.message)
     }
@@ -44,7 +44,7 @@ class UserService {
 
   async login (userData) {
     try {
-      console.log('verifying if the user and password match')
+      LOG.info('verifying if the user and password match')
       const user = await userInfo.findOne({ where: { correo: userData.email } })
       const idCredential = user.get('id_usuario')
       const userCredentialData = await userCredentials.findOne({ where: { id_credenciales_usuario: idCredential } })
@@ -60,17 +60,17 @@ class UserService {
       }
       return data
     } catch (error) {
-      console.log(error)
+      LOG.error(error)
     }
   }
 
   async getUserByEmail (email) {
     try {
-      console.log('finding email in DB')
+      LOG.info('finding email in DB')
       const user = await UserInfo.findOne({ where: { correo: email } })
       return user
     } catch (error) {
-      console.log(error)
+      LOG.error(error)
       throw new Error(ErrorMessages.GET_USER_EMAIL)
     }
   }

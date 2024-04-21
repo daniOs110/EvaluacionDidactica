@@ -1,4 +1,3 @@
-// in this class we will declare de functional of this service like create user, update user, etc all the service we will use
 const createUserRouter = require('express').Router()
 const CreateAccountDTO = require('../dtos/user/create-user.dto')
 const LoginDTO = require('../dtos/user/login.dto')
@@ -7,9 +6,10 @@ const { matchedData } = require('express-validator')
 const { validateRegisterUser, validateLoginUser } = require('../validators/users.validator')
 const ErrorMessages = require('../utils/errorMessages')
 const authMiddleware = require('../middleware/session')
+const LOG = require('../app/logger')
 
 createUserRouter.use((req, res, next) => {
-  console.log('Receive request:', req.method, req.url)
+  LOG.info('Receive request:', req.method, req.url)
   next()
 })
 
@@ -36,7 +36,7 @@ createUserRouter.post('/user/signup', validateRegisterUser, async (req, res) => 
     res.status(201).json(createUser)
     // res.send({ data: req })
   } catch (error) {
-    console.error('Error creando el usuario: ', error)
+    LOG.error('Error creando el usuario: ', error)
     res.status(500).json({ message: 'Internal server error' })
   }
 })
@@ -46,15 +46,15 @@ createUserRouter.post('/user/login', validateLoginUser, async (req, res) => {
     const validatedData = matchedData(req)
     const newLogDto = new LoginDTO(validatedData.email, validatedData.password)
     const user = await userService.getUserByEmail(validatedData.email)
-    console.log(`verify if the user exist for email ${validatedData.email}`)
+    LOG.info(`verify if the user exist for email ${validatedData.email}`)
     if (!user) {
-      console.log('not exist the user')
+      LOG.info('not exist the user')
       return res.status(404).json({ message: ErrorMessages.LOGIN_FAIL })
     }
 
     const login = await userService.login(newLogDto)
     if (!login) {
-      console.log('wrong password')
+      LOG.error('wrong password')
       return res.status(401).json({ message: ErrorMessages.LOGIN_FAIL })
     }
     res.status(200).json(login)

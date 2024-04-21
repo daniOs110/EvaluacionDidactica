@@ -1,5 +1,6 @@
 const { Sequelize, Model, DataTypes } = require('sequelize')
 const sequelize = require('../config/database')
+const LOG = require('../app/logger')
 
 // const sequelize = new Sequelize("evaluacionesdidacticas", "root", "12345678", {
 //     host: "localhost",
@@ -38,7 +39,7 @@ module.exports = Product
 async function testConnection () {
   try {
     await sequelize.authenticate()
-    console.log('All Good!!')
+    LOG.info('All Good!!')
   } catch (err) {
     console.error('All bad!!', err)
   }

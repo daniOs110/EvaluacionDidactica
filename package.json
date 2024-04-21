@@ -29,7 +29,8 @@
     "morgan": "1.10.0",
     "mysql2": "3.9.4",
     "sequelize": "6.37.2",
-    "validator": "13.11.0"
+    "validator": "13.11.0",
+    "winston": "3.13.0"
   },
   "devDependencies": {
     "globals": "15.0.0",
