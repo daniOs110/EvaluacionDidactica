@@ -167,7 +167,7 @@ CREATE TABLE IF NOT EXISTS `info_usuarios` (
   `apellido_materno` VARCHAR(45) NULL,
   `correo` VARCHAR(45) NOT NULL,
   `id_usuario` INT NOT NULL,
-  'verificado' BOOLEAN NOT NULL DEFAULT FALSE,
+  `verificado` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`id_info_usuario`),
   UNIQUE INDEX `id_usuario_UNIQUE` (`id_usuario` ASC),
   UNIQUE INDEX `correo_UNIQUE` (`correo` ASC),

@@ -1,20 +1,3 @@
-{"level":"info","message":"------ Server running on port 3001"}
-{"level":"info","message":"------ Server running on port 3001"}
-2024-04-21T04:59:49.659Z - [INFO   ] - ------ Server running on port 3001
-2024-04-21T05:00:11.978Z - [INFO   ] - ------ Server running on port 3001
-2024-04-21T05:00:46.775Z - [INFO   ] - Server running on port 3001
-2024-04-21T05:02:17.839Z - [   INFO] - Server running on port 3001
-2024-04-21T05:02:28.371Z - [INFO] - Server running on port 3001
-2024-04-21T05:02:44.224Z - [INFO] - Server running on port 3001
-2024-04-21T05:02:53.866Z - [INFO   ] - Server running on port 3001
-2024-04-21T05:03:04.654Z - [INFO] - Server running on port 3001
-2024-04-21T05:03:12.592Z - [INFO] - Server running on port 3001
-2024-04-21T05:03:18.740Z - [INFO ] - Server running on port 3001
-2024-04-21T05:03:24.282Z - [INFO ] - Server running on port 3001
-2024-04-21T05:03:31.494Z - [INFO ] - Server running on port 3001
-2024-04-21T05:03:36.116Z - [INFO ] - Server running on port 3001
-2024-04-21T05:03:40.487Z - [INFO ] - Server running on port 3001
-2024-04-21T05:03:46.115Z - [ INFO] - Server running on port 3001
 2024-04-21T05:03:52.742Z - [ INFO ] - Server running on port 3001
 2024-04-21T05:04:21.568Z - [ INFO ] - Server running on port 3001
 2024-04-21T05:05:17.640Z - [ INFO ] - Server running on port 3001
@@ -33,3 +16,23 @@
 2024-04-21T05:09:24.253Z - [ INFO ] - All Good!!
 2024-04-21T05:09:32.319Z - [ INFO ] - Server running on port 3001
 2024-04-21T05:09:32.401Z - [ INFO ] - All Good!!
+2024-04-21T06:08:35.979Z - [ INFO ] - Server running on port 3001
+2024-04-21T06:08:36.070Z - [ INFO ] - All Good!!
+2024-04-21T22:26:10.695Z - [ INFO ] - Server running on port 3001
+2024-04-21T22:26:10.782Z - [ INFO ] - All Good!!
+2024-04-21T22:26:49.728Z - [ INFO ] - Receive request:
+2024-04-21T22:26:49.741Z - [ INFO ] - finding email in DB
+2024-04-21T22:27:31.999Z - [ INFO ] - Receive request:
+2024-04-21T22:27:32.003Z - [ INFO ] - finding email in DB
+2024-04-21T22:27:32.022Z - [ INFO ] - verify if the user exist for email vane@gmail.com
+2024-04-21T22:27:32.024Z - [ INFO ] - verifying if the user and password match
+2024-04-22T14:26:28.948Z - [ INFO ] - Server running on port 3001
+2024-04-22T14:26:29.047Z - [ INFO ] - All Good!!
+2024-04-22T14:26:48.191Z - [ INFO ] - Receive request:
+2024-04-22T14:26:48.203Z - [ INFO ] - finding email in DB
+2024-04-22T14:26:58.608Z - [ INFO ] - Receive request:
+2024-04-22T14:26:58.618Z - [ INFO ] - finding email in DB
+2024-04-22T14:27:07.163Z - [ INFO ] - Receive request:
+2024-04-22T14:27:07.165Z - [ INFO ] - finding email in DB
+2024-04-22T14:27:07.175Z - [ INFO ] - verify if the user exist for email daniOs7@gmail.com
+2024-04-22T14:27:07.176Z - [ INFO ] - verifying if the user and password match
