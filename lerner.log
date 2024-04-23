@@ -36,3 +36,216 @@
 2024-04-22T14:27:07.165Z - [ INFO ] - finding email in DB
 2024-04-22T14:27:07.175Z - [ INFO ] - verify if the user exist for email daniOs7@gmail.com
 2024-04-22T14:27:07.176Z - [ INFO ] - verifying if the user and password match
+2024-04-23T02:39:26.917Z - [ INFO ] - Server running on port 3001
+2024-04-23T02:39:27.015Z - [ INFO ] - All Good!!
+2024-04-23T14:42:05.860Z - [ INFO ] - Server running on port 3001
+2024-04-23T14:42:05.964Z - [ INFO ] - All Good!!
+2024-04-23T14:42:06.800Z - [ INFO ] - Ready for send emails
+2024-04-23T14:43:01.407Z - [ INFO ] - Receive request:
+2024-04-23T14:43:01.416Z - [ INFO ] - finding email in DB
+2024-04-23T14:43:01.445Z - [ INFO ] - verify if the user exist for email daniOs7@gmail.com
+2024-04-23T14:43:01.446Z - [ INFO ] - verifying if the user and password match
+2024-04-23T14:49:34.803Z - [ INFO ] - Server running on port 3001
+2024-04-23T14:49:34.971Z - [ INFO ] - All Good!!
+2024-04-23T14:49:35.752Z - [ INFO ] - Ready for send emails
+2024-04-23T14:50:58.449Z - [ INFO ] - Server running on port 3001
+2024-04-23T14:50:58.557Z - [ INFO ] - All Good!!
+2024-04-23T14:50:59.408Z - [ INFO ] - Ready for send emails
+2024-04-23T14:51:52.105Z - [ INFO ] - Receive request:
+2024-04-23T14:52:00.224Z - [ INFO ] - Receive request:
+2024-04-23T15:01:25.031Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:01:25.156Z - [ INFO ] - All Good!!
+2024-04-23T15:01:25.837Z - [ INFO ] - Ready for send emails
+2024-04-23T15:03:53.219Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:03:53.344Z - [ INFO ] - All Good!!
+2024-04-23T15:03:53.891Z - [ INFO ] - Ready for send emails
+2024-04-23T15:06:38.783Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:06:38.928Z - [ INFO ] - All Good!!
+2024-04-23T15:06:39.776Z - [ INFO ] - Ready for send emails
+2024-04-23T15:06:48.080Z - [ INFO ] - Receive request:
+2024-04-23T15:06:48.135Z - [ INFO ] - finding email in DB
+2024-04-23T15:06:58.307Z - [ INFO ] - Receive request:
+2024-04-23T15:06:58.311Z - [ INFO ] - finding email in DB
+2024-04-23T15:06:58.506Z - [ INFO ] - Cannot read properties of undefined (reading 'sendMail')
+2024-04-23T15:08:44.853Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:08:44.995Z - [ INFO ] - All Good!!
+2024-04-23T15:08:46.141Z - [ INFO ] - Ready for send emails
+2024-04-23T15:09:53.844Z - [ INFO ] - Receive request:
+2024-04-23T15:09:53.858Z - [ INFO ] - finding email in DB
+2024-04-23T15:09:57.629Z - [ INFO ] - Receive request:
+2024-04-23T15:09:57.634Z - [ INFO ] - finding email in DB
+2024-04-23T15:09:57.812Z - [ INFO ] - Cannot read properties of undefined (reading 'sendMail')
+2024-04-23T15:11:55.860Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:11:56.041Z - [ INFO ] - All Good!!
+2024-04-23T15:11:56.617Z - [ INFO ] - Ready for send emails
+2024-04-23T15:12:12.240Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:12:12.389Z - [ INFO ] - All Good!!
+2024-04-23T15:12:12.995Z - [ INFO ] - Ready for send emails
+2024-04-23T15:12:31.670Z - [ INFO ] - Receive request:
+2024-04-23T15:12:31.687Z - [ INFO ] - finding email in DB
+2024-04-23T15:12:31.940Z - [ERROR ] - Cannot read properties of undefined (reading 'sendMail')
+2024-04-23T15:14:47.473Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:14:47.701Z - [ INFO ] - All Good!!
+2024-04-23T15:14:48.236Z - [ INFO ] - Ready for send emails
+2024-04-23T15:16:16.827Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:16:16.972Z - [ INFO ] - All Good!!
+2024-04-23T15:16:17.569Z - [ INFO ] - Ready for send emails
+2024-04-23T15:16:23.891Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:16:23.990Z - [ INFO ] - All Good!!
+2024-04-23T15:16:24.713Z - [ INFO ] - Ready for send emails
+2024-04-23T15:17:34.627Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:17:34.780Z - [ INFO ] - All Good!!
+2024-04-23T15:17:35.369Z - [ INFO ] - Ready for send emails
+2024-04-23T15:18:50.345Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:18:50.498Z - [ INFO ] - All Good!!
+2024-04-23T15:18:52.011Z - [ INFO ] - Ready for send emails
+2024-04-23T15:18:53.869Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:18:53.937Z - [ INFO ] - All Good!!
+2024-04-23T15:18:55.665Z - [ INFO ] - Ready for send emails
+2024-04-23T15:19:10.829Z - [ INFO ] - Receive request:
+2024-04-23T15:19:10.839Z - [ INFO ] - finding email in DB
+2024-04-23T15:19:11.032Z - [ERROR ] - transport.sendEmail is not a function
+2024-04-23T15:20:02.466Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:20:02.603Z - [ INFO ] - All Good!!
+2024-04-23T15:20:03.330Z - [ INFO ] - Ready for send emails
+2024-04-23T15:20:07.715Z - [ INFO ] - Receive request:
+2024-04-23T15:20:07.728Z - [ INFO ] - finding email in DB
+2024-04-23T15:20:10.092Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjI4LCJyb2xlIjoxLCJpYXQiOjE3MTM4ODU2MDcsImV4cCI6MTcxMzg5MjgwN30.WjI31gTmsmwYKIsmxzNh0EpZI5d_izJF3x5CfGMGZ9c 
+2024-04-23T15:20:29.036Z - [ INFO ] - Receive request:
+2024-04-23T15:20:29.041Z - [ INFO ] - finding email in DB
+2024-04-23T15:21:10.128Z - [ INFO ] - Receive request:
+2024-04-23T15:21:10.132Z - [ INFO ] - finding email in DB
+2024-04-23T15:21:12.147Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjI5LCJyb2xlIjoxLCJpYXQiOjE3MTM4ODU2NzAsImV4cCI6MTcxMzg5Mjg3MH0.C28kwA_2S2-Ji4POWfD90gn9ZYKrZQ-Vg3qiTsTE25Y 
+2024-04-23T15:21:27.607Z - [ INFO ] - Receive request:
+2024-04-23T15:22:17.850Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:22:17.958Z - [ INFO ] - All Good!!
+2024-04-23T15:22:18.726Z - [ INFO ] - Ready for send emails
+2024-04-23T15:28:53.727Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:28:53.801Z - [ INFO ] - All Good!!
+2024-04-23T15:28:55.100Z - [ INFO ] - Ready for send emails
+2024-04-23T15:29:31.869Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:29:31.981Z - [ INFO ] - All Good!!
+2024-04-23T15:29:32.528Z - [ INFO ] - Ready for send emails
+2024-04-23T15:29:42.557Z - [ INFO ] - Server running on port 3001
+2024-04-23T15:29:42.711Z - [ INFO ] - All Good!!
+2024-04-23T15:29:43.695Z - [ INFO ] - Ready for send emails
+2024-04-23T16:17:18.815Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:17:19.001Z - [ INFO ] - All Good!!
+2024-04-23T16:17:19.864Z - [ INFO ] - Ready for send emails
+2024-04-23T16:18:03.001Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:18:03.084Z - [ INFO ] - All Good!!
+2024-04-23T16:18:04.614Z - [ INFO ] - Ready for send emails
+2024-04-23T16:22:30.850Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:22:31.001Z - [ INFO ] - All Good!!
+2024-04-23T16:22:31.666Z - [ INFO ] - Ready for send emails
+2024-04-23T16:23:32.125Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:23:32.260Z - [ INFO ] - All Good!!
+2024-04-23T16:23:32.812Z - [ INFO ] - Ready for send emails
+2024-04-23T16:24:44.638Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:24:44.781Z - [ INFO ] - All Good!!
+2024-04-23T16:24:45.603Z - [ INFO ] - Ready for send emails
+2024-04-23T16:25:39.972Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:25:40.166Z - [ INFO ] - All Good!!
+2024-04-23T16:25:41.023Z - [ INFO ] - Ready for send emails
+2024-04-23T16:35:27.713Z - [ INFO ] - Receive request:
+2024-04-23T16:35:27.721Z - [ INFO ] - finding email in DB
+2024-04-23T16:35:33.127Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMwLCJyb2xlIjoxLCJpYXQiOjE3MTM4OTAxMjcsImV4cCI6MTcxMzg5NzMyN30.9q1FyF5UrgTpii9VHYcgHjHh3LbL-BRGaldLosgxj7E 
+2024-04-23T16:36:46.473Z - [ INFO ] - Receive request:
+2024-04-23T16:38:34.505Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:38:34.596Z - [ INFO ] - All Good!!
+2024-04-23T16:38:35.112Z - [ INFO ] - Ready for send emails
+2024-04-23T16:38:52.461Z - [ INFO ] - Receive request:
+2024-04-23T16:38:52.469Z - [ INFO ] - finding email in DB
+2024-04-23T16:39:21.552Z - [ INFO ] - Receive request:
+2024-04-23T16:39:21.556Z - [ INFO ] - finding email in DB
+2024-04-23T16:39:40.385Z - [ERROR ] - Unexpected socket close
+2024-04-23T16:44:13.884Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:44:13.967Z - [ INFO ] - All Good!!
+2024-04-23T16:44:14.439Z - [ INFO ] - Ready for send emails
+2024-04-23T16:45:45.232Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:45:45.338Z - [ INFO ] - All Good!!
+2024-04-23T16:46:23.535Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:46:23.617Z - [ INFO ] - All Good!!
+2024-04-23T16:46:24.263Z - [ INFO ] - Ready for send emails
+2024-04-23T16:46:59.165Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:46:59.250Z - [ INFO ] - All Good!!
+2024-04-23T16:46:59.649Z - [ INFO ] - Ready for send emails
+2024-04-23T16:48:34.748Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:48:34.834Z - [ INFO ] - All Good!!
+2024-04-23T16:48:35.229Z - [ INFO ] - Ready for send emails
+2024-04-23T16:57:33.177Z - [ INFO ] - Server running on port 3001
+2024-04-23T16:57:33.262Z - [ INFO ] - All Good!!
+2024-04-23T16:57:33.984Z - [ INFO ] - Ready for send emails
+2024-04-23T17:01:05.052Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:01:05.101Z - [ INFO ] - All Good!!
+2024-04-23T17:01:36.057Z - [ INFO ] - Ready for send emails
+2024-04-23T17:04:11.475Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:04:11.559Z - [ INFO ] - All Good!!
+2024-04-23T17:04:11.974Z - [ INFO ] - Ready for send emails
+2024-04-23T17:05:18.937Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:05:19.014Z - [ INFO ] - All Good!!
+2024-04-23T17:05:19.504Z - [ INFO ] - Ready for send emails
+2024-04-23T17:06:11.684Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:06:11.769Z - [ INFO ] - All Good!!
+2024-04-23T17:06:12.197Z - [ INFO ] - Ready for send emails
+2024-04-23T17:06:26.403Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:06:26.485Z - [ INFO ] - All Good!!
+2024-04-23T17:06:26.881Z - [ INFO ] - Ready for send emails
+2024-04-23T17:07:11.032Z - [ INFO ] - Receive request:
+2024-04-23T17:07:26.406Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:07:26.491Z - [ INFO ] - All Good!!
+2024-04-23T17:07:26.940Z - [ INFO ] - Ready for send emails
+2024-04-23T17:07:30.491Z - [ INFO ] - Receive request:
+2024-04-23T17:10:53.490Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:10:53.571Z - [ INFO ] - All Good!!
+2024-04-23T17:10:54.173Z - [ INFO ] - Ready for send emails
+2024-04-23T17:11:00.191Z - [ INFO ] - Receive request:
+2024-04-23T17:11:07.223Z - [ INFO ] - Receive request:
+2024-04-23T17:11:07.230Z - [ INFO ] - finding email in DB
+2024-04-23T17:11:07.247Z - [ INFO ] - verify if the user exist for email daniOs7@gmail.com
+2024-04-23T17:11:07.248Z - [ INFO ] - verifying if the user and password match
+2024-04-23T17:11:54.893Z - [ INFO ] - Receive request:
+2024-04-23T17:11:54.896Z - [ INFO ] - finding email in DB
+2024-04-23T17:11:54.923Z - [ INFO ] - verify if the user exist for email lernerprueba02@yopmail.com
+2024-04-23T17:11:54.924Z - [ INFO ] - verifying if the user and password match
+2024-04-23T17:12:18.946Z - [ INFO ] - Receive request:
+2024-04-23T17:12:19.408Z - [ERROR ] - No recipients defined
+2024-04-23T17:12:19.408Z - [ INFO ] - email enviado con exito
+2024-04-23T17:15:08.778Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:15:08.870Z - [ INFO ] - All Good!!
+2024-04-23T17:15:10.279Z - [ INFO ] - Ready for send emails
+2024-04-23T17:15:14.510Z - [ INFO ] - Receive request:
+2024-04-23T17:15:14.528Z - [ INFO ] - LOS DATOS DEL USUARIO SON: [object SequelizeInstance:info_usuarios] y el email es: undefined
+2024-04-23T17:15:14.962Z - [ERROR ] - No recipients defined
+2024-04-23T17:15:14.963Z - [ INFO ] - email enviado con exito
+2024-04-23T17:17:28.239Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:17:28.337Z - [ INFO ] - All Good!!
+2024-04-23T17:17:28.821Z - [ INFO ] - Ready for send emails
+2024-04-23T17:17:49.055Z - [ INFO ] - Receive request:
+2024-04-23T17:17:49.075Z - [ INFO ] - LOS DATOS DEL USUARIO SON: [object SequelizeInstance:info_usuarios] y el email es: lernerprueba02@yopmail.com, el token es: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTM4OTIzMTUsImV4cCI6MTcxMzg5OTUxNX0.WDRxZ5HtR0qs30O8Avy2NyMEgEF4xncWenCCZbFqwmU
+2024-04-23T17:17:51.422Z - [ERROR ] - No recipients defined
+2024-04-23T17:17:51.423Z - [ INFO ] - email enviado con exito
+2024-04-23T17:18:16.836Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:18:16.954Z - [ INFO ] - All Good!!
+2024-04-23T17:18:19.144Z - [ INFO ] - Ready for send emails
+2024-04-23T17:18:19.442Z - [ INFO ] - Receive request:
+2024-04-23T17:18:19.459Z - [ INFO ] - LOS DATOS DEL USUARIO SON: [object SequelizeInstance:info_usuarios] y el email es: lernerprueba02@yopmail.com, el token es: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTM4OTIzMTUsImV4cCI6MTcxMzg5OTUxNX0.WDRxZ5HtR0qs30O8Avy2NyMEgEF4xncWenCCZbFqwmU
+2024-04-23T17:18:21.789Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTM4OTIzMTUsImV4cCI6MTcxMzg5OTUxNX0.WDRxZ5HtR0qs30O8Avy2NyMEgEF4xncWenCCZbFqwmU 
+2024-04-23T17:18:21.789Z - [ INFO ] - email enviado con exito
+2024-04-23T17:18:47.719Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:18:47.818Z - [ INFO ] - All Good!!
+2024-04-23T17:18:48.214Z - [ INFO ] - Ready for send emails
+2024-04-23T17:18:56.157Z - [ INFO ] - Receive request:
+2024-04-23T17:20:36.748Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:20:36.836Z - [ INFO ] - All Good!!
+2024-04-23T17:20:37.238Z - [ INFO ] - Ready for send emails
+2024-04-23T17:22:00.261Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:22:00.406Z - [ INFO ] - All Good!!
+2024-04-23T17:22:00.894Z - [ INFO ] - Ready for send emails
+2024-04-23T17:23:07.686Z - [ INFO ] - Server running on port 3001
+2024-04-23T17:23:07.776Z - [ INFO ] - All Good!!
+2024-04-23T17:23:08.171Z - [ INFO ] - Ready for send emails
+2024-04-23T17:25:03.367Z - [ INFO ] - Receive request:
+2024-04-23T17:25:04.533Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTM4OTIzMTUsImV4cCI6MTcxMzg5OTUxNX0.WDRxZ5HtR0qs30O8Avy2NyMEgEF4xncWenCCZbFqwmU 
+2024-04-23T17:25:04.534Z - [ INFO ] - email enviado con exito
+2024-04-23T17:26:26.512Z - [ INFO ] - Receive request:

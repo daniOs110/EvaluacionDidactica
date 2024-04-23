@@ -16,8 +16,8 @@ const authMiddleware = async (req, res, next) => {
       return res.status(401).json({ message: ErrorMessages.NOT_SESSION })
     }
     const user = await UserInfo.findByPk(dataToken._id)
-    req.user = user
-
+    req.user = user // para devolver los datos del usuario
+    req.token = token // devolvemos el token
     next()
   } catch (error) {
     return res.status(401).json({ message: ErrorMessages.NOT_SESSION })

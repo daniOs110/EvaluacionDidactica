@@ -1,7 +1,7 @@
 const nodemailer = require('nodemailer')
 const LOG = require('./logger')
 
-const transporter = nodemailer.createTransport({
+const transport = nodemailer.createTransport({
   host: process.env.HOST_EMAIL,
   port: process.env.PORT_EMAIL,
   secure: true,
@@ -11,8 +11,8 @@ const transporter = nodemailer.createTransport({
   }
 })
 
-transporter.verify().then(() => {
-  LOG.info('Ready for send emailsd')
+transport.verify().then(() => {
+  LOG.info('Ready for send emails')
 })
 
-module.exports = transporter
+module.exports = { transport }

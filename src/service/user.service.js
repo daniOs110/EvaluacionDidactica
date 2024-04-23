@@ -4,8 +4,11 @@ const sequelize = require('../config/database')
 const { encrypt, compare } = require('../helpers/handler.bcrypt')
 const UserInfo = require('../model/schema/user.info.schema')
 const ErrorMessages = require('../utils/errorMessages')
-const { tokenSign } = require('../helpers/handlerJwt')
+const { tokenSign, recoverToken } = require('../helpers/handlerJwt')
 const LOG = require('../app/logger')
+const { transport } = require('../app/mail')
+const { URL_RESET_PASSWORD } = require('../utils/globalConstants')
+const CONFIRM_EMAIL = process.env.CONFIRM_EMAIL
 
 class UserService {
   async createUser (userData) {
@@ -34,6 +37,13 @@ class UserService {
 
       await transaction.commit()
       const token = await tokenSign(newUser, newCredentials)
+      try {
+        await this.sendConfirmationEmail(userData.email, token)
+        LOG.info('correo enviado con exito')
+      } catch (error) {
+        LOG.error(`No fue posible enviar el correo de confirmación, error: ${error}`)
+      }
+
       return { credentials: newCredentials, info: newUser, token }
     } catch (error) {
       LOG.error(error)
@@ -73,6 +83,47 @@ class UserService {
       LOG.error(error)
       throw new Error(ErrorMessages.GET_USER_EMAIL)
     }
+  }
+
+  async recoverPassword (email) {
+    const user = await userInfo.findOne({ where: { correo: email } })
+    const idCredential = user.get('id_usuario')
+    const userCredentialData = await userCredentials.findOne({ where: { id_credenciales_usuario: idCredential } })
+    const token = recoverToken(user, userCredentialData)
+
+    const verificationLink = URL_RESET_PASSWORD + `${token}`
+  }
+
+  async sendConfirmationEmail (email, token) {
+    try {
+      const confirmationUrl = CONFIRM_EMAIL + `${token}`
+      await transport.sendMail({
+        from: '"Confirm email 👻" <lernerapp2024@gmail.com>',
+        to: email,
+        subject: 'Confirm email ✔',
+        text: 'Hello world?',
+        html: `<p>Por favor, haz clic en el siguiente enlace para confirmar tu correo electrónico:</p>
+            <p><a href="${confirmationUrl}">${confirmationUrl}</a></p>`
+
+      })
+      LOG.info(`Se envio el email a la siguiente ruta: ${confirmationUrl} `)
+    } catch (error) {
+      LOG.error(error)
+      return null
+    }
+  }
+
+  async verificateUser (dataToken) {
+    try {
+      await UserInfo.update({ verificado: true }, { where: { id_info_usuario: dataToken._id } })
+    } catch (error) {
+      LOG.error(error)
+      return null
+    }
+  }
+
+  async createNewPassword () {
+
   }
 }
 

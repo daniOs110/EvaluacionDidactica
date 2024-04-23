@@ -20,5 +20,13 @@ const validateLoginUser = [
     return validateResult(req, res, next)
   }
 ]
+const validateForgotPassword = [
+  check('email').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
+  check('password').exists().notEmpty().isLength({ min: 3, max: 15 }),
+  check('confirmPassword').exists().notEmpty(),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
 
-module.exports = { validateRegisterUser, validateLoginUser }
+module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword }

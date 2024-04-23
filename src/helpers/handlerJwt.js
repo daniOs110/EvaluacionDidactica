@@ -1,5 +1,7 @@
+const { config } = require('dotenv')
 const jwt = require('jsonwebtoken')
 const JWT_SECRET = process.env.JWT_SECRET
+const LOG = require('../app/logger')
 
 /**
  * Debes pasar el objeto del usuario
@@ -33,8 +35,34 @@ const verifyToken = async (token) => {
   }
 }
 
+/**
+ * Se debe ingresar un token valido
+ * @param {*} token
+ * @returns
+ */
 const decodeSign = (token) => { // TODO: Verificar que el token sea valido y correcto
   return jwt.decode(token, null)
 }
 
-module.exports = { tokenSign, decodeSign, verifyToken }
+/**
+ * recuperar contraseña jwt
+ */
+const recoverToken = async (userInfo, userCredentials) => {
+  try {
+    const signRecover = jwt.sign({
+      _id: userInfo.id_info_usuario,
+      role: userCredentials.id_roles_de_usuario
+    },
+    JWT_SECRET,
+    {
+      expiresIn: '10m'
+    }
+    )
+    return signRecover
+  } catch (error) {
+    LOG.error(error)
+    return null
+  }
+}
+
+module.exports = { tokenSign, decodeSign, verifyToken, recoverToken }

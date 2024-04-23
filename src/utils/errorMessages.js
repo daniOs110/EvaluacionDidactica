@@ -43,6 +43,10 @@ class ErrorMessages {
     return 'Usuario o contraseña incorrectos'
   }
 
+  static get USER_NOT_EXIST () {
+    return 'no se encontro usuario registrado'
+  }
+
   static get NOT_SESSION () {
     return 'No ha iniciado sesión o el token es invalido'
   }
