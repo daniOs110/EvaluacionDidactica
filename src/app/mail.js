@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
 })
 
 transporter.verify().then(() => {
-  LOG.info('Ready for send emails')
+  LOG.info('Ready for send emailsd')
 })
 
 module.exports = transporter
