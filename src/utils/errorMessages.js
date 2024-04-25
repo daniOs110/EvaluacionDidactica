@@ -11,6 +11,10 @@ class ErrorMessages {
     return 'El apellido materno debe contener unicamente letras.'
   }
 
+  static get FORMAT_NAMES () {
+    return 'El campo ingresado solo puede contener letras'
+  }
+
   static get EMAIL_INVALID () {
     return 'El correo electrónico ingresado no es válido.'
   }

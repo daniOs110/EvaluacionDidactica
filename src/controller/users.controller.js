@@ -46,8 +46,16 @@ createUserRouter.post('/user/forgotPassword', validateForgotPassword, async (req
   try {
     const validatedData = matchedData(req)
     const existUser = await userService.getUserByEmail(validatedData.email)
-    if (existUser) {
+    if (!existUser) {
       return res.status(400).json({ message: ErrorMessages.USER_NOT_EXIST })
+    }
+    try {
+      // intentar enviar correo de cambio de contraseña
+      await userService.recoverPassword(existUser)
+      res.status(200).json({ message: 'correo enviado con exito' })
+    } catch (error) {
+      LOG.error('Error reseteando contraseña ', error)
+      res.status(500).json({ message: 'Internal server error' })
     }
   } catch (error) {
 

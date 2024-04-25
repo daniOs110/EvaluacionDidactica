@@ -85,13 +85,32 @@ class UserService {
     }
   }
 
-  async recoverPassword (email) {
-    const user = await userInfo.findOne({ where: { correo: email } })
-    const idCredential = user.get('id_usuario')
+  async recoverPassword (user) {
+  //  const user = await userInfo.findOne({ where: { correo: email } })
+    const idCredential = user.get('id_info_usuario')
     const userCredentialData = await userCredentials.findOne({ where: { id_credenciales_usuario: idCredential } })
-    const token = recoverToken(user, userCredentialData)
-
+    const token = tokenSign(user, userCredentialData)
+    LOG.info(token)
     const verificationLink = URL_RESET_PASSWORD + `${token}`
+    await this.sendResetPasswordEmail(user.get('correo'), verificationLink)
+    return null
+  }
+
+  async sendResetPasswordEmail (email, verificationLink) {
+    try {
+      await transport.sendMail({
+        from: '"reset password email 👻" <lernerapp2024@gmail.com>',
+        to: email,
+        subject: 'reset password email ✔',
+        html: `<p>Por favor, haz clic en el siguiente enlace para confirmar tu correo electrónico:</p>
+            <p><a href="${verificationLink}">${verificationLink}</a></p>`
+
+      })
+      LOG.info(`Se envio el email a la siguiente ruta: ${verificationLink} `)
+    } catch (error) {
+      LOG.error(error)
+      return null
+    }
   }
 
   async sendConfirmationEmail (email, token) {
@@ -101,7 +120,6 @@ class UserService {
         from: '"Confirm email 👻" <lernerapp2024@gmail.com>',
         to: email,
         subject: 'Confirm email ✔',
-        text: 'Hello world?',
         html: `<p>Por favor, haz clic en el siguiente enlace para confirmar tu correo electrónico:</p>
             <p><a href="${confirmationUrl}">${confirmationUrl}</a></p>`
 
@@ -122,7 +140,8 @@ class UserService {
     }
   }
 
-  async createNewPassword () {
+  async resetPassword (user) {
+    // enviamos el email que redirigira a la ruta de resetear contraseña
 
   }
 }
