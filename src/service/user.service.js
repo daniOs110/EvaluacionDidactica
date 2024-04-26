@@ -7,7 +7,7 @@ const ErrorMessages = require('../utils/errorMessages')
 const { tokenSign, recoverToken } = require('../helpers/handlerJwt')
 const LOG = require('../app/logger')
 const { transport } = require('../app/mail')
-const CONFIRM_EMAIL = process.env.CONFIRM_EMAIL
+const CONFIRM_EMAIL = process.env.FRONTEND_CONFIRM_EMAIL
 const RESET_PASSWORD_EMAIL = process.env.RESET_PASSWORD_EMAIL
 
 class UserService {
@@ -122,8 +122,39 @@ class UserService {
         from: '"Confirm email 👻" <lernerapp2024@gmail.com>',
         to: email,
         subject: 'Confirm email ✔',
-        html: `<p>Por favor, haz clic en el siguiente enlace para confirmar tu correo electrónico:</p>
-            <p><a href="${confirmationUrl}">${confirmationUrl}</a></p>`
+        html: 
+        `
+          <html>
+            <head>
+              <style>
+                /* Estilos para centrar el contenido horizontal y verticalmente */
+                body, html {
+                  height: 100%;
+                  margin: 0;
+                  padding: 0;
+                }
+                body {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+              </style>
+            </head>
+            <body>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center">
+                    <h2>¡Confirma tu correo electrónico!</h2>
+                    <p>Por favor, haz clic en el siguiente botón para confirmar tu correo electrónico:</p>
+                    <a href="${confirmationUrl}" style="display: inline-block; background-color: #EE6F57; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                      Verificar correo electrónico
+                    </a>
+                  </td>
+                </tr>
+              </table>
+            </body>
+          </html>
+        `
 
       })
       LOG.info(`Se envio el email a la siguiente ruta: ${confirmationUrl} `)
