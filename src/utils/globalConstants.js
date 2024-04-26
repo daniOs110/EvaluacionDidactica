@@ -1,6 +1,6 @@
 class GlobalConstants {
   static get REGEX_NAMES () {
-    return /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]+$/
+    return /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s]*$/
   }
 }
 

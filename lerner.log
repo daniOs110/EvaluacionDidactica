@@ -580,3 +580,49 @@
 2024-04-26T00:17:34.933Z - [ INFO ] - finding email in DB
 2024-04-26T00:17:34.940Z - [ INFO ] - verify if the user exist for email lernerprueba02@yopmail.com
 2024-04-26T00:17:34.941Z - [ INFO ] - verifying if the user and password match
+2024-04-26T06:35:59.233Z - [ INFO ] - Server running on port 3001
+2024-04-26T06:35:59.367Z - [ INFO ] - All Good!!
+2024-04-26T06:36:00.312Z - [ INFO ] - Ready for send emails
+2024-04-26T06:36:10.667Z - [ INFO ] - Receive request:
+2024-04-26T06:36:10.677Z - [ INFO ] - finding email in DB
+2024-04-26T06:36:10.700Z - [ INFO ] - verify if the user exist for email lernerprueba10@yopmail.com
+2024-04-26T06:36:10.702Z - [ INFO ] - verifying if the user and password match
+2024-04-26T06:36:15.641Z - [ERROR ] - no se pudo verificar el token TokenExpiredError: jwt expired
+2024-04-26T06:36:22.380Z - [ INFO ] - Receive request:
+2024-04-26T06:36:22.382Z - [ INFO ] - finding email in DB
+2024-04-26T06:36:23.765Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/newPassword/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjM3LCJyb2xlIjoxLCJpYXQiOjE3MTQxMTMzODIsImV4cCI6MTcxNDEyMDU4Mn0.93l4zC7n4t7NA7kOJ2rsCAAYOHSquIqqPj3OehsaUMM 
+2024-04-26T16:17:18.306Z - [ INFO ] - Server running on port 3001
+2024-04-26T16:17:18.413Z - [ INFO ] - All Good!!
+2024-04-26T16:17:18.875Z - [ INFO ] - Ready for send emails
+2024-04-26T16:18:45.051Z - [ INFO ] - Receive request:
+2024-04-26T16:18:45.069Z - [ INFO ] - finding email in DB
+2024-04-26T16:18:46.784Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjM4LCJyb2xlIjoxLCJpYXQiOjE3MTQxNDgzMjUsImV4cCI6MTcxNDE1NTUyNX0.tbB1MgWPNySOl24R6sZfHX05uZZ11P25b687IT-SePU 
+2024-04-26T16:18:46.785Z - [ INFO ] - correo enviado con exito
+2024-04-26T16:19:10.564Z - [ INFO ] - Receive request:
+2024-04-26T16:19:10.568Z - [ERROR ] - Error
+2024-04-26T16:28:37.421Z - [ INFO ] - Server running on port 3001
+2024-04-26T16:28:37.595Z - [ INFO ] - All Good!!
+2024-04-26T16:28:38.324Z - [ INFO ] - Ready for send emails
+2024-04-26T16:28:50.049Z - [ INFO ] - Receive request:
+2024-04-26T16:28:50.064Z - [ERROR ] - Error
+2024-04-26T16:30:00.414Z - [ INFO ] - Server running on port 3001
+2024-04-26T16:30:00.618Z - [ INFO ] - All Good!!
+2024-04-26T16:30:01.166Z - [ INFO ] - Ready for send emails
+2024-04-26T16:30:08.304Z - [ INFO ] - Receive request:
+2024-04-26T16:30:08.322Z - [ERROR ] - Error
+2024-04-26T16:34:28.049Z - [ INFO ] - Server running on port 3001
+2024-04-26T16:34:28.254Z - [ INFO ] - All Good!!
+2024-04-26T16:34:28.836Z - [ INFO ] - Ready for send emails
+2024-04-26T16:34:32.115Z - [ INFO ] - Server running on port 3001
+2024-04-26T16:34:32.311Z - [ INFO ] - All Good!!
+2024-04-26T16:34:32.773Z - [ INFO ] - Ready for send emails
+2024-04-26T16:34:38.244Z - [ INFO ] - Receive request:
+2024-04-26T16:34:38.263Z - [ERROR ] - Error
+2024-04-26T16:44:05.606Z - [ INFO ] - Receive request:
+2024-04-26T16:44:05.611Z - [ INFO ] - finding email in DB
+2024-04-26T16:44:07.021Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjM5LCJyb2xlIjoxLCJpYXQiOjE3MTQxNDk4NDUsImV4cCI6MTcxNDE1NzA0NX0.Hcd_A9WDnylDtDvmaQSEdZQrauT1dAzs2vv43Iid6Xo 
+2024-04-26T16:44:07.021Z - [ INFO ] - correo enviado con exito
+2024-04-26T16:44:23.716Z - [ INFO ] - Receive request:
+2024-04-26T16:44:23.718Z - [ INFO ] - finding email in DB
+2024-04-26T16:44:25.113Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/confirmEmail/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjQwLCJyb2xlIjoxLCJpYXQiOjE3MTQxNDk4NjMsImV4cCI6MTcxNDE1NzA2M30.uU-2kwgXAhhiIEGC3DTBUEvJVkvT6gXcvqP2imHoVq4 
+2024-04-26T16:44:25.115Z - [ INFO ] - correo enviado con exito
