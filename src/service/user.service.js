@@ -7,8 +7,8 @@ const ErrorMessages = require('../utils/errorMessages')
 const { tokenSign, recoverToken } = require('../helpers/handlerJwt')
 const LOG = require('../app/logger')
 const { transport } = require('../app/mail')
-const { URL_RESET_PASSWORD } = require('../utils/globalConstants')
 const CONFIRM_EMAIL = process.env.CONFIRM_EMAIL
+const RESET_PASSWORD_EMAIL = process.env.RESET_PASSWORD_EMAIL
 
 class UserService {
   async createUser (userData) {
@@ -89,15 +89,17 @@ class UserService {
   //  const user = await userInfo.findOne({ where: { correo: email } })
     const idCredential = user.get('id_info_usuario')
     const userCredentialData = await userCredentials.findOne({ where: { id_credenciales_usuario: idCredential } })
-    const token = tokenSign(user, userCredentialData)
-    LOG.info(token)
-    const verificationLink = URL_RESET_PASSWORD + `${token}`
-    await this.sendResetPasswordEmail(user.get('correo'), verificationLink)
-    return null
+    const token = await tokenSign(user, userCredentialData)
+    try {
+      await this.sendResetPasswordEmail(user.get('correo'), token)
+    } catch (error) {
+      return null
+    }
   }
 
-  async sendResetPasswordEmail (email, verificationLink) {
+  async sendResetPasswordEmail (email, token) {
     try {
+      const verificationLink = RESET_PASSWORD_EMAIL + `${token}` // este link me manda a la pagina donde ingresas la nueva contraseña
       await transport.sendMail({
         from: '"reset password email 👻" <lernerapp2024@gmail.com>',
         to: email,
@@ -140,9 +142,36 @@ class UserService {
     }
   }
 
-  async resetPassword (user) {
-    // enviamos el email que redirigira a la ruta de resetear contraseña
+  async resetPassword (dataToken, validatedData) {
+    // reseteamos nueva contraseña
+    let transaction
 
+    try {
+      transaction = await sequelize.transaction()
+
+      const passwordHash = await encrypt(validatedData.password)
+      let idCredentials
+      try {
+        idCredentials = await UserInfo.findOne({ where: { id_info_usuario: dataToken._id } })
+      } catch (error) {
+        LOG.error('No se encontro usuario al resetear contraseña')
+        return null
+      }
+      try {
+        await userCredentials.update({ hash_password: passwordHash }, { where: { id_credenciales_usuario: idCredentials.get('id_usuario') } }, { transaction })
+        LOG.info('contraseña reseteada con exito')
+        // return true
+      } catch (error) {
+        LOG.error(`No se pudo actualizar la contraseña, error: ${error.message}`)
+        return null
+      }
+      await transaction.commit()
+      return true
+    } catch (error) {
+      LOG.error(error)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al actualizar contraseña de usuario:' + error.message)
+    }
   }
 }
 

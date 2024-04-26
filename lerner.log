@@ -387,3 +387,196 @@
 2024-04-25T14:36:34.811Z - [ INFO ] - finding email in DB
 2024-04-25T14:36:40.837Z - [ INFO ] - Receive request:
 2024-04-25T14:36:40.840Z - [ INFO ] - finding email in DB
+2024-04-25T23:06:49.893Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:06:49.986Z - [ INFO ] - All Good!!
+2024-04-25T23:06:51.529Z - [ INFO ] - Ready for send emails
+2024-04-25T23:09:19.143Z - [ INFO ] - Receive request:
+2024-04-25T23:09:19.150Z - [ INFO ] - finding email in DB
+2024-04-25T23:09:23.911Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/newPassword/[object Promise] 
+2024-04-25T23:10:06.241Z - [ INFO ] - Receive request:
+2024-04-25T23:12:39.063Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:12:39.202Z - [ INFO ] - All Good!!
+2024-04-25T23:12:39.856Z - [ INFO ] - Ready for send emails
+2024-04-25T23:13:33.201Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:13:33.269Z - [ INFO ] - All Good!!
+2024-04-25T23:13:35.979Z - [ INFO ] - Ready for send emails
+2024-04-25T23:14:15.903Z - [ INFO ] - Receive request:
+2024-04-25T23:14:15.911Z - [ INFO ] - finding email in DB
+2024-04-25T23:14:15.941Z - [ INFO ] - user id is: 31, user rol is: 1
+2024-04-25T23:14:18.587Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/newPassword/[object Promise] 
+2024-04-25T23:19:01.735Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:19:01.813Z - [ INFO ] - All Good!!
+2024-04-25T23:19:02.389Z - [ INFO ] - Ready for send emails
+2024-04-25T23:19:30.720Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:19:30.797Z - [ INFO ] - All Good!!
+2024-04-25T23:19:31.430Z - [ INFO ] - Ready for send emails
+2024-04-25T23:19:37.565Z - [ INFO ] - Receive request:
+2024-04-25T23:19:37.569Z - [ INFO ] - finding email in DB
+2024-04-25T23:19:39.145Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/newPassword/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODcxNzcsImV4cCI6MTcxNDA5NDM3N30.wYlRb86XIVA_bVnHt5xEcBi1qUnpBe4RTWtgSRtMmXQ 
+2024-04-25T23:19:56.155Z - [ INFO ] - Receive request:
+2024-04-25T23:20:29.645Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:20:29.723Z - [ INFO ] - All Good!!
+2024-04-25T23:20:30.304Z - [ INFO ] - Ready for send emails
+2024-04-25T23:21:29.612Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:21:29.658Z - [ INFO ] - All Good!!
+2024-04-25T23:21:30.317Z - [ INFO ] - Ready for send emails
+2024-04-25T23:21:43.180Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:21:43.256Z - [ INFO ] - All Good!!
+2024-04-25T23:21:43.742Z - [ INFO ] - Ready for send emails
+2024-04-25T23:24:31.643Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:24:31.686Z - [ INFO ] - All Good!!
+2024-04-25T23:24:32.223Z - [ INFO ] - Ready for send emails
+2024-04-25T23:27:06.418Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:27:06.501Z - [ INFO ] - All Good!!
+2024-04-25T23:27:06.963Z - [ INFO ] - Ready for send emails
+2024-04-25T23:28:08.860Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:28:08.906Z - [ INFO ] - All Good!!
+2024-04-25T23:28:09.427Z - [ INFO ] - Ready for send emails
+2024-04-25T23:28:29.245Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:28:29.337Z - [ INFO ] - All Good!!
+2024-04-25T23:28:29.827Z - [ INFO ] - Ready for send emails
+2024-04-25T23:28:58.146Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:28:58.220Z - [ INFO ] - All Good!!
+2024-04-25T23:28:58.723Z - [ INFO ] - Ready for send emails
+2024-04-25T23:32:08.508Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:32:08.586Z - [ INFO ] - All Good!!
+2024-04-25T23:32:09.055Z - [ INFO ] - Ready for send emails
+2024-04-25T23:39:16.583Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:39:16.670Z - [ INFO ] - All Good!!
+2024-04-25T23:39:17.621Z - [ INFO ] - Ready for send emails
+2024-04-25T23:41:25.165Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:41:25.209Z - [ INFO ] - All Good!!
+2024-04-25T23:41:31.757Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:41:31.800Z - [ INFO ] - All Good!!
+2024-04-25T23:41:32.334Z - [ INFO ] - Ready for send emails
+2024-04-25T23:41:49.421Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:41:49.503Z - [ INFO ] - All Good!!
+2024-04-25T23:41:49.927Z - [ INFO ] - Ready for send emails
+2024-04-25T23:42:02.123Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:42:02.199Z - [ INFO ] - All Good!!
+2024-04-25T23:42:02.598Z - [ INFO ] - Ready for send emails
+2024-04-25T23:42:35.883Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:42:35.962Z - [ INFO ] - All Good!!
+2024-04-25T23:42:36.399Z - [ INFO ] - Ready for send emails
+2024-04-25T23:42:48.135Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:42:48.214Z - [ INFO ] - All Good!!
+2024-04-25T23:42:48.624Z - [ INFO ] - Ready for send emails
+2024-04-25T23:43:15.189Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:43:15.231Z - [ INFO ] - All Good!!
+2024-04-25T23:43:16.635Z - [ INFO ] - Ready for send emails
+2024-04-25T23:43:31.815Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:43:31.896Z - [ INFO ] - All Good!!
+2024-04-25T23:43:32.273Z - [ INFO ] - Ready for send emails
+2024-04-25T23:45:24.021Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:45:24.093Z - [ INFO ] - All Good!!
+2024-04-25T23:45:24.494Z - [ INFO ] - Ready for send emails
+2024-04-25T23:45:50.794Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:45:50.874Z - [ INFO ] - All Good!!
+2024-04-25T23:45:51.343Z - [ INFO ] - Ready for send emails
+2024-04-25T23:49:27.086Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:49:27.161Z - [ INFO ] - All Good!!
+2024-04-25T23:49:27.674Z - [ INFO ] - Ready for send emails
+2024-04-25T23:50:32.842Z - [ INFO ] - Receive request:
+2024-04-25T23:50:32.847Z - [ INFO ] - finding email in DB
+2024-04-25T23:50:34.271Z - [ INFO ] - Se envio el email a la siguiente ruta: http://localhost:3001/lerner/user/newPassword/eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ 
+2024-04-25T23:53:54.877Z - [ INFO ] - Receive request:
+2024-04-25T23:56:03.402Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:56:03.476Z - [ INFO ] - All Good!!
+2024-04-25T23:56:04.249Z - [ INFO ] - Ready for send emails
+2024-04-25T23:56:06.341Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:56:06.416Z - [ INFO ] - All Good!!
+2024-04-25T23:56:06.809Z - [ INFO ] - Ready for send emails
+2024-04-25T23:56:10.910Z - [ INFO ] - Receive request:
+2024-04-25T23:57:01.267Z - [ INFO ] - Server running on port 3001
+2024-04-25T23:57:01.348Z - [ INFO ] - All Good!!
+2024-04-25T23:57:01.731Z - [ INFO ] - Ready for send emails
+2024-04-25T23:59:17.872Z - [ INFO ] - Receive request:
+2024-04-26T00:00:10.271Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:00:10.348Z - [ INFO ] - All Good!!
+2024-04-26T00:00:10.728Z - [ INFO ] - Ready for send emails
+2024-04-26T00:00:12.585Z - [ INFO ] - Receive request:
+2024-04-26T00:03:14.642Z - [ INFO ] - Receive request:
+2024-04-26T00:03:14.646Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:03:14.746Z - [ERROR ] - No se encontro usuario al resetear contraseña
+2024-04-26T00:05:04.096Z - [ INFO ] - Receive request:
+2024-04-26T00:05:04.101Z - [ INFO ] - finding email in DB
+2024-04-26T00:05:04.114Z - [ INFO ] - verify if the user exist for email lernerprueba02@yopmail.com
+2024-04-26T00:05:04.115Z - [ INFO ] - verifying if the user and password match
+2024-04-26T00:05:22.859Z - [ INFO ] - Receive request:
+2024-04-26T00:05:22.862Z - [ INFO ] - finding email in DB
+2024-04-26T00:05:44.233Z - [ERROR ] - connect ETIMEDOUT 142.250.115.108:465
+2024-04-26T00:07:23.044Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:07:23.178Z - [ INFO ] - All Good!!
+2024-04-26T00:07:23.583Z - [ INFO ] - Ready for send emails
+2024-04-26T00:07:36.925Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:07:37.007Z - [ INFO ] - All Good!!
+2024-04-26T00:07:37.392Z - [ INFO ] - Ready for send emails
+2024-04-26T00:08:23.754Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:08:23.841Z - [ INFO ] - All Good!!
+2024-04-26T00:08:24.224Z - [ INFO ] - Ready for send emails
+2024-04-26T00:09:01.669Z - [ INFO ] - Receive request:
+2024-04-26T00:09:01.678Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:09:01.777Z - [ERROR ] - No se encontro usuario al resetear contraseña
+2024-04-26T00:10:48.198Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:10:48.243Z - [ INFO ] - All Good!!
+2024-04-26T00:11:22.191Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:11:22.236Z - [ INFO ] - All Good!!
+2024-04-26T00:11:36.358Z - [ INFO ] - Ready for send emails
+2024-04-26T00:12:13.113Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:12:13.164Z - [ INFO ] - All Good!!
+2024-04-26T00:12:14.282Z - [ INFO ] - Ready for send emails
+2024-04-26T00:12:17.778Z - [ INFO ] - Receive request:
+2024-04-26T00:12:17.784Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:12:17.892Z - [ INFO ] - contraseña reseteada con exito
+2024-04-26T00:12:53.474Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:12:53.548Z - [ INFO ] - All Good!!
+2024-04-26T00:12:54.328Z - [ INFO ] - Ready for send emails
+2024-04-26T00:13:07.565Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:13:07.607Z - [ INFO ] - All Good!!
+2024-04-26T00:13:08.224Z - [ INFO ] - Ready for send emails
+2024-04-26T00:13:22.426Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:13:22.469Z - [ INFO ] - All Good!!
+2024-04-26T00:13:25.975Z - [ INFO ] - Ready for send emails
+2024-04-26T00:13:50.482Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:13:50.559Z - [ INFO ] - All Good!!
+2024-04-26T00:13:50.935Z - [ INFO ] - Ready for send emails
+2024-04-26T00:13:55.116Z - [ INFO ] - Receive request:
+2024-04-26T00:13:55.124Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:13:55.298Z - [ INFO ] - contraseña reseteada con exito
+2024-04-26T00:14:34.128Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:14:34.205Z - [ INFO ] - All Good!!
+2024-04-26T00:14:34.661Z - [ INFO ] - Ready for send emails
+2024-04-26T00:14:39.860Z - [ INFO ] - Receive request:
+2024-04-26T00:14:39.868Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:14:39.978Z - [ INFO ] - contraseña reseteada con exito
+2024-04-26T00:15:02.979Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:15:03.057Z - [ INFO ] - All Good!!
+2024-04-26T00:15:03.470Z - [ INFO ] - Ready for send emails
+2024-04-26T00:15:05.119Z - [ INFO ] - Receive request:
+2024-04-26T00:15:05.127Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:15:05.242Z - [ INFO ] - contraseña reseteada con exito
+2024-04-26T00:15:47.327Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:15:47.404Z - [ INFO ] - All Good!!
+2024-04-26T00:15:47.834Z - [ INFO ] - Ready for send emails
+2024-04-26T00:15:49.667Z - [ INFO ] - Receive request:
+2024-04-26T00:15:49.674Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:15:49.781Z - [ INFO ] - contraseña reseteada con exito
+2024-04-26T00:15:49.786Z - [ERROR ] - Cannot set headers after they are sent to the client
+2024-04-26T00:16:26.814Z - [ INFO ] - Server running on port 3001
+2024-04-26T00:16:26.903Z - [ INFO ] - All Good!!
+2024-04-26T00:16:27.400Z - [ INFO ] - Ready for send emails
+2024-04-26T00:16:28.841Z - [ INFO ] - Receive request:
+2024-04-26T00:16:28.849Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:16:28.963Z - [ INFO ] - contraseña reseteada con exito
+2024-04-26T00:17:16.691Z - [ INFO ] - Receive request:
+2024-04-26T00:17:16.696Z - [ INFO ] - El token es eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjMxLCJyb2xlIjoxLCJpYXQiOjE3MTQwODkwMzIsImV4cCI6MTcxNDA5NjIzMn0.Jxolf78W9NkjgxC4ZOo0E451DzMl-4ULLuoApAwdrMQ y el dato verificado es: [object Object]
+2024-04-26T00:17:16.795Z - [ INFO ] - contraseña reseteada con exito
+2024-04-26T00:17:24.415Z - [ INFO ] - Receive request:
+2024-04-26T00:17:24.420Z - [ INFO ] - finding email in DB
+2024-04-26T00:17:24.423Z - [ INFO ] - verify if the user exist for email lernerprueba02@yopmail.com
+2024-04-26T00:17:24.423Z - [ INFO ] - verifying if the user and password match
+2024-04-26T00:17:24.500Z - [ERROR ] - wrong password
+2024-04-26T00:17:34.930Z - [ INFO ] - Receive request:
+2024-04-26T00:17:34.933Z - [ INFO ] - finding email in DB
+2024-04-26T00:17:34.940Z - [ INFO ] - verify if the user exist for email lernerprueba02@yopmail.com
+2024-04-26T00:17:34.941Z - [ INFO ] - verifying if the user and password match

@@ -27,6 +27,13 @@ const validateForgotPassword = [
     return validateResult(req, res, next)
   }
 ]
+const validateResetPassword = [
+  check('password').exists().notEmpty().isLength({ min: 3, max: 15 }).withMessage(ErrorMessages.PASSWORD_FORMAT),
+  check('confirmPassword').exists().notEmpty(),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
 
 function validateName (value) {
   if (value && !REGEX_NAMES.test(value)) {
@@ -35,4 +42,4 @@ function validateName (value) {
   return true
 }
 
-module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword }
+module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword }

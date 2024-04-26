@@ -30,7 +30,8 @@ const tokenSign = async (userInfo, userCredentials) => {
 const verifyToken = async (token) => {
   try {
     return jwt.verify(token, process.env.JWT_SECRET)
-  } catch (e) {
+  } catch (error) {
+    LOG.error(`no se pudo verificar el token ${error}`)
     return null
   }
 }

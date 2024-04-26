@@ -3,7 +3,7 @@ const CreateAccountDTO = require('../dtos/user/create-user.dto')
 const LoginDTO = require('../dtos/user/login.dto')
 const userService = require('../service/user.service')
 const { matchedData } = require('express-validator')
-const { validateRegisterUser, validateLoginUser, validateForgotPassword } = require('../validators/users.validator')
+const { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword } = require('../validators/users.validator')
 const ErrorMessages = require('../utils/errorMessages')
 const authMiddleware = require('../middleware/session')
 const LOG = require('../app/logger')
@@ -59,6 +59,37 @@ createUserRouter.post('/user/forgotPassword', validateForgotPassword, async (req
     }
   } catch (error) {
 
+  }
+})
+createUserRouter.post('/user/newPassword/:token', validateResetPassword, async (req, res) => {
+  const token = req.params.token
+
+  const dataToken = await verifyToken(token)
+  if (dataToken === null) {
+    return res.status(500).send('Hubo un error al procesar la actualización de contraseña.')
+  }
+
+  LOG.info(`El token es ${token} y el dato verificado es: ${dataToken}`)
+  const validatedData = matchedData(req)
+
+  if (!dataToken._id) {
+    LOG.info('No exist a token id')
+    return res.status(401).json({ message: ErrorMessages.NOT_SESSION })
+  }
+  if (validatedData.password !== validatedData.confirmPassword) {
+    return res.status(400).json({ message: ErrorMessages.PASSWORD_UNMATCH })
+  }
+
+  try {
+    let userUpdate = false
+    userUpdate = await userService.resetPassword(dataToken, validatedData)
+    if (userUpdate) {
+      return res.send('¡Tu contraseña se ha actualizado con exito!')
+    }
+    return res.send('¡Tu contraseña no se ha podido actualizar!')
+  } catch (error) {
+    LOG.error(error)
+    return res.status(500).send('Hubo un error al procesar la actualización de contraseña.')
   }
 })
 
