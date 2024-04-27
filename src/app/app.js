@@ -3,6 +3,7 @@ const router = require('../router/product.router')
 const createUserRouter = require('../controller/users.controller')
 const morgan = require('morgan')
 const cors = require('cors')
+const validateTokenRouter = require('../controller/validateSession.controller')
 
 const whiteList = ['http://localhost:3000']
 
@@ -17,6 +18,6 @@ app.get('/', (req, res) => {
 })
 app.use(express.json())
 app.use('/api/v1', router)
-app.use('/lerner', createUserRouter)
+app.use('/lerner', createUserRouter, validateTokenRouter)
 
 module.exports = app

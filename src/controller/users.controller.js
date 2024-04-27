@@ -119,7 +119,9 @@ createUserRouter.post('/user/login', validateLoginUser, async (req, res) => {
 createUserRouter.get('/user/confirmEmail/:token', async (req, res) => {
   const token = req.params.token
   const dataToken = await verifyToken(token)
-
+  if (dataToken === null) {
+    return res.status(500).send('Hubo un error al confirmar el email.')
+  }
   if (!dataToken._id) {
     LOG.info('No exist a token id')
     return res.status(401).json({ message: ErrorMessages.NOT_SESSION })
