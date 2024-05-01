@@ -34,11 +34,11 @@ createUserRouter.post('/user/signup', validateRegisterUser, async (req, res) => 
     const newUserDTO = new CreateAccountDTO(validatedData.name, validatedData.firstName, validatedData.lastName, validatedData.email, validatedData.password, validatedData.confirmPassword)
 
     const createUser = await userService.createUser(newUserDTO)
-    res.status(201).json(createUser)
+    return res.status(201).json(createUser)
     // res.send({ data: req })
   } catch (error) {
     LOG.error('Error creando el usuario: ', error)
-    res.status(500).json({ message: 'Internal server error' })
+    return res.status(500).json({ message: 'Internal server error' })
   }
 })
 
@@ -52,10 +52,10 @@ createUserRouter.post('/user/forgotPassword', validateForgotPassword, async (req
     try {
       // intentar enviar correo de cambio de contraseña
       await userService.recoverPassword(existUser)
-      res.status(200).json({ message: 'correo enviado con exito' })
+      return res.status(200).json({ message: 'correo enviado con exito' })
     } catch (error) {
       LOG.error('Error reseteando contraseña ', error)
-      res.status(500).json({ message: 'Internal server error' })
+      return res.status(500).json({ message: 'Internal server error' })
     }
   } catch (error) {
 
@@ -112,7 +112,7 @@ createUserRouter.post('/user/login', validateLoginUser, async (req, res) => {
     res.status(200).json(login)
   } catch (error) {
     console.error('Error al iniciar sesion: ', error)
-    res.status(500).json({ message: 'internal server error' })
+    return res.status(500).json({ message: 'internal server error' })
   }
 })
 
@@ -128,10 +128,10 @@ createUserRouter.get('/user/confirmEmail/:token', async (req, res) => {
   }
   try {
     await userService.verificateUser(dataToken)
-    res.send('¡Tu correo electrónico ha sido verificado con éxito!')
+    return res.send('¡Tu correo electrónico ha sido verificado con éxito!')
   } catch (error) {
     LOG.error(error)
-    res.status(500).send('Hubo un error al procesar la verificación del correo electrónico.')
+    return res.status(500).send('Hubo un error al procesar la verificación del correo electrónico.')
   }
 })
 /***
@@ -143,15 +143,15 @@ createUserRouter.get('/user/sendConfirmationEmail', authMiddleware, async (req, 
   try {
     await userService.sendConfirmationEmail(user.get('correo'), token)
     LOG.info('email enviado con exito')
-    res.send('¡Tu correo electrónico ha sido enviado con éxito!')
+    return res.send('¡Tu correo electrónico ha sido enviado con éxito!')
   } catch (error) {
     LOG.error(`error al enviar el correo electronico ${error}`)
-    res.status(500).send('Hubo un error al enviar el correo electrónico.')
+    return res.status(500).send('Hubo un error al enviar el correo electrónico.')
   }
 })
 
 createUserRouter.get('/user', (req, res) => {
-  res.send('User crontroller')
+  return res.send('User crontroller')
 })
 
 module.exports = createUserRouter

@@ -35,6 +35,19 @@ const validateResetPassword = [
   }
 ]
 
+const validateCreateEvaluation = [
+  check('title').exists().notEmpty().isString().withMessage(ErrorMessages.TITLE_FORMAT),
+  check('feedback').exists().notEmpty().isBoolean().withMessage(ErrorMessages.FEEDBACK_ERROR),
+  check('activationDate').exists().isISO8601().toDate().withMessage(ErrorMessages.ACTIVATIONDATE_FORMAT),
+  check('activationTime').exists().isString().withMessage(ErrorMessages.ACTIVATIONTIME_FORMAT),
+  check('duration').exists().isString().withMessage(ErrorMessages.DURATION_FORMAT),
+  check('idDinamic').exists().isString().withMessage(ErrorMessages.IDDINAMIC_FORMAT),
+  check('creationDate').exists().isISO8601().toDate().withMessage(ErrorMessages.CREATIONDATE_FORMAT),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
+
 function validateName (value) {
   if (value && !REGEX_NAMES.test(value)) {
     throw new Error(ErrorMessages.FORMAT_NAMES)
@@ -42,4 +55,4 @@ function validateName (value) {
   return true
 }
 
-module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword }
+module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation }

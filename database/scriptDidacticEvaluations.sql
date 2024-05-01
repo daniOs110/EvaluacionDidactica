@@ -24,6 +24,8 @@ CREATE TABLE IF NOT EXISTS `credenciales_usuarios` (
 ) ENGINE = InnoDB;
 
 
+
+
 CREATE TABLE IF NOT EXISTS `clasificacion` (
   `id_clasificacion` INT NOT NULL AUTO_INCREMENT,
   `clasificacion` VARCHAR(45) NOT NULL,
@@ -46,6 +48,25 @@ CREATE TABLE IF NOT EXISTS `dinamicas` (
 ) ENGINE = InnoDB;
 
 
+CREATE TABLE IF NOT EXISTS `info_usuarios` (
+  `id_info_usuario` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido_paterno` VARCHAR(45) NOT NULL,
+  `apellido_materno` VARCHAR(45) NULL,
+  `correo` VARCHAR(45) NOT NULL,
+  `id_usuario` INT NOT NULL,
+  `verificado` BOOLEAN NOT NULL DEFAULT FALSE,
+  PRIMARY KEY (`id_info_usuario`),
+  UNIQUE INDEX `id_usuario_UNIQUE` (`id_usuario` ASC),
+  UNIQUE INDEX `correo_UNIQUE` (`correo` ASC),
+  CONSTRAINT `fk_info_usuarios_credenciales_usuario`
+    FOREIGN KEY (`id_usuario`)
+    REFERENCES `credenciales_usuarios` (`id_credenciales_usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB;
+
+
 CREATE TABLE IF NOT EXISTS `evaluaciones` (
   `id_evaluaciones` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(100) NOT NULL,
@@ -54,14 +75,16 @@ CREATE TABLE IF NOT EXISTS `evaluaciones` (
   `hora_activacion` TIME NOT NULL,
   `duracion` TIME NOT NULL,
   `id_usuario` INT NOT NULL,
-  `id_dinamica` INT NOT NULL,
+  `id_dinamica` INT NOT NULL,  
+  `fecha_creacion` DATE NOT NULL,
+  `active` TINYINT NOT NULL,
   PRIMARY KEY (`id_evaluaciones`),
   UNIQUE INDEX `id_evaluaciones_UNIQUE` (`id_evaluaciones` ASC),
   INDEX `id_usuario_idx` (`id_usuario` ASC),
   INDEX `id_dinamica_idx` (`id_dinamica` ASC),
-  CONSTRAINT `fk_evaluaciones_credenciales_usuario`
+  CONSTRAINT `fk_evaluaciones_info_usuario`
     FOREIGN KEY (`id_usuario`)
-    REFERENCES `credenciales_usuarios` (`id_credenciales_usuario`)
+    REFERENCES `info_usuarios` (`id_info_usuario`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `fk_evaluaciones_dinamicas`
@@ -116,7 +139,6 @@ CREATE TABLE IF NOT EXISTS `respuestas` (
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
-
 CREATE TABLE IF NOT EXISTS `usuarios_invitados` (
   `id_usuarios_invitados` INT NOT NULL AUTO_INCREMENT,
   `nombre` VARCHAR(45) NOT NULL,
@@ -131,7 +153,70 @@ CREATE TABLE IF NOT EXISTS `usuarios_invitados` (
 ) ENGINE = InnoDB;
 
 
-CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
+CREATE TABLE IF NOT EXISTS `ordenamiento` (
+  `id_ordenamiento` INT NOT NULL AUTO_INCREMENT,
+  `oracion` VARCHAR(255) NOT NULL,
+  `id_evaluacion` INT NOT NULL,
+  `num_pregunta` INT NOT NULL,
+  `orden` INT NULL,
+  PRIMARY KEY (`id_ordenamiento`),
+  UNIQUE INDEX `id_ordenamiento_UNIQUE` (`id_ordenamiento` ASC),
+  INDEX `id_evaluacion_idx` (`id_evaluacion` ASC),
+  CONSTRAINT `id_evaluacion`
+    FOREIGN KEY (`id_evaluacion`)
+    REFERENCES `evaluaciones` (`id_evaluaciones`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION) ENGINE = InnoDB;
+
+  CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
+  `id_resultado_evaluaciones` INT NOT NULL AUTO_INCREMENT,
+  `id_usuario_invitado` INT NULL,
+  `id_pregunta` INT NULL,
+  `id_respuesta_seleccionada` INT NULL,
+  `fecha` DATE NOT NULL,
+  `hora` TIME NOT NULL,
+  `id_evaluacion` INT NOT NULL,
+  `id_usuario_registrado` INT NULL,
+  `id_pregunta_ordenamiento` INT NULL,
+  `status` TINYINT NOT NULL,
+  `opcion_ordenamiento` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_resultado_evaluaciones`),
+  INDEX `id_pregunta_idx` (`id_pregunta` ASC),
+  INDEX `id_respuesta_idx` (`id_respuesta_seleccionada` ASC),
+  INDEX `id_usuario_idx` (`id_usuario_invitado` ASC),
+  INDEX `id_evaluacion_idx` (`id_evaluacion` ASC),
+  INDEX `id_usuario_registrado_idx` (`id_usuario_registrado` ASC),
+  INDEX `id_pregunta_ordenamiento_idx` (`id_pregunta_ordenamiento` ASC),
+  CONSTRAINT `fk_resultados_evaluaciones_preguntas`
+    FOREIGN KEY (`id_pregunta`)
+    REFERENCES `preguntas` (`id_pregunta`),
+  CONSTRAINT `fk_resultados_evaluaciones_respuestas`
+    FOREIGN KEY (`id_respuesta_seleccionada`)
+    REFERENCES `respuestas` (`id_respuesta`),
+  CONSTRAINT `fk_resultados_evaluaciones_usuarios_invitados`
+    FOREIGN KEY (`id_usuario_invitado`)
+    REFERENCES `usuarios_invitados` (`id_usuarios_invitados`),
+  CONSTRAINT `fk_resultados_evaluaciones_evaluaciones`
+    FOREIGN KEY (`id_evaluacion`)
+    REFERENCES `evaluaciones` (`id_evaluaciones`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_resultados_evaluaciones_usuarios_registrados`
+    FOREIGN KEY (`id_usuario_registrado`)
+    REFERENCES `info_usuarios` (`id_info_usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_resultados_evaluaciones_preguntas_ordenamiento`
+    FOREIGN KEY (`id_pregunta_ordenamiento`)
+    REFERENCES `ordenamiento` (`id_ordenamiento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION
+) ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
+/*CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
   `id_resultado_evaluaciones` INT NOT NULL AUTO_INCREMENT,
   `id_usuario` INT NOT NULL,
   `id_pregunta` INT NOT NULL,
@@ -159,22 +244,50 @@ CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
-
-CREATE TABLE IF NOT EXISTS `info_usuarios` (
-  `id_info_usuario` INT NOT NULL AUTO_INCREMENT,
-  `nombre` VARCHAR(45) NOT NULL,
-  `apellido_paterno` VARCHAR(45) NOT NULL,
-  `apellido_materno` VARCHAR(45) NULL,
-  `correo` VARCHAR(45) NOT NULL,
-  `id_usuario` INT NOT NULL,
-  `verificado` BOOLEAN NOT NULL DEFAULT FALSE,
-  PRIMARY KEY (`id_info_usuario`),
-  UNIQUE INDEX `id_usuario_UNIQUE` (`id_usuario` ASC),
-  UNIQUE INDEX `correo_UNIQUE` (`correo` ASC),
-  CONSTRAINT `fk_info_usuarios_credenciales_usuario`
-    FOREIGN KEY (`id_usuario`)
-    REFERENCES `credenciales_usuarios` (`id_credenciales_usuario`)
+CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
+  `id_resultado_evaluaciones` INT NOT NULL AUTO_INCREMENT,
+  `id_usuario_invitado` INT NULL,
+  `id_pregunta` INT NULL,
+  `id_respuesta_seleccionada` INT NULL,
+  `fecha` DATE NOT NULL,
+  `hora` TIME NOT NULL,
+  `id_evaluacion` INT NOT NULL,
+  `id_usuario_registrado` INT NULL,
+  `id_pregunta_ordenamiento` INT NULL,
+  `status` TINYINT NOT NULL,
+  `opcion_ordenamiento` VARCHAR(45) NULL,
+  PRIMARY KEY (`id_resultado_evaluaciones`),
+  INDEX `id_pregunta_idx` (`id_pregunta` ASC),
+  INDEX `id_respuesta_idx` (`id_respuesta_seleccionada` ASC),
+  INDEX `id_usuario_idx` (`id_usuario_invitado` ASC),
+  INDEX `id_evaluacion_idx` (`id_evaluacion` ASC),
+  INDEX `id_usuario_registrado_idx` (`id_usuario_registrado` ASC),
+  INDEX `id_pregunta_ordenamiento_idx` (`id_pregunta_ordenamiento` ASC),
+  CONSTRAINT `fk_resultados_evaluaciones_preguntas`
+    FOREIGN KEY (`id_pregunta`)
+    REFERENCES `preguntas` (`id_pregunta`),
+  CONSTRAINT `fk_resultados_evaluaciones_respuestas`
+    FOREIGN KEY (`id_respuesta_seleccionada`)
+    REFERENCES `respuestas` (`id_respuesta`),
+  CONSTRAINT `fk_resultados_evaluaciones_usuarios_invitados`
+    FOREIGN KEY (`id_usuario_invitado`)
+    REFERENCES `usuarios_invitados` (`id_usuarios_invitados`),
+  CONSTRAINT `id_evaluacion`
+    FOREIGN KEY (`id_evaluacion`)
+    REFERENCES `evaluaciones` (`id_evaluaciones`)
     ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-) ENGINE = InnoDB;
+    ON UPDATE NO ACTION,
+  CONSTRAINT `id_usuario_registrado`
+    FOREIGN KEY (`id_usuario_registrado`)
+    REFERENCES `info_usuarios` (`id_info_usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `id_pregunta_ordenamiento`
+    FOREIGN KEY (`id_pregunta_ordenamiento`)
+    REFERENCES `ordenamiento` (`id_ordenamiento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;*/
 	
