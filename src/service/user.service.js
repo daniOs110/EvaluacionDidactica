@@ -8,7 +8,13 @@ const { tokenSign, recoverToken } = require('../helpers/handlerJwt')
 const LOG = require('../app/logger')
 const { transport } = require('../app/mail')
 const CONFIRM_EMAIL = process.env.FRONTEND_CONFIRM_EMAIL
-const RESET_PASSWORD_EMAIL = process.env.RESET_PASSWORD_EMAIL
+const RESET_PASSWORD_EMAIL = process.env.FRONTEND_RESET_PASSWORD
+
+// --- En el archivo .env se deben agregar las siguientes direcciones ---
+// #FRONT-END URL 
+// FRONTEND_URL = 'http://localhost:8080/'
+// FRONTEND_CONFIRM_EMAIL = 'http://localhost:8080/confirm-email/'
+// FRONTEND_RESET_PASSWORD = 'http://localhost:8080/user/reset-password/'
 
 class UserService {
   async createUser (userData) {
@@ -101,12 +107,45 @@ class UserService {
     try {
       const verificationLink = RESET_PASSWORD_EMAIL + `${token}` // este link me manda a la pagina donde ingresas la nueva contraseña
       await transport.sendMail({
-        from: '"reset password email 👻" <lernerapp2024@gmail.com>',
+        from: '"Correo de recuperación de contraseña 👻" <lernerapp2024@gmail.com>',
         to: email,
-        subject: 'reset password email ✔',
-        html: `<p>Por favor, haz clic en el siguiente enlace para confirmar tu correo electrónico:</p>
-            <p><a href="${verificationLink}">${verificationLink}</a></p>`
-
+        subject: 'Correo de recuperación de contraseña ✔',
+        html: 
+          `
+            <html>
+              <head>
+                <style>
+                  body, html {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                  }
+                  body {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                </style>
+              </head>
+              <body>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="center">
+                      <h2>Restablecer tu contraseña</h2>
+                      <p>¡Hola!</p>
+                      <p>Recibes este correo porque has solicitado restablecer la contraseña de tu cuenta. Si no has solicitado este cambio, puedes ignorar este mensaje de forma segura.</p>
+                      <p>Para restablecer tu contraseña, simplemente haz clic en el siguiente enlace:</p>
+                      <a href="${verificationLink}" style="display: inline-block; background-color: #EE6F57; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                        Restablecer tu contraseña
+                      </a>                      
+                      <p>Gracias</p>
+                      <p>El equipo de [Nombre de la aplicación/servicio]</p>                      
+                    </td>
+                  </tr>
+                </table>
+              </body>
+            </html>
+          `
       })
       LOG.info(`Se envio el email a la siguiente ruta: ${verificationLink} `)
     } catch (error) {
@@ -121,13 +160,12 @@ class UserService {
       await transport.sendMail({
         from: '"Confirm email 👻" <lernerapp2024@gmail.com>',
         to: email,
-        subject: 'Confirm email ✔',
+        subject: 'Confirma tu correo electrónico ✔',
         html: 
         `
           <html>
             <head>
               <style>
-                /* Estilos para centrar el contenido horizontal y verticalmente */
                 body, html {
                   height: 100%;
                   margin: 0;
@@ -140,19 +178,23 @@ class UserService {
                 }
               </style>
             </head>
+
             <body>
               <table width="100%" border="0" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="center">
                     <h2>¡Confirma tu correo electrónico!</h2>
-                    <p>Por favor, haz clic en el siguiente botón para confirmar tu correo electrónico:</p>
+                    <p>¡Hola!</p>
+                    <p>Por favor, haz clic en el siguiente botón para confirmar tu correo electrónico:</p>   
                     <a href="${confirmationUrl}" style="display: inline-block; background-color: #EE6F57; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
                       Verificar correo electrónico
-                    </a>
+                    </a>                                 
+                    <p>Gracias</p>
+                    <p>El equipo de [Nombre de la aplicación/servicio]</p>                      
                   </td>
                 </tr>
               </table>
-            </body>
+            </body>                        
           </html>
         `
 
