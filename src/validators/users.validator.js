@@ -48,6 +48,16 @@ const validateCreateEvaluation = [
   }
 ]
 
+const validateAddLetter = [
+  check('letter').exists().notEmpty().isString().withMessage(ErrorMessages.LETTER_FORMAT),
+  check('idEvaluacion').exists().notEmpty().withMessage(ErrorMessages.GENERIC_NOT_NULL),
+  check('idDinamica').exists().notEmpty().withMessage(ErrorMessages.GENERIC_NOT_NULL),
+  check('questionNumber').exists().notEmpty().withMessage(ErrorMessages.GENERIC_NOT_NULL),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
+
 function validateName (value) {
   if (value && !REGEX_NAMES.test(value)) {
     throw new Error(ErrorMessages.FORMAT_NAMES)
@@ -55,4 +65,4 @@ function validateName (value) {
   return true
 }
 
-module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation }
+module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter }

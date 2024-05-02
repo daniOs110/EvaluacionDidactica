@@ -1,8 +1,7 @@
 const evaluation = require('../model/schema/evaluation.schemas')
 const sequelize = require('../config/database')
-const { parseISO, format, isBefore, isEqual, parse } = require('date-fns')
+// const { parseISO, format, isBefore, isEqual, parse } = require('date-fns')
 const TIMEZONE = process.env.TIME_ZONE
-
 const LOG = require('../app/logger')
 
 class CreateEvaluationService {
@@ -26,7 +25,7 @@ class CreateEvaluationService {
         fecha_creacion: evaluationData.creationDate,
         active: true // llamaremos al metodo is active
       }, { transaction })
-      await this.isActive2(evaluationData, userId)
+      // await this.isActive2(evaluationData, userId)
       await transaction.commit()
 
       return { evaluation: newEvaluation }

@@ -30,7 +30,9 @@ Sorting.init({
 {
   sequelize,
   modelName: 'ordenamiento',
-  timestamps: false
+  // tableName: 'ordenamiento', // Nombre de la tabla en la base de datos (opcional)
+  timestamps: false,
+  freezeTableName: true
 })
 
 // Definir las relaciones

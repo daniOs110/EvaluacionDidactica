@@ -89,6 +89,14 @@ class ErrorMessages {
   static get CREATIONDATE_FORMAT () {
     return 'La fecha de creación es necesaria y debe estar en el formato ISO 8601'
   }
+
+  static get LETTER_FORMAT () {
+    return 'formato incorrecto valida que sea una cadena'
+  }
+
+  static get GENERIC_NOT_NULL () {
+    return ' el atributo ingresado no puede ser nulo'
+  }
 }
 
 module.exports = ErrorMessages
