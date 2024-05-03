@@ -37,6 +37,27 @@ class CreateEvaluationService {
     }
   }
 
+  async finadAllEvaluations (userData) {
+    const userId = userData.get('id_info_usuario')
+    const userName = userData.get('nombre')
+    LOG.info(`Creando evaluación para el usuario ${userName}, con id: ${userId}`)
+    try {
+      const evaluationsInfo = await evaluation.findAll({
+        where: {
+          id_usuario: userId
+        }
+      })
+      if (evaluationsInfo.length === 0) {
+        LOG.info('no se encontraron evaluaciones asociadas al usuario')
+        return null
+      }
+      return evaluationsInfo
+    } catch (error) {
+      LOG.error(`Ocurrio un error al buscar las evaluaciones asociadas al usuario, error: ${error}`)
+      throw new Error('Error al crear el evaluación:' + error.message)
+    }
+  }
+
   async createEvaluation (evaluationData, userData) {
     const userId = userData.get('id_info_usuario')
     const userName = userData.get('nombre')

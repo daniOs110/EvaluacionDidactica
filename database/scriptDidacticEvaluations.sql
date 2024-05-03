@@ -154,6 +154,22 @@ CREATE TABLE IF NOT EXISTS `usuarios_invitados` (
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
+-- -----------------------------------------------------
+-- Table `evaluaciones_didacticas`.`instrucciones`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `instrucciones` (
+  `id_instrucciones` INT NOT NULL AUTO_INCREMENT,
+  `num_pregunta` INT NOT NULL,
+  `instruccion` VARCHAR(150) NULL,
+  PRIMARY KEY (`id_instrucciones`),
+  UNIQUE INDEX `id_instrucciones_UNIQUE` (`id_instrucciones` ASC),
+  INDEX `num_pregunta_idx` (`num_pregunta` ASC),
+  CONSTRAINT `fk_num_pregunta`
+    FOREIGN KEY (`num_pregunta`)
+    REFERENCES `evaluaciones_didacticas`.`ordenamiento` (`id_ordenamiento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 CREATE TABLE IF NOT EXISTS `ordenamiento` (
   `id_ordenamiento` INT NOT NULL AUTO_INCREMENT,
@@ -218,22 +234,7 @@ CREATE TABLE IF NOT EXISTS `ordenamiento` (
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
--- -----------------------------------------------------
--- Table `evaluaciones_didacticas`.`instrucciones`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `instrucciones` (
-  `id_instrucciones` INT NOT NULL AUTO_INCREMENT,
-  `num_pregunta` INT NOT NULL,
-  `instruccion` VARCHAR(150) NULL,
-  PRIMARY KEY (`id_instrucciones`),
-  UNIQUE INDEX `id_instrucciones_UNIQUE` (`id_instrucciones` ASC),
-  INDEX `num_pregunta_idx` (`num_pregunta` ASC),
-  CONSTRAINT `fk_num_pregunta`
-    FOREIGN KEY (`num_pregunta`)
-    REFERENCES `evaluaciones_didacticas`.`ordenamiento` (`id_ordenamiento`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
+
 
 
 /*CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
