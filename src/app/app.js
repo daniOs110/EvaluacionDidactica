@@ -6,6 +6,7 @@ const cors = require('cors')
 const validateTokenRouter = require('../controller/validateSession.controller')
 const createEvaluationRouter = require('../controller/createEvaluation.controller')
 const orderQuestionRouter = require('../controller/orderQuestion.controller')
+const useEvaluationRouter = require('../controller/useEvaluation.controller')
 
 const whiteList = ['http://localhost:3000']
 
@@ -20,6 +21,6 @@ app.get('/', (req, res) => {
 })
 app.use(express.json())
 app.use('/api/v1', router)
-app.use('/lerner', createUserRouter, validateTokenRouter, createEvaluationRouter, orderQuestionRouter)
+app.use('/lerner', createUserRouter, validateTokenRouter, createEvaluationRouter, orderQuestionRouter, useEvaluationRouter)
 
 module.exports = app
