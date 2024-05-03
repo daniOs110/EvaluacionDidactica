@@ -72,7 +72,7 @@ class CreateEvaluationService {
     }
   }
 
-  async finadAllEvaluations (userData) {
+  async findAllEvaluations (userData) {
     const userId = userData.get('id_info_usuario')
     const userName = userData.get('nombre')
     LOG.info(`Creando evaluación para el usuario ${userName}, con id: ${userId}`)
@@ -98,6 +98,8 @@ class CreateEvaluationService {
     const userName = userData.get('nombre')
     LOG.info(`Creando evaluación para el usuario ${userName}, con id: ${userId}`)
     let transaction
+    const currentDate = new Date().toISOString()
+    LOG.info(`El fecha actual a momentod e crear una evaluacion es: ${currentDate}`)
     try {
       transaction = await sequelize.transaction()
       // const isActive = await this.isActive(evaluationData)
@@ -112,7 +114,9 @@ class CreateEvaluationService {
         duracion: evaluationData.duration,
         id_usuario: userId,
         id_dinamica: evaluationData.idDinamic,
-        fecha_creacion: evaluationData.creationDate,
+        fecha_desactivacion: evaluationData.deactivationDate,
+        hora_desactivacion: evaluationData.deactivationTime,
+        fecha_creacion: currentDate,
         active: true // llamaremos al metodo is active
       }, { transaction })
       // await this.isActive2(evaluationData, userId)

@@ -80,6 +80,8 @@ CREATE TABLE IF NOT EXISTS `evaluaciones` (
   `active` TINYINT NOT NULL,
   `subtitulo` VARCHAR(45) NULL,
   `descripcion` VARCHAR(150) NULL,
+  `fecha_desactivacion` DATE NULL,
+  `hora_desactivacion` TIME NULL,
   PRIMARY KEY (`id_evaluaciones`),
   UNIQUE INDEX `id_evaluaciones_UNIQUE` (`id_evaluaciones` ASC),
   INDEX `id_usuario_idx` (`id_usuario` ASC),

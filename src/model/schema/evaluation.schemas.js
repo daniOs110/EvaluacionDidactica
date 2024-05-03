@@ -27,10 +27,10 @@ Evaluation.init({
     type: DataTypes.TIME,
     allowNull: false
   },
-  duracion: {
-    type: DataTypes.TIME,
-    allowNull: false
-  },
+  // duracion: {
+  //   type: DataTypes.TIME,
+  //   allowNull: false
+  // },
   fecha_creacion: {
     type: DataTypes.DATE,
     allowNull: false
@@ -45,6 +45,14 @@ Evaluation.init({
   },
   descripcion: {
     type: DataTypes.STRING,
+    allowNull: true
+  },
+  fecha_desactivacion: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  hora_desactivacion: {
+    type: DataTypes.TIME,
     allowNull: true
   }
 },

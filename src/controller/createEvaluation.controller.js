@@ -15,7 +15,7 @@ createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreate
   try {
     const validatedData = matchedData(req)
     // creo que la fecha ya esta en iso string
-    const newEvaluationDTO = new CreateEvaluationDTO(validatedData.title, validatedData.subtitle, validatedData.description, validatedData.feedback, validatedData.activationDate, validatedData.activationTime, validatedData.duration, validatedData.idDinamic, validatedData.creationDate)
+    const newEvaluationDTO = new CreateEvaluationDTO(validatedData.title, validatedData.subtitle, validatedData.description, validatedData.feedback, validatedData.activationDate, validatedData.activationTime, validatedData.duration, validatedData.idDinamic, validatedData.deactivationDate, validatedData.deactivationTime)
     // ir al service que guarde los datos ingresados en el req
     const createEvaluation = await createEvaluationService.createEvaluation(newEvaluationDTO, user)
     return res.status(201).json(createEvaluation)
@@ -54,7 +54,7 @@ createEvaluationRouter.get('/evaluation/getClasification', authMiddleware, async
 createEvaluationRouter.get('/evaluation/getAllEvaluations', authMiddleware, async (req, res) => {
   const user = req.user
   try {
-    const evaluationsInfo = await createEvaluationService.finadAllEvaluations(user)
+    const evaluationsInfo = await createEvaluationService.findAllEvaluations(user)
     if (evaluationsInfo === null) {
       return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al usuario' })
     }

@@ -86,6 +86,10 @@ class ErrorMessages {
     return 'La hora de activación es necesaria'
   }
 
+  static get DEACTIVATIONTIME_FORMAT () {
+    return 'La hora de desactivación esta en formato incorrecto'
+  }
+
   static get DURATION_FORMAT () {
     return 'La duración de la actividad es necesaria y debe ser numerico'
   }
@@ -96,6 +100,10 @@ class ErrorMessages {
 
   static get CREATIONDATE_FORMAT () {
     return 'La fecha de creación es necesaria y debe estar en el formato ISO 8601'
+  }
+
+  static get BAD_DATE_FORMAT () {
+    return 'La fecha esta en formato incorrecto, debe estar en el formato ISO 8601'
   }
 
   static get LETTER_FORMAT () {
