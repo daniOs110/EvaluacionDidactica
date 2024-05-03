@@ -15,6 +15,7 @@ class CreateEvaluationService {
         LOG.info('no se encontro informacion en la tabla de dinamicas')
         return null
       }
+
       return dinamicInfo
     } catch (error) {
       LOG.error(`Ocurrio un error al buscar datos de dinamica: ${error}`)
@@ -34,6 +35,40 @@ class CreateEvaluationService {
     } catch (error) {
       LOG.error(`Ocurrio un error al buscar datos de clasificacion: ${error}`)
       throw new Error('Error al buscar datos de clasificacion:' + error.message)
+    }
+  }
+
+  async getCombinedInfo () {
+    LOG.info('Buscando los datos de la tabla "dinamica" y "clasificacion"')
+    try {
+      const dinamicInfo = await dinamics.findAll({
+        include: [{
+          model: clasification,
+          as: 'clasificacion',
+          required: true // Para asegurar que solo obtenga registros que tengan una clasificación asociada
+        }]
+      })
+
+      if (dinamicInfo.length === 0) {
+        LOG.info('No se encontró información en la tabla de dinamicas')
+        return null
+      }
+
+      // Mapear los resultados para combinar la información
+      const combinedInfo = dinamicInfo.map(dinamic => ({
+        id_dinamicas: dinamic.id_dinamicas,
+        dinamica: dinamic.dinamica,
+        descripcion: dinamic.descripcion,
+        clasification: {
+          id_clasificacion: dinamic.clasificacion.id_clasificacion,
+          clasificacion: dinamic.clasificacion.clasificacion
+        }
+      }))
+
+      return combinedInfo
+    } catch (error) {
+      LOG.error(`Ocurrió un error al buscar datos de dinámica o clasificación: ${error}`)
+      throw new Error('Error al buscar datos de dinámica o clasificación: ' + error.message)
     }
   }
 

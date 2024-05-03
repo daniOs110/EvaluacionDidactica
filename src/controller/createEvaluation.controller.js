@@ -27,7 +27,7 @@ createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreate
 
 createEvaluationRouter.get('/evaluation/getDinamics', authMiddleware, async (req, res) => {
   try {
-    const dinamicInfo = await createEvaluationService.getDinamicInfo()
+    const dinamicInfo = await createEvaluationService.getCombinedInfo()
     if (dinamicInfo === null) {
       return res.status(404).json({ message: 'No se encontro información' })
     }
