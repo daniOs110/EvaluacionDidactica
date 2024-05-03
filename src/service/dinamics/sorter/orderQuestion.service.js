@@ -28,12 +28,6 @@ class OrderQuestionService {
     }
   }
 
-  async getEvaluationTest (idEvaluacion) {
-    // aqui depende si recibimos un token lo vamos a decodificar para obtener el id_evaluación
-    // en un hash map o una lista vamos a tener que ir guardando oracion por oración que pertenezca al id de evaluacion
-
-  }
-
   async getEvaluation (idEvaluacion) {
     try {
       // Buscar todas las oraciones que pertenecen a la evaluación con el id dado
@@ -59,7 +53,7 @@ class OrderQuestionService {
       if (sentencesPlay.size === 0) {
         throw new Error('Error al obtener las oraciones de la evaluación')
       }
-      return { tamaño: sentencesPlay.size }
+      return { sentence: sentencesPlay }
     } catch (error) {
       // Manejar errores
       LOG.error('Error al obtener las oraciones de la evaluación:', error)
@@ -103,7 +97,7 @@ class OrderQuestionService {
 
     // Desordenar las palabras
     const palabrasDesordenadas = palabras.sort(compararAleatorio)
-    LOG.info(`El array quedo de la siguiente manera: ${palabras} y las palabras desordenadas asi: ${palabrasDesordenadas}`)
+    // LOG.info(`El array quedo de la siguiente manera: ${palabras} y las palabras desordenadas asi: ${palabrasDesordenadas}`)
 
     // const oracionDesordenada = palabrasDesordenadas.join(' ')
 

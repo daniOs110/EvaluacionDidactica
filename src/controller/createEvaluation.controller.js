@@ -15,7 +15,7 @@ createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreate
   try {
     const validatedData = matchedData(req)
     // creo que la fecha ya esta en iso string
-    const newEvaluationDTO = new CreateEvaluationDTO(validatedData.title, validatedData.feedback, validatedData.activationDate, validatedData.activationTime, validatedData.duration, validatedData.idDinamic, validatedData.creationDate)
+    const newEvaluationDTO = new CreateEvaluationDTO(validatedData.title, validatedData.subtitle, validatedData.description, validatedData.feedback, validatedData.activationDate, validatedData.activationTime, validatedData.duration, validatedData.idDinamic, validatedData.creationDate)
     // ir al service que guarde los datos ingresados en el req
     const createEvaluation = await createEvaluationService.createEvaluation(newEvaluationDTO, user)
     return res.status(201).json(createEvaluation)
@@ -25,4 +25,29 @@ createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreate
   }
 })
 
+createEvaluationRouter.get('/evaluation/getDinamics', authMiddleware, async (req, res) => {
+  try {
+    const dinamicInfo = await createEvaluationService.getDinamicInfo()
+    if (dinamicInfo === null) {
+      return res.status(404).json({ message: 'No se encontro información' })
+    }
+    return res.status(200).json(dinamicInfo)
+  } catch (error) {
+    LOG.error(`error al traer la informacion de dinamicas: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
+createEvaluationRouter.get('/evaluation/getClasification', authMiddleware, async (req, res) => {
+  try {
+    const clasificationInfo = await createEvaluationService.getClasificationInfo()
+    if (clasificationInfo === null) {
+      return res.status(404).json({ message: 'No se encontro información' })
+    }
+    return res.status(200).json(clasificationInfo)
+  } catch (error) {
+    LOG.error(`error al traer la informacion de clasificación : ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
 module.exports = createEvaluationRouter

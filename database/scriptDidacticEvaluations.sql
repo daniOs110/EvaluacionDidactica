@@ -78,6 +78,8 @@ CREATE TABLE IF NOT EXISTS `evaluaciones` (
   `id_dinamica` INT NOT NULL,  
   `fecha_creacion` DATE NOT NULL,
   `active` TINYINT NOT NULL,
+  `subtitulo` VARCHAR(45) NULL,
+  `descripcion` VARCHAR(150) NULL,
   PRIMARY KEY (`id_evaluaciones`),
   UNIQUE INDEX `id_evaluaciones_UNIQUE` (`id_evaluaciones` ASC),
   INDEX `id_usuario_idx` (`id_usuario` ASC),
@@ -180,6 +182,7 @@ CREATE TABLE IF NOT EXISTS `ordenamiento` (
   `id_pregunta_ordenamiento` INT NULL,
   `status` TINYINT NOT NULL,
   `opcion_ordenamiento` VARCHAR(45) NULL,
+  `oracion_usuario` VARCHAR(255) NULL,
   PRIMARY KEY (`id_resultado_evaluaciones`),
   INDEX `id_pregunta_idx` (`id_pregunta` ASC),
   INDEX `id_respuesta_idx` (`id_respuesta_seleccionada` ASC),
@@ -214,6 +217,23 @@ CREATE TABLE IF NOT EXISTS `ordenamiento` (
 ) ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
+
+-- -----------------------------------------------------
+-- Table `evaluaciones_didacticas`.`instrucciones`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `instrucciones` (
+  `id_instrucciones` INT NOT NULL AUTO_INCREMENT,
+  `num_pregunta` INT NOT NULL,
+  `instruccion` VARCHAR(150) NULL,
+  PRIMARY KEY (`id_instrucciones`),
+  UNIQUE INDEX `id_instrucciones_UNIQUE` (`id_instrucciones` ASC),
+  INDEX `num_pregunta_idx` (`num_pregunta` ASC),
+  CONSTRAINT `fk_num_pregunta`
+    FOREIGN KEY (`num_pregunta`)
+    REFERENCES `evaluaciones_didacticas`.`ordenamiento` (`id_ordenamiento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
 
 /*CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (

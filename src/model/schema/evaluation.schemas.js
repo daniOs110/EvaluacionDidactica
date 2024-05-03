@@ -38,6 +38,14 @@ Evaluation.init({
   active: {
     type: DataTypes.TINYINT,
     allowNull: false
+  },
+  subtitulo: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  descripcion: {
+    type: DataTypes.STRING,
+    allowNull: true
   }
 },
 {

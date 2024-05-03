@@ -66,6 +66,14 @@ class ErrorMessages {
     return 'El formato del titulo es incorrecto'
   }
 
+  static get SUBTITLE_FORMAT () {
+    return 'El formato del subtitulo es incorrecto'
+  }
+
+  static get DESCRIPTION_FORMAT () {
+    return 'El formato de la descripción es incorrecto'
+  }
+
   static get FEEDBACK_ERROR () {
     return 'El campo retroalimetación es necesario'
   }

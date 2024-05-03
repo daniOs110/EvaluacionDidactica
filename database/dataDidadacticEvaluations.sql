@@ -6,3 +6,6 @@ INSERT INTO evaluaciones_didacticas.clasificacion (clasificacion) VALUES ("ORDER
 -- Data user roll
 INSERT INTO evaluaciones_didacticas.roles_de_usuarios (rol_de_usuario) VALUES ("USER");
 INSERT INTO evaluaciones_didacticas.roles_de_usuarios (rol_de_usuario) VALUES ("ADMIN");
+
+-- Data table dinamics
+INSERT INTO evaluaciones_didacticas.dinamicas (dinamica, id_clasificacion, descripcion) VALUES ('ordena la pregunta', '3', 'El profesor ingresa una pregunta o enunciado y cuando los alumnos respondan la evaluación verán en desorden todas las palabras, ellos deberán poner en orden el enunciado');

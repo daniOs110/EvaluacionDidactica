@@ -1,10 +1,42 @@
 const evaluation = require('../model/schema/evaluation.schemas')
+const dinamics = require('../model/schema/dinamic.schema')
+const clasification = require('../model/schema/clasifications.schema')
 const sequelize = require('../config/database')
 // const { parseISO, format, isBefore, isEqual, parse } = require('date-fns')
 const TIMEZONE = process.env.TIME_ZONE
 const LOG = require('../app/logger')
 
 class CreateEvaluationService {
+  async getDinamicInfo () {
+    LOG.info('Buscando los datos de la tabla "dinamica"')
+    try {
+      const dinamicInfo = await dinamics.findAll()
+      if (dinamicInfo.length === 0) {
+        LOG.info('no se encontro informacion en la tabla de dinamicas')
+        return null
+      }
+      return dinamicInfo
+    } catch (error) {
+      LOG.error(`Ocurrio un error al buscar datos de dinamica: ${error}`)
+      throw new Error('Error al buscar datos de dinamica:' + error.message)
+    }
+  }
+
+  async getClasificationInfo () {
+    LOG.info('Buscando los datos de la tabla "clasificacion"')
+    try {
+      const clasificationInfo = await clasification.findAll()
+      if (clasificationInfo.length === 0) {
+        LOG.info('no se encontro informacion en la tabla de clasificacion')
+        return null
+      }
+      return clasificationInfo
+    } catch (error) {
+      LOG.error(`Ocurrio un error al buscar datos de clasificacion: ${error}`)
+      throw new Error('Error al buscar datos de clasificacion:' + error.message)
+    }
+  }
+
   async createEvaluation (evaluationData, userData) {
     const userId = userData.get('id_info_usuario')
     const userName = userData.get('nombre')
@@ -16,6 +48,8 @@ class CreateEvaluationService {
 
       const newEvaluation = await evaluation.create({
         nombre: evaluationData.title,
+        subtitulo: evaluationData.subtitle,
+        descripcion: evaluationData.description,
         retroalimentacion_activa: evaluationData.feedback,
         fecha_activacion: evaluationData.activationDate,
         hora_activacion: evaluationData.activationTime,

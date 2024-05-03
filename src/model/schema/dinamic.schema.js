@@ -22,7 +22,7 @@ Dinamic.init({
 {
   sequelize,
   modelName: 'dinamicas',
-  timestamps: true
+  timestamps: false
 })
 
 Dinamic.belongsTo(Clasification, { foreignKey: 'id_clasificacion', as: 'clasificacion' })
