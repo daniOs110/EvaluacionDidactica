@@ -7,10 +7,11 @@ const LOG = require('../app/logger')
 const authMiddleware = require('../middleware/session')
 const { validateCreateEvaluation } = require('../validators/users.validator')
 const { convertActivationData } = require('../middleware/activtionDate')
+const { convertDeactivationData } = require('../middleware/deactivationDate')
 const { matchedData } = require('express-validator')
 const CreateEvaluationDTO = require('../dtos/createEvaluation/createEvaluation.dto')
 
-createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreateEvaluation, convertActivationData, async (req, res) => {
+createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreateEvaluation, convertActivationData, convertDeactivationData, async (req, res) => {
   const user = req.user
   try {
     const validatedData = matchedData(req)

@@ -1,5 +1,5 @@
 class CreateEvaluationDTO {
-  constructor (title, subtitle, description, feedback, activationDate, activationTime, duration, idDinamic, creationDate) {
+  constructor (title, subtitle, description, feedback, activationDate, activationTime, duration, idDinamic, deactivationDate, deactivationTime) {
     this.title = title
     this.subtitle = subtitle
     this.description = description
@@ -8,7 +8,8 @@ class CreateEvaluationDTO {
     this.activationTime = activationTime
     this.duration = duration
     this.idDinamic = idDinamic
-    this.creationDate = creationDate
+    this.deactivationDate = deactivationDate
+    this.deactivationTime = deactivationTime
   }
 }
 

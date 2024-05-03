@@ -38,7 +38,7 @@ const validateResetPassword = [
 const validateCreateEvaluation = [
   check('title').exists().notEmpty().isString().withMessage(ErrorMessages.TITLE_FORMAT),
   check('subtitle').optional().isString().withMessage(ErrorMessages.SUBTITLE_FORMAT),
-  check('descripcion').optional().isString().withMessage(ErrorMessages.DESCRIPTION_FORMAT),
+  check('description').optional().isString().withMessage(ErrorMessages.DESCRIPTION_FORMAT),
   check('feedback').exists().notEmpty().isBoolean().withMessage(ErrorMessages.FEEDBACK_ERROR),
   check('activationDate').exists().isISO8601().toDate().withMessage(ErrorMessages.ACTIVATIONDATE_FORMAT),
   check('activationTime').exists().isString().withMessage(ErrorMessages.ACTIVATIONTIME_FORMAT),

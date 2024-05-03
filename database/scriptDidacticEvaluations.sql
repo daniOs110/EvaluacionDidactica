@@ -156,23 +156,6 @@ CREATE TABLE IF NOT EXISTS `usuarios_invitados` (
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
 
--- -----------------------------------------------------
--- Table `evaluaciones_didacticas`.`instrucciones`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `instrucciones` (
-  `id_instrucciones` INT NOT NULL AUTO_INCREMENT,
-  `num_pregunta` INT NOT NULL,
-  `instruccion` VARCHAR(150) NULL,
-  PRIMARY KEY (`id_instrucciones`),
-  UNIQUE INDEX `id_instrucciones_UNIQUE` (`id_instrucciones` ASC),
-  INDEX `num_pregunta_idx` (`num_pregunta` ASC),
-  CONSTRAINT `fk_num_pregunta`
-    FOREIGN KEY (`num_pregunta`)
-    REFERENCES `evaluaciones_didacticas`.`ordenamiento` (`id_ordenamiento`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB;
-
 CREATE TABLE IF NOT EXISTS `ordenamiento` (
   `id_ordenamiento` INT NOT NULL AUTO_INCREMENT,
   `oracion` VARCHAR(255) NOT NULL,
@@ -187,6 +170,24 @@ CREATE TABLE IF NOT EXISTS `ordenamiento` (
     REFERENCES `evaluaciones` (`id_evaluaciones`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION) ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `evaluaciones_didacticas`.`instrucciones`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `instrucciones` (
+  `id_instrucciones` INT NOT NULL AUTO_INCREMENT,
+  `num_pregunta` INT NOT NULL,
+  `instruccion` VARCHAR(150) NULL,
+  PRIMARY KEY (`id_instrucciones`),
+  UNIQUE INDEX `id_instrucciones_UNIQUE` (`id_instrucciones` ASC),
+  INDEX `num_pregunta_idx` (`num_pregunta` ASC),
+  CONSTRAINT `fk_num_pregunta`
+    FOREIGN KEY (`num_pregunta`)
+    REFERENCES `ordenamiento` (`id_ordenamiento`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
   CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
   `id_resultado_evaluaciones` INT NOT NULL AUTO_INCREMENT,
@@ -235,82 +236,3 @@ CREATE TABLE IF NOT EXISTS `ordenamiento` (
 ) ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
-
-
-
-
-/*CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
-  `id_resultado_evaluaciones` INT NOT NULL AUTO_INCREMENT,
-  `id_usuario` INT NOT NULL,
-  `id_pregunta` INT NOT NULL,
-  `id_respuesta_seleccionada` INT NOT NULL,
-  `fecha` DATE NOT NULL,
-  `hora` TIME NOT NULL,
-  PRIMARY KEY (`id_resultado_evaluaciones`),
-  INDEX `id_pregunta_idx` (`id_pregunta` ASC),
-  INDEX `id_respuesta_idx` (`id_respuesta_seleccionada` ASC),
-  INDEX `id_usuario_idx` (`id_usuario` ASC),
-  CONSTRAINT `fk_resultados_evaluaciones_preguntas`
-    FOREIGN KEY (`id_pregunta`)
-    REFERENCES `preguntas` (`id_pregunta`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_resultados_evaluaciones_respuestas`
-    FOREIGN KEY (`id_respuesta_seleccionada`)
-    REFERENCES `respuestas` (`id_respuesta`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_resultados_evaluaciones_usuarios_invitados`
-    FOREIGN KEY (`id_usuario`)
-    REFERENCES `usuarios_invitados` (`id_usuarios_invitados`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-) ENGINE = InnoDB;
-
-CREATE TABLE IF NOT EXISTS `resultados_evaluaciones` (
-  `id_resultado_evaluaciones` INT NOT NULL AUTO_INCREMENT,
-  `id_usuario_invitado` INT NULL,
-  `id_pregunta` INT NULL,
-  `id_respuesta_seleccionada` INT NULL,
-  `fecha` DATE NOT NULL,
-  `hora` TIME NOT NULL,
-  `id_evaluacion` INT NOT NULL,
-  `id_usuario_registrado` INT NULL,
-  `id_pregunta_ordenamiento` INT NULL,
-  `status` TINYINT NOT NULL,
-  `opcion_ordenamiento` VARCHAR(45) NULL,
-  PRIMARY KEY (`id_resultado_evaluaciones`),
-  INDEX `id_pregunta_idx` (`id_pregunta` ASC),
-  INDEX `id_respuesta_idx` (`id_respuesta_seleccionada` ASC),
-  INDEX `id_usuario_idx` (`id_usuario_invitado` ASC),
-  INDEX `id_evaluacion_idx` (`id_evaluacion` ASC),
-  INDEX `id_usuario_registrado_idx` (`id_usuario_registrado` ASC),
-  INDEX `id_pregunta_ordenamiento_idx` (`id_pregunta_ordenamiento` ASC),
-  CONSTRAINT `fk_resultados_evaluaciones_preguntas`
-    FOREIGN KEY (`id_pregunta`)
-    REFERENCES `preguntas` (`id_pregunta`),
-  CONSTRAINT `fk_resultados_evaluaciones_respuestas`
-    FOREIGN KEY (`id_respuesta_seleccionada`)
-    REFERENCES `respuestas` (`id_respuesta`),
-  CONSTRAINT `fk_resultados_evaluaciones_usuarios_invitados`
-    FOREIGN KEY (`id_usuario_invitado`)
-    REFERENCES `usuarios_invitados` (`id_usuarios_invitados`),
-  CONSTRAINT `id_evaluacion`
-    FOREIGN KEY (`id_evaluacion`)
-    REFERENCES `evaluaciones` (`id_evaluaciones`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `id_usuario_registrado`
-    FOREIGN KEY (`id_usuario_registrado`)
-    REFERENCES `info_usuarios` (`id_info_usuario`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `id_pregunta_ordenamiento`
-    FOREIGN KEY (`id_pregunta_ordenamiento`)
-    REFERENCES `ordenamiento` (`id_ordenamiento`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;*/
-	
