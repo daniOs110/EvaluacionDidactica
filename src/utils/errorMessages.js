@@ -58,6 +58,10 @@ class ErrorMessages {
     return 'No ha iniciado sesión o el token es invalido'
   }
 
+  static get SERVER_ERROR () {
+    return 'Ocurrio un error en el servidor'
+  }
+
   /**
    * CREATE EVALUATION
    */

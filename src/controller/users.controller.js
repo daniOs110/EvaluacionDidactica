@@ -20,6 +20,31 @@ createUserRouter.post('/user/createAccount', validateRegisterUser, async (req, r
   // res.send('receive post request') PRUEBA
 })
 
+createUserRouter.get('/user/guestScreen/:pin', async (req, res) => {
+  try {
+    const pin = req.params.pin
+    if (pin === null || pin === '') {
+      return res.status(400).json({ message: 'bad request not have a pin included' })
+    }
+    LOG.info(`El pin recibido desde los parametros es ${pin}`)
+    return res.status(200).json({ pin })
+  } catch (error) {
+    LOG.error('Error mostrando pantalla de usuario invitado: ', error)
+    return res.status(500).json({ message: ErrorMessages.SERVER_ERROR })
+  }
+})
+
+createUserRouter.post('/user/guest', async (req, res) => {
+  try {
+    LOG.info('llegaste al servicio usuario invitado')
+  } catch (error) {
+    LOG.error('Error creando el usuario: ', error)
+    return res.status(500).json({ message: ErrorMessages.SERVER_ERROR })
+  }
+  // res.send({ data: req })
+  return res.send('Llegaste al servicio usuario invitado')
+})
+
 createUserRouter.post('/user/signup', validateRegisterUser, async (req, res) => {
   try {
     const validatedData = matchedData(req)

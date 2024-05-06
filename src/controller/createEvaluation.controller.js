@@ -65,4 +65,19 @@ createEvaluationRouter.get('/evaluation/getAllEvaluations', authMiddleware, asyn
     return res.status(500).json({ message: 'Internal server error' })
   }
 })
+
+createEvaluationRouter.get('/evaluation/getEvaluation/:idEvaluacion', authMiddleware, async (req, res) => {
+  const idEvaluacion = req.params.idEvaluacion
+  try {
+    const evaluationsInfo = await createEvaluationService.findEvaluationById(idEvaluacion)
+    if (evaluationsInfo === null) {
+      return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al id de evaluación' })
+    }
+    return res.status(200).json(evaluationsInfo)
+  } catch (error) {
+    LOG.error(`error al traer la informacion de la tabla evaluaciones : ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 module.exports = createEvaluationRouter

@@ -107,7 +107,7 @@ class UserService {
     try {
       const verificationLink = RESET_PASSWORD_EMAIL + `${token}` // este link me manda a la pagina donde ingresas la nueva contraseña
       await transport.sendMail({
-        from: '"Correo de recuperación de contraseña 👻" <lernerapp2024@gmail.com>',
+        from: '"Correo de recuperación de contraseña 🎓" <lernerapp2024@gmail.com>',
         to: email,
         subject: 'Correo de recuperación de contraseña ✔',
         html:
@@ -158,7 +158,7 @@ class UserService {
     try {
       const confirmationUrl = CONFIRM_EMAIL + `${token}`
       await transport.sendMail({
-        from: '"Confirm email 👻" <lernerapp2024@gmail.com>',
+        from: '"Confirm email 🎓" <lernerapp2024@gmail.com>',
         to: email,
         subject: 'Confirma tu correo electrónico ✔',
         html:

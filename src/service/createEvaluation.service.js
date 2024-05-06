@@ -93,6 +93,20 @@ class CreateEvaluationService {
     }
   }
 
+  async findEvaluationById (idEvaluacion) {
+    try {
+      const evaluationsInfo = await evaluation.findByPk(idEvaluacion)
+      if (evaluationsInfo === undefined) {
+        LOG.info('no se encontraron evaluaciones asociadas al id de evaluacion')
+        return null
+      }
+      return evaluationsInfo
+    } catch (error) {
+      LOG.error(`Ocurrio un error al buscar la evaluacion asociada al id de evaluación, error: ${error}`)
+      throw new Error('Error al crear el evaluación:' + error.message)
+    }
+  }
+
   async createEvaluation (evaluationData, userData) {
     const userId = userData.get('id_info_usuario')
     const userName = userData.get('nombre')
