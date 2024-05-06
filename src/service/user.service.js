@@ -11,7 +11,7 @@ const CONFIRM_EMAIL = process.env.FRONTEND_CONFIRM_EMAIL
 const RESET_PASSWORD_EMAIL = process.env.FRONTEND_RESET_PASSWORD
 
 // --- En el archivo .env se deben agregar las siguientes direcciones ---
-// #FRONT-END URL 
+// #FRONT-END URL
 // FRONTEND_URL = 'http://localhost:8080/'
 // FRONTEND_CONFIRM_EMAIL = 'http://localhost:8080/confirm-email/'
 // FRONTEND_RESET_PASSWORD = 'http://localhost:8080/user/reset-password/'
@@ -110,7 +110,7 @@ class UserService {
         from: '"Correo de recuperación de contraseña 👻" <lernerapp2024@gmail.com>',
         to: email,
         subject: 'Correo de recuperación de contraseña ✔',
-        html: 
+        html:
           `
             <html>
               <head>
@@ -161,7 +161,7 @@ class UserService {
         from: '"Confirm email 👻" <lernerapp2024@gmail.com>',
         to: email,
         subject: 'Confirma tu correo electrónico ✔',
-        html: 
+        html:
         `
           <html>
             <head>

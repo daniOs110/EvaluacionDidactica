@@ -83,9 +83,14 @@ class OrderQuestionService {
   async unorder (numPregunta, sentence, sentencePlay) {
     const palabras = sentence.split(' ')
     for (let i = 0; i < palabras.length; i++) {
-      // LOG.info(`Estamos revisando la posicion ${i} con la palabra "${palabras[i]}" de un array que tiene una longitud de ${palabras.length}`)
-      // LOG.info(`Palabras[${i}] = ${palabras[i].length} es < a 1?`)
-      if (palabras[i].length < 3) {
+      if ((palabras.length - 1) === i) {
+        LOG.info(`La ultima palabra es: ${palabras[i]}`)
+        if (palabras[i].length < 3) {
+          LOG.info(`La ultima palabra palabra ${palabras[i]} es menor o igual a 2 caracteres `)
+          palabras[i - 1] = palabras[i - 1] + ' ' + palabras[i]
+          palabras.splice(i, 1) // delete word < 2
+        }
+      } else if (palabras[i].length < 3) {
         LOG.info(`La palabra ${palabras[i]} es menor o igual a 2 caracteres `)
         palabras[i + 1] = palabras[i] + ' ' + palabras[i + 1]
         palabras.splice(i, 1) // delete word < 2
@@ -97,11 +102,6 @@ class OrderQuestionService {
 
     // Desordenar las palabras
     const palabrasDesordenadas = palabras.sort(compararAleatorio)
-    // LOG.info(`El array quedo de la siguiente manera: ${palabras} y las palabras desordenadas asi: ${palabrasDesordenadas}`)
-
-    // const oracionDesordenada = palabrasDesordenadas.join(' ')
-
-    // aqui falta agregar la validacion de omar que si son una palabra de dos letras se una a otra palabra y tambien que lo agregue a un nuevo hash map key: num_pregunta, value: new_array
     sentencePlay.set(numPregunta, palabrasDesordenadas)
 
     return sentencePlay
