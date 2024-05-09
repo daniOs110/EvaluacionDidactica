@@ -21,6 +21,12 @@ const validateLoginUser = [
     return validateResult(req, res, next)
   }
 ]
+const validateEmail = [
+  check('email').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
 const validateForgotPassword = [
   check('email').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
   (req, res, next) => {
@@ -73,4 +79,4 @@ function validateName (value) {
   return true
 }
 
-module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter, validateGuestUser }
+module.exports = { validateRegisterUser, validateLoginUser, validateEmail, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter, validateGuestUser }
