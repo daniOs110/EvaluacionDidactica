@@ -26,6 +26,25 @@ createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreate
   }
 })
 
+createEvaluationRouter.post('/evaluation/update/:idEvaluation', authMiddleware, validateCreateEvaluation, convertActivationData, convertDeactivationData, async (req, res) => {
+  const user = req.user
+  const idEvaluation = req.params.idEvaluation
+  try {
+    const validatedData = matchedData(req)
+    // creo que la fecha ya esta en iso string
+    const newEvaluationDTO = new CreateEvaluationDTO(validatedData.title, validatedData.subtitle, validatedData.description, validatedData.feedback, validatedData.activationDate, validatedData.activationTime, validatedData.duration, validatedData.idDinamic, validatedData.deactivationDate, validatedData.deactivationTime)
+    // ir al service que guarde los datos ingresados en el req
+    const updateEvaluation = await createEvaluationService.updateEvaluation(newEvaluationDTO, user, idEvaluation)
+    if (updateEvaluation === null) {
+      return res.status(404).json({ message: 'No existe la evaluación' })
+    }
+    return res.status(201).json(updateEvaluation)
+  } catch (error) {
+    LOG.error(`error al crear evaluacion: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 createEvaluationRouter.get('/evaluation/getDinamics', authMiddleware, async (req, res) => {
   try {
     const dinamicInfo = await createEvaluationService.getCombinedInfo()

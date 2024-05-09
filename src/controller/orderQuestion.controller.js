@@ -18,7 +18,7 @@ orderQuestionRouter.post('/dinamic/orderQuestion/add', validateAddLetter, authMi
     // agregar una validacion para que si crea otra pregunta pero para el mismo numero de pregunta y evaluacion entonce que se actualice no qui cree otra
     // se va a recibir la oracion y se guardara en bd
     LOG.info(`la data traida es oracion: ${req.letter}, idEvalucion: ${req.idEvaluacion}, numPregunta: ${req.questionNumber}`)
-
+    // no se si aquiu me serviria tener el tipio de dinamica (ordena los items, ordena el enunciado)
     const validatedData = matchedData(req)
     const newLetterDTO = new AddLetterDTO(validatedData.letter, validatedData.idEvaluacion, validatedData.idDinamica, validatedData.questionNumber)
     const addLetter = await orderQuestionService.addLetter(newLetterDTO, user) // lamamos al servicio de crear evaluacion

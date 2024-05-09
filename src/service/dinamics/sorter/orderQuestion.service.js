@@ -13,14 +13,26 @@ class OrderQuestionService {
       transaction = await sequelize.transaction()
 
       LOG.info(`la data traida es oracion: ${letterData.letter}, idEvalucion: ${letterData.idEvaluacion}, numPregunta: ${letterData.num_pregunta}`)
-      const newLetter = await sorting.create({
-        oracion: letterData.letter,
-        id_evaluacion: letterData.idEvaluacion,
-        num_pregunta: letterData.questionNumber
-      }, { transaction })
+      const [existingSentece, created] = await sorting.findOrCreate({
+        where: {
+          id_evaluacion: letterData.idEvaluacion,
+          num_pregunta: letterData.questionNumber
+        },
+        defaults: {
+          oracion: letterData.letter,
+          id_evaluacion: letterData.idEvaluacion,
+          num_pregunta: letterData.questionNumber
+        },
+        transaction
+      })
+      if (!created) {
+        LOG.info('oración previamente creada, se actualizo')
+        existingSentece.oracion = letterData.letter
+        await existingSentece.save({ transaction })
+      }
 
       await transaction.commit()
-      return { letter: newLetter }
+      return { letter: existingSentece }
     } catch (error) {
       LOG.error(`Ocurrio un error al agregar la oracion a la evaluacion, error: ${error}`)
       if (transaction) await transaction.rollback()

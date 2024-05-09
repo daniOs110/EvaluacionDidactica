@@ -144,6 +144,49 @@ class CreateEvaluationService {
     }
   }
 
+  async updateEvaluation (evaluationData, userData, idEvaluation) {
+    const userId = userData.get('id_info_usuario')
+    const userName = userData.get('nombre')
+    LOG.info(`Actualizando evaluación para el usuario ${userName}, con id: ${userId}`)
+    let transaction
+    const currentDate = new Date().toISOString()
+    LOG.info(`El fecha al momento de actualizar una evaluacion es: ${currentDate}`)
+    try {
+      const existEvaluation = await evaluation.findByPk(idEvaluation)
+
+      if (!existEvaluation) {
+        return null // evaluation not exist
+      }
+
+      transaction = await sequelize.transaction()
+      // const isActive = await this.isActive(evaluationData)
+
+      await existEvaluation.update({
+        nombre: evaluationData.title,
+        subtitulo: evaluationData.subtitle,
+        descripcion: evaluationData.description,
+        retroalimentacion_activa: evaluationData.feedback,
+        fecha_activacion: evaluationData.activationDate,
+        hora_activacion: evaluationData.activationTime,
+        duracion: evaluationData.duration,
+        id_usuario: userId,
+        id_dinamica: evaluationData.idDinamic,
+        fecha_desactivacion: evaluationData.deactivationDate,
+        hora_desactivacion: evaluationData.deactivationTime,
+        fecha_creacion: currentDate,
+        active: true // llamaremos al metodo is active
+      }, { transaction })
+      // await this.isActive2(evaluationData, userId)
+      await transaction.commit()
+
+      return { evaluation: existEvaluation }
+    } catch (error) {
+      LOG.error(`Ocurrio un error al crear la evaluación, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al crear el evaluación:' + error.message)
+    }
+  }
+
   async findEvaluation (evaluationData, userId) {
     try {
       const evaluationFound = await evaluation.findOne({
