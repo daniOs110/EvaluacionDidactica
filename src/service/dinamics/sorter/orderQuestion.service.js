@@ -106,6 +106,24 @@ class OrderQuestionService {
 
     return sentencePlay
   }
+
+  async getActivities (idEvaluacion) {
+    try {
+      LOG.info(`El id de evaluacion es: ${idEvaluacion}`)
+      const sentences = await Sorting.findAll({
+        where: {
+          id_evaluacion: idEvaluacion
+        }
+      })
+      if (sentences.length === 0) {
+        return null
+      }
+      return sentences
+    } catch (error) {
+      LOG.error('Error al obtener las oraciones de la evaluación:', error)
+      throw new Error('Error al obtener las oraciones de la evaluación')
+    }
+  }
 }
 
 module.exports = new OrderQuestionService()

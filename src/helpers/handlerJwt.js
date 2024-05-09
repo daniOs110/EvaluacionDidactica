@@ -23,6 +23,25 @@ const tokenSign = async (userInfo, userCredentials) => {
 }
 
 /**
+ * Debes pasar el objeto del usuario invitado
+ * @param {*} user
+ * @returns
+ */
+const tokenSignGuest = async (guestUser) => {
+  const sign = jwt.sign(
+    {
+      _id: guestUser.id_usuarios_invitados,
+      role: guestUser.id_roles_de_usuario_invitado
+    },
+    JWT_SECRET,
+    {
+      expiresIn: '4h'
+    }
+  )
+  return sign
+}
+
+/**
  * pasar el token de sesion JWT
  * @param {*} token
  * @returns
@@ -66,4 +85,4 @@ const recoverToken = async (userInfo, userCredentials) => {
   }
 }
 
-module.exports = { tokenSign, decodeSign, verifyToken, recoverToken }
+module.exports = { tokenSign, decodeSign, verifyToken, recoverToken, tokenSignGuest }

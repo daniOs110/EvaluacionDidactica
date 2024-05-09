@@ -1,12 +1,13 @@
 const userInfo = require('../model/schema/user.info.schema')
 const userCredentials = require('../model/schema/user.crendentials.schema')
+const guestUser = require('../model/schema/guest.user.schema')
 const sequelize = require('../config/database')
 const { encrypt, compare } = require('../helpers/handler.bcrypt')
-const UserInfo = require('../model/schema/user.info.schema')
 const ErrorMessages = require('../utils/errorMessages')
-const { tokenSign, recoverToken } = require('../helpers/handlerJwt')
+const { tokenSign, recoverToken, tokenSignGuest } = require('../helpers/handlerJwt')
 const LOG = require('../app/logger')
 const { transport } = require('../app/mail')
+const UserInfo = require('../model/schema/user.info.schema')
 const CONFIRM_EMAIL = process.env.FRONTEND_CONFIRM_EMAIL
 const RESET_PASSWORD_EMAIL = process.env.FRONTEND_RESET_PASSWORD
 
@@ -58,6 +59,29 @@ class UserService {
     }
   }
 
+  async createGuestUser (userName) {
+    let transaction
+
+    try {
+      transaction = await sequelize.transaction()
+
+      const newGuestUser = await guestUser.create({
+        nombre: userName,
+        id_roles_de_usuario_invitado: 1
+      }, { transaction })
+
+      await transaction.commit()
+
+      const token = await tokenSignGuest(newGuestUser)
+
+      return { guestUser: newGuestUser, token }
+    } catch (error) {
+      LOG.error(error)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al crear el usuario:' + error.message)
+    }
+  }
+
   async login (userData) {
     try {
       LOG.info('verifying if the user and password match')
@@ -84,6 +108,7 @@ class UserService {
     try {
       LOG.info('finding email in DB')
       const user = await UserInfo.findOne({ where: { correo: email } })
+      // UserInfo.findOne({ where: { correo: email } })
       return user
     } catch (error) {
       LOG.error(error)

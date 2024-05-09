@@ -60,6 +60,12 @@ const validateAddLetter = [
   }
 ]
 
+const validateGuestUser = [
+  check('userName').exists().notEmpty().isString().withMessage(ErrorMessages.LETTER_FORMAT),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
 function validateName (value) {
   if (value && !REGEX_NAMES.test(value)) {
     throw new Error(ErrorMessages.FORMAT_NAMES)
@@ -67,4 +73,4 @@ function validateName (value) {
   return true
 }
 
-module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter }
+module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter, validateGuestUser }

@@ -2,6 +2,10 @@ const { verifyToken } = require('../helpers/handlerJwt')
 const ErrorMessages = require('../utils/errorMessages')
 const UserInfo = require('../model/schema/user.info.schema')
 const LOG = require('../app/logger')
+const GUESTUSER = process.env.FRONTEND_GUEST_USER
+// #FRONT-END URL
+// FRONTEND_URL = 'http://localhost:8080/'
+// redirigira a la url de la pantalla del front
 
 const areLoggedin = async (req, res, next) => {
   const pin = req.body.pin

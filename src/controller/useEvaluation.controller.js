@@ -46,7 +46,7 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', areLoggedin, async (req, 
     LOG.info('Es usuario registrado')
     userId = registerUserId
   } else {
-    LOG.error('No es ningun tipo de usuario error')
+    LOG.error('Error no es ningun tipo de usuario')
   }
 
   LOG.info(`el pin es: ${pin} y el id de usuario es ${userId}`)

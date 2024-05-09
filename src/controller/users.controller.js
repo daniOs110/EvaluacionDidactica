@@ -3,7 +3,7 @@ const CreateAccountDTO = require('../dtos/user/create-user.dto')
 const LoginDTO = require('../dtos/user/login.dto')
 const userService = require('../service/user.service')
 const { matchedData } = require('express-validator')
-const { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword } = require('../validators/users.validator')
+const { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateGuestUser } = require('../validators/users.validator')
 const ErrorMessages = require('../utils/errorMessages')
 const authMiddleware = require('../middleware/session')
 const LOG = require('../app/logger')
@@ -34,15 +34,25 @@ createUserRouter.get('/user/guestScreen/:pin', async (req, res) => {
   }
 })
 
-createUserRouter.post('/user/guest', async (req, res) => {
+createUserRouter.post('/user/guest', validateGuestUser, async (req, res) => {
+  const pin = req.body.pin
   try {
     LOG.info('llegaste al servicio usuario invitado')
+    const userName = req.body.userName
+
+    const guestUser = await userService.createGuestUser(userName)
+
+    if (guestUser === null || guestUser === undefined) {
+      return res.status(400).json({ message: ErrorMessages.GUEST_USER })
+    }
+
+    LOG.info(`El usuario ${userName} se creo correctamente`)
+    return res.status(201).json({ guestUser })
   } catch (error) {
-    LOG.error('Error creando el usuario: ', error)
+    LOG.error('Error creando el usuario invitado: ', error)
     return res.status(500).json({ message: ErrorMessages.SERVER_ERROR })
   }
-  // res.send({ data: req })
-  return res.send('Llegaste al servicio usuario invitado')
+  // esta debe redirigir a el servicio de unirse a evaluación
 })
 
 createUserRouter.post('/user/signup', validateRegisterUser, async (req, res) => {

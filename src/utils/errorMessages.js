@@ -62,6 +62,10 @@ class ErrorMessages {
     return 'Ocurrio un error en el servidor'
   }
 
+  static get GUEST_USER () {
+    return 'Error al crear usuario invitado'
+  }
+
   /**
    * CREATE EVALUATION
    */
@@ -111,7 +115,7 @@ class ErrorMessages {
   }
 
   static get LETTER_FORMAT () {
-    return 'formato incorrecto valida que sea una cadena'
+    return 'formato incorrecto valida que solo contenga letras'
   }
 
   static get GENERIC_NOT_NULL () {
