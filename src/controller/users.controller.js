@@ -4,7 +4,7 @@ const LoginDTO = require('../dtos/user/login.dto')
 const EditAccountDTO = require('../dtos/user/edit-user.dto')
 const userService = require('../service/user.service')
 const { matchedData } = require('express-validator')
-const { validateRegisterUser, validateEmail, validateLoginUser, validateForgotPassword, validateResetPassword, validateGuestUser } = require('../validators/users.validator')
+const { validateRegisterUser, validateEmail, validateLoginUser, validateForgotPassword, validateResetPassword, validateGuestUser, validateUpdateUser } = require('../validators/users.validator')
 const ErrorMessages = require('../utils/errorMessages')
 const authMiddleware = require('../middleware/session')
 const LOG = require('../app/logger')
@@ -23,34 +23,37 @@ createUserRouter.post('/user/createAccount', validateRegisterUser, async (req, r
 
 createUserRouter.get('/user/', authMiddleware, async (req, res) => {
   try {
-      const userEmail = req.query.email; 
-      const user = await userService.getUserByEmail(userEmail);
-      if (!user) {
-        return res.status(404).json({ message: 'Usuario no encontrado' });
-      }
-      return res.status(200).json(user);
-  } catch (error) {
-      LOG.error('Error obteniendo la información del usuario por email: ', error);
-      return res.status(500).json({ message: 'Error interno del servidor' });
-  }
-});
-
-createUserRouter.put('/user/:id', authMiddleware, async (req, res) => {
-  try {
-    const id = req.params.id;
-    const newEditAccountDTO = new EditAccountDTO(req.body.correo, req.body.nombre, req.body.apellido_paterno, req.body.apellido_materno, req.body.verificado)
-    console.log("newEditAccountDTO: ", newEditAccountDTO)
-
-    const updatedUser = await userService.updateUser(id, newEditAccountDTO);
-    if (!updatedUser) {
-      return res.status(404).json({ message: 'Usuario no encontrado' });
+    const userEmail = req.query.email
+    const user = await userService.getUserByEmail(userEmail)
+    if (!user) {
+      return res.status(404).json({ message: 'Usuario no encontrado' })
     }
-    return res.status(200).json(updatedUser);
+    return res.status(200).json(user)
   } catch (error) {
-      LOG.error('Error actualizando los datos del usuario: ', error);
-      return res.status(500).json({ message: 'Error interno del servidor' });
+    LOG.error('Error obteniendo la información del usuario por email: ', error)
+    return res.status(500).json({ message: 'Error interno del servidor' })
   }
-});
+})
+
+createUserRouter.post('/user/:id', authMiddleware, validateUpdateUser, async (req, res) => {
+  try {
+    const validatedData = matchedData(req)
+    const id = req.params.id
+    // const newEditAccountDTO = new EditAccountDTO(req.body.correo, req.body.nombre, req.body.apellidoPaterno, req.body.apellidoMaterno, req.body.verificado)
+    const newEditAccountDTO = new EditAccountDTO(validatedData.correo, validatedData.nombre, validatedData.apellidoPaterno, validatedData.apellidoMaterno, validatedData.verificado)
+
+    console.log('newEditAccountDTO: ', newEditAccountDTO)
+
+    const updatedUser = await userService.updateUser(id, newEditAccountDTO)
+    if (updatedUser === null) {
+      return res.status(404).json({ message: 'Usuario no encontrado o no hay información para actualizar' })
+    }
+    return res.status(200).json({ message: 'usuario actualizado con exito' })
+  } catch (error) {
+    LOG.error('Error actualizando los datos del usuario: ', error)
+    return res.status(500).json({ message: 'Error interno del servidor' })
+  }
+})
 
 createUserRouter.get('/user/guestScreen/:pin', async (req, res) => {
   try {

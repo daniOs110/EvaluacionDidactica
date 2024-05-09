@@ -1,12 +1,11 @@
 class EditAccountDTO {
-    constructor (correo, nombre, apellido_paterno, apellido_materno, verificado) {
-      this.correo = correo
-      this.nombre = nombre
-      this.apellido_paterno = apellido_paterno
-      this.apellido_materno = apellido_materno
-      this.verificado = verificado
-    }
+  constructor (correo, nombre, apellidoPaterno, apellidoMaterno, verificado) {
+    this.correo = correo
+    this.nombre = nombre
+    this.apellidoPaterno = apellidoPaterno
+    this.apellidoMaterno = apellidoMaterno
+    this.verificado = verificado
   }
-  
-  module.exports = EditAccountDTO
-  
+}
+
+module.exports = EditAccountDTO

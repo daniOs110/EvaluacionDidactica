@@ -38,6 +38,10 @@ class ErrorMessages {
     return 'La contraseña no puede ser mayor a 15 caracteres ni menor a 3.'
   }
 
+  static get BOOLEAN_FORMAT () {
+    return 'El campo verificado solo acepta booleanos.'
+  }
+
   static get PASSWORD_UNMATCH () {
     return 'La contraseñas no coinciden.'
   }
