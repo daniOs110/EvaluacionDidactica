@@ -14,6 +14,16 @@ const validateRegisterUser = [
     return validateResult(req, res, next)
   }
 ]
+const validateUpdateUser = [
+  check('correo').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
+  check('nombre').exists().notEmpty().custom(validateName).withMessage(ErrorMessages.NAME_REQUIRED),
+  check('apellidoPaterno').exists().notEmpty().custom(validateName).withMessage(ErrorMessages.FIRST_NAME_REQUIRED),
+  check('apellidoMaterno').optional().isString().custom(validateName).withMessage(ErrorMessages.LAST_NAME_REQUIRED),
+  check('verificado').exists().isBoolean().withMessage(ErrorMessages.PASSWORD_FORMAT),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
 const validateLoginUser = [
   check('email').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
   check('password').exists().notEmpty().isLength({ min: 3, max: 15 }),
@@ -73,4 +83,4 @@ function validateName (value) {
   return true
 }
 
-module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter, validateGuestUser }
+module.exports = { validateRegisterUser, validateLoginUser, validateUpdateUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter, validateGuestUser }
