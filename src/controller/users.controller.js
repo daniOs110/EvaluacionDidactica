@@ -35,7 +35,7 @@ createUserRouter.get('/user/guestScreen/:pin', async (req, res) => {
 })
 
 createUserRouter.post('/user/guest', validateGuestUser, async (req, res) => {
-  const pin = req.body.pin
+  // const pin = req.body.pin
   try {
     LOG.info('llegaste al servicio usuario invitado')
     const userName = req.body.userName

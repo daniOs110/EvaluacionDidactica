@@ -3,8 +3,10 @@ const Hashids = require('hashids/cjs')
 const hashids = new Hashids('clave-secreta')
 const LOG = require('../app/logger')
 const authMiddleware = require('../middleware/session')
-const areLoggedin = require('../middleware/logged')
+const authTypeUserMiddleware = require('../middleware/logged')
 const EvaluationService = require('../service/evaluation.service')
+const createEvaluationService = require('../service/createEvaluation.service')
+const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.service')
 
 useEvaluationRouter.get('/evaluation/share/:idEvaluation', authMiddleware, async (req, res) => {
   const idEvaluation = req.params.idEvaluation
@@ -21,7 +23,7 @@ useEvaluationRouter.get('/evaluation/share/:idEvaluation', authMiddleware, async
   }
 })
 
-useEvaluationRouter.post('/evaluation/decodePin', authMiddleware, async (req, res) => {
+useEvaluationRouter.post('/evaluation/decodePin', async (req, res) => {
   const pin = req.body.pin
 
   LOG.info(`El pin es ${pin}`)
@@ -30,29 +32,45 @@ useEvaluationRouter.post('/evaluation/decodePin', authMiddleware, async (req, re
   return res.status(200).json(decode)
 })
 
-useEvaluationRouter.post('/evaluation/joinEvaluation', areLoggedin, async (req, res) => {
+useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, async (req, res) => {
 // revisar si esta logueado
   const user = req.user
+  const typeUser = req.type
   const pin = req.body.pin
-
-  const guestUsertId = user.get('id_usuarios_invitados')
-  const registerUserId = user.get('id_info_usuario')
-  let userId
-  // separar usuario invitado y usuario registrado
-  if (!guestUsertId === undefined) {
-    LOG.info('Es usuario invitado')
-    userId = guestUsertId
-  } else if (!registerUserId === undefined) {
-    LOG.info('Es usuario registrado')
-    userId = registerUserId
-  } else {
-    LOG.error('Error no es ningun tipo de usuario')
+  // decodificar el pin para saber a que evaluacion pertenece
+  const decode = hashids.decode(pin)
+  const idEvaluation = parseInt(decode)
+  // traer los datos de la evaluación
+  const evaluationsInfo = await createEvaluationService.findEvaluationById(idEvaluation)
+  if (evaluationsInfo === null) {
+    return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al id de evaluación' })
+  }
+  // que tipo de evaluacion es
+  const typeEvaluation = evaluationsInfo.get('id_dinamica')
+  let dataEvaluation
+  switch (typeEvaluation) {
+    case 1:
+      LOG.info('Es tipo ordena la pregunta')
+      dataEvaluation = await orderQuestionService.getEvaluation(idEvaluation)
+      if (dataEvaluation === null) {
+        return res.status(404).json({ message: 'No se encontro evaluación' })
+      }
+      break
+    case 2:
+      LOG.info('Es tipo ordena los items')
+      break
+    case 3:
+      LOG.info('Es tipo gato')
+      break
   }
 
-  LOG.info(`el pin es: ${pin} y el id de usuario es ${userId}`)
+  LOG.info(`El tipo de evaluacion es ${typeEvaluation}`)
+  LOG.info(`El id de la evaluacion es: ${decode}`)
+  LOG.info(`el pin es: ${pin} y el tipo de usuario es ${typeUser}`)
 
   // revisar si esta activa la evaluacion
 
-  return res.send('pasaste al servicio join evaluation')
+  return res.status(200).json(dataEvaluation)
+  // return res.send('pasaste al servicio join evaluation')
 })
 module.exports = useEvaluationRouter

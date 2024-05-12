@@ -65,7 +65,23 @@ class OrderQuestionService {
       if (sentencesPlay.size === 0) {
         throw new Error('Error al obtener las oraciones de la evaluación')
       }
-      return { sentence: sentencesPlay }
+
+      if (sentencesPlay instanceof Map) {
+        LOG.info('si es un mapa')
+      }
+      sentencesPlay.forEach((value, key) => {
+        LOG.info(`the key of my map is ${key} and the value is ${value}`)
+      })
+
+      LOG.info('Transformando el mapa a respuesta json')
+
+      const jsonObject = {}
+      for (const [clave, valor] of sentencesPlay) {
+        jsonObject[clave] = valor
+      }
+
+      // const jsonString = JSON.stringify(jsonObject)
+      return { sentence: jsonObject }
     } catch (error) {
       // Manejar errores
       LOG.error('Error al obtener las oraciones de la evaluación:', error)

@@ -102,7 +102,7 @@ class CreateEvaluationService {
       }
       return evaluationsInfo
     } catch (error) {
-      LOG.error(`Ocurrio un error al buscar la evaluacion asociada al id de evaluación, error: ${error}`)
+      LOG.error(`Ocurrio un error al buscar la evaluacion asociada al id de evaluación ${idEvaluacion}, error: ${error}`)
       throw new Error('Error al crear el evaluación:' + error.message)
     }
   }

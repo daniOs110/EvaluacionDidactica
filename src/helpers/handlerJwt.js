@@ -30,7 +30,7 @@ const tokenSign = async (userInfo, userCredentials) => {
 const tokenSignGuest = async (guestUser) => {
   const sign = jwt.sign(
     {
-      _id: guestUser.id_usuarios_invitados,
+      _idGuest: guestUser.id_usuarios_invitados,
       role: guestUser.id_roles_de_usuario_invitado
     },
     JWT_SECRET,
