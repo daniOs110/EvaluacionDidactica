@@ -7,7 +7,7 @@ const Products = require('../model/product.model')
 const UserRoll = require('../model/schema/user.roll.schema')
 const authMiddleware = require('../middleware/session')
 
-router.get('/roll/get', authMiddleware, async (req, res) => {
+router.get('/roll/get', async (req, res) => {
   const userRoll = await UserRoll.findAll()
   const user = req.user
   res.status(200).json({
