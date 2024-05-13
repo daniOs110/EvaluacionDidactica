@@ -40,6 +40,28 @@ class OrderQuestionService {
     }
   }
 
+  async deleteSentence (orderId) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // Busca la entrada por su ID
+      const existingSentence = await sorting.findByPk(orderId, { transaction })
+      if (!existingSentence) {
+        return null
+      }
+      // Elimina la entrada
+      await existingSentence.destroy({ transaction })
+
+      await transaction.commit()
+
+      return { message: 'Oracion eliminada exitosamente.' }
+    } catch (error) {
+      LOG.error(`Ocurrió un error al eliminar la oración, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al eliminar oración:' + error.message)
+    }
+  }
+
   async getEvaluation (idEvaluacion) {
     try {
       // Buscar todas las oraciones que pertenecen a la evaluación con el id dado

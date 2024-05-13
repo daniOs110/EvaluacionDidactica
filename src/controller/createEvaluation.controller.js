@@ -1,9 +1,6 @@
 const createEvaluationRouter = require('express').Router()
 const createEvaluationService = require('../service/createEvaluation.service')
 const LOG = require('../app/logger')
-// const { verifyToken } = require('../helpers/handlerJwt')
-// const ErrorMessages = require('../utils/errorMessages')
-// const SuccesfullMessages = require('../utils/succesfullMessages')
 const authMiddleware = require('../middleware/session')
 const { validateCreateEvaluation } = require('../validators/users.validator')
 const { convertActivationData } = require('../middleware/activtionDate')
@@ -35,12 +32,32 @@ createEvaluationRouter.post('/evaluation/update/:idEvaluation', authMiddleware, 
     const newEvaluationDTO = new CreateEvaluationDTO(validatedData.title, validatedData.subtitle, validatedData.description, validatedData.feedback, validatedData.activationDate, validatedData.activationTime, validatedData.duration, validatedData.idDinamic, validatedData.deactivationDate, validatedData.deactivationTime)
     // ir al service que guarde los datos ingresados en el req
     const updateEvaluation = await createEvaluationService.updateEvaluation(newEvaluationDTO, user, idEvaluation)
-    if (updateEvaluation === null) {
-      return res.status(404).json({ message: 'No existe la evaluación' })
+    if (updateEvaluation.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(updateEvaluation.statusCode).json({ error: updateEvaluation.error, message: updateEvaluation.message })
     }
+
     return res.status(201).json(updateEvaluation)
   } catch (error) {
     LOG.error(`error al crear evaluacion: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
+createEvaluationRouter.delete('/evaluation/delete/:idEvaluation', authMiddleware, async (req, res) => {
+  const user = req.user
+  const idEvaluation = req.params.idEvaluation
+  try {
+    const userId = user.get('id_info_usuario')
+    const deleteEvaluation = await createEvaluationService.deleteEvaluation(idEvaluation, userId)
+
+    if (deleteEvaluation.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(deleteEvaluation.statusCode).json({ error: deleteEvaluation.error, message: deleteEvaluation.message })
+    }
+    return res.status(201).json(deleteEvaluation)
+  } catch (error) {
+    LOG.error(`error al borrar la evaluacion: ${error}`)
     return res.status(500).json({ message: 'Internal server error' })
   }
 })

@@ -155,7 +155,13 @@ class CreateEvaluationService {
       const existEvaluation = await evaluation.findByPk(idEvaluation)
 
       if (!existEvaluation) {
-        return null // evaluation not exist
+        return { error: 'Not Found', statusCode: 404, message: 'La evaluación con el ID proporcionado no fue encontrada.' }
+      }
+      const originalUserId = existEvaluation.get('id_usuario')
+      LOG.info(`El userId que hizo la evaluacion es: ${userId} y el usuario que la esta solicitando es: ${userId}`)
+      if (originalUserId !== userId) {
+        LOG.error('User id not have authorization to delete this evaluatión')
+        return { error: 'Forbidden', statusCode: 403, message: 'No tienes autorización para borrar esta evaluación' }
       }
 
       transaction = await sequelize.transaction()
@@ -184,6 +190,35 @@ class CreateEvaluationService {
       LOG.error(`Ocurrio un error al crear la evaluación, error: ${error}`)
       if (transaction) await transaction.rollback()
       throw new Error('Error al crear el evaluación:' + error.message)
+    }
+  }
+
+  async deleteEvaluation (evaluationId, reqUserId) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // Busca la entrada por su ID
+      const existingEvaluation = await evaluation.findByPk(evaluationId, { transaction })
+      if (!existingEvaluation) {
+        return { error: 'Not Found', statusCode: 404, message: 'La evaluación con el ID proporcionado no fue encontrada.' }
+      }
+      const userId = existingEvaluation.get('id_usuario')
+      LOG.info(`El userId que hizo la evaluacion es: ${userId} y el usuario que la esta solicitando es: ${reqUserId}`)
+      if (userId !== reqUserId) {
+        LOG.error('User id not have authorization to delete this evaluatión')
+        return { error: 'Forbidden', statusCode: 403, message: 'No tienes autorización para borrar esta evaluación' }
+      }
+
+      // Elimina la entrada
+      await existingEvaluation.destroy({ transaction })
+
+      await transaction.commit()
+
+      return { message: 'Evaluación eliminada exitosamente.' }
+    } catch (error) {
+      LOG.error(`Ocurrió un error al eliminar la evaluación, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al eliminar evaluación:' + error.message)
     }
   }
 

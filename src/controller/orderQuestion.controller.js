@@ -15,7 +15,6 @@ const { error } = require('winston')
 orderQuestionRouter.post('/dinamic/orderQuestion/add', validateAddLetter, authMiddleware, async (req, res) => {
   const user = req.user
   try {
-    // agregar una validacion para que si crea otra pregunta pero para el mismo numero de pregunta y evaluacion entonce que se actualice no qui cree otra
     // se va a recibir la oracion y se guardara en bd
     LOG.info(`la data traida es oracion: ${req.letter}, idEvalucion: ${req.idEvaluacion}, numPregunta: ${req.questionNumber}`)
     // no se si aquiu me serviria tener el tipio de dinamica (ordena los items, ordena el enunciado)
@@ -29,8 +28,25 @@ orderQuestionRouter.post('/dinamic/orderQuestion/add', validateAddLetter, authMi
   }
 })
 
+orderQuestionRouter.post('/dinamic/orderQuestion/delete', authMiddleware, async (req, res) => {
+  try {
+    // se va a recibir la oracion y se guardara en bd
+    LOG.info(`la data traida es idOrdenamiento: ${req.idOrdenamieto}`)
+    // no se si aquiu me serviria tener el tipio de dinamica (ordena los items, ordena el enunciado)
+    const orderId = req.body.idOrdenamiento
+    const deleteLetter = await orderQuestionService.deleteSentence(orderId) // lamamos al servicio de crear evaluacion
+    if (deleteLetter == null) {
+      return res.status(404).json({ message: 'La oración con el ID proporcionado no fue encontrada.' })
+    }
+    return res.status(201).json(deleteLetter)
+  } catch (error) {
+    LOG.error(`error al agregar la oración: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 orderQuestionRouter.get('/dinamic/orderQuestion/getActivity/:idActividad', authMiddleware, async (req, res) => {
-  const user = req.user
+  // const user = req.user
   const idActivity = req.params.idActividad
   try {
     LOG.info(`el id de evaluación es ${idActivity}`)
