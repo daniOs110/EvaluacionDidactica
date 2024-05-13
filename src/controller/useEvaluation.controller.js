@@ -39,6 +39,15 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   const pin = req.body.pin
   // decodificar el pin para saber a que evaluacion pertenece
   const decode = hashids.decode(pin)
+  LOG.info(decode)
+  LOG.info(`The id evaluation decode is ${decode} and his type: ${typeof decode}`)
+  if (decode.length === 0) {
+    LOG.error('PIN is invalid')
+    return res.status(404).json({ message: 'Codigo invalido' })
+  }
+  if (decode == null || decode === undefined || decode === '') {
+    return res.status(404).json({ message: 'Codigo invalido' })
+  }
   const idEvaluation = parseInt(decode)
   // traer los datos de la evaluación
   const evaluationsInfo = await createEvaluationService.findEvaluationById(idEvaluation)
@@ -47,6 +56,13 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   }
   // que tipo de evaluacion es
   const typeEvaluation = evaluationsInfo.get('id_dinamica')
+  const isActive = evaluationsInfo.get('active')
+  LOG.info(`The atibute isActive of evaluation is: ${isActive}`)
+  if (!isActive) {
+    LOG.error(`The evaluation with id: ${idEvaluation} is inactive`)
+    return res.status(404).json({ message: 'Evaluación inactiva' })
+  }
+  // Verificar que el id de evaluacion exista y este activa si no mandar mensaje de error
   let dataEvaluation
   switch (typeEvaluation) {
     case 1:
@@ -67,8 +83,6 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   LOG.info(`El tipo de evaluacion es ${typeEvaluation}`)
   LOG.info(`El id de la evaluacion es: ${decode}`)
   LOG.info(`el pin es: ${pin} y el tipo de usuario es ${typeUser}`)
-
-  // revisar si esta activa la evaluacion
 
   return res.status(200).json(dataEvaluation)
   // return res.send('pasaste al servicio join evaluation')

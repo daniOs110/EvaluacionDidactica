@@ -73,7 +73,6 @@ CREATE TABLE IF NOT EXISTS `evaluaciones` (
   `retroalimentacion_activa` TINYINT NOT NULL,
   `fecha_activacion` DATE NOT NULL,
   `hora_activacion` TIME NOT NULL,
-  `duracion` TIME NOT NULL,
   `id_usuario` INT NOT NULL,
   `id_dinamica` INT NOT NULL,  
   `fecha_creacion` DATE NOT NULL,

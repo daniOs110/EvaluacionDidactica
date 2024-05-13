@@ -53,6 +53,10 @@ EvaluationResults.init({
   opcion_ordenamiento: {
     type: DataTypes.STRING(45),
     allowNull: true // Permitir que el campo sea nulo según tu definición en la tabla
+  },
+  oracion_usuario: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   }
 },
 {

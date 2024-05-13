@@ -42,7 +42,7 @@ const validateCreateEvaluation = [
   check('feedback').exists().notEmpty().isBoolean().withMessage(ErrorMessages.FEEDBACK_ERROR),
   check('activationDate').exists().isISO8601().toDate().withMessage(ErrorMessages.ACTIVATIONDATE_FORMAT),
   check('activationTime').exists().isString().withMessage(ErrorMessages.ACTIVATIONTIME_FORMAT),
-  check('idDinamic').exists().isString().withMessage(ErrorMessages.IDDINAMIC_FORMAT),
+  check('idDinamic').exists().withMessage(ErrorMessages.IDDINAMIC_FORMAT),
   check('deactivationDate').optional().isISO8601().toDate().withMessage(ErrorMessages.BAD_DATE_FORMAT),
   check('deactivationTime').optional().isString().withMessage(ErrorMessages.DEACTIVATIONTIME_FORMAT),
   (req, res, next) => {
