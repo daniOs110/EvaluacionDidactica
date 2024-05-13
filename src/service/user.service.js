@@ -271,6 +271,35 @@ class UserService {
       throw new Error('Error al actualizar contraseña de usuario:' + error.message)
     }
   }
+  async updateUser (id, updatedUserData) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // const updatedUser = await UserInfo.update(editUserData, { where: { id_info_usuario: id } });
+      const [updatedData] = await userInfo.update(
+        {
+          nombre: updatedUserData.nombre,
+          apellido_paterno: updatedUserData.apellidoPaterno,
+          apellido_materno: updatedUserData.apellidoMaterno,
+          correo: updatedUserData.correo,
+          verificado: updatedUserData.verificado
+        }, {
+          where: { id_info_usuario: id }
+
+        }, { transaction })
+
+      if (updatedData === 0) {
+        LOG.info('Usuario no encontrado o no hay información para actualizar')
+        return null
+      }
+
+      await transaction.commit()
+      return { updatedData }
+    } catch (error) {
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al actualizar el usuario: ' + error.message)
+    }
+  }  
 }
 
 module.exports = new UserService()
