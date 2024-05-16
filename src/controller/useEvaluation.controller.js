@@ -84,7 +84,7 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   LOG.info(`El id de la evaluacion es: ${decode}`)
   LOG.info(`el pin es: ${pin} y el tipo de usuario es ${typeUser}`)
 
-  return res.status(200).json(dataEvaluation)
+  return res.status(200).json({ infoEvaluation: evaluationsInfo, dataEvaluation })
   // return res.send('pasaste al servicio join evaluation')
 })
 module.exports = useEvaluationRouter
