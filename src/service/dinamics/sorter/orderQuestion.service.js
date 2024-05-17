@@ -120,7 +120,7 @@ class OrderQuestionService {
 
     let value
     LOG.info(`El tamaño del mapa es: ${sizeMap}`)
-    for (let i = 1; i < sizeMap + 1; i++) {
+    for (let i = 0; i < sizeMap; i++) {
       value = map.get(i)
 
       // desordenar palabra
