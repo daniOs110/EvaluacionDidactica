@@ -80,12 +80,13 @@ class OrderQuestionService {
 
       // Iterar sobre las oraciones encontradas y almacenarlas en el objeto
       sentences.forEach(sentence => {
+        LOG.info(`Guardando la pregunta ${sentence.num_pregunta}, con el valor ${sentence.oracion}`)
         sentencesMap.set(sentence.num_pregunta, sentence.oracion)
       })
 
       const sentencesPlay = await this.unorderSentence(sentencesMap)
       if (sentencesPlay.size === 0) {
-        throw new Error('Error al obtener las oraciones de la evaluación')
+        throw new Error('Error al obtener las oraciones de la evaluación ')
       }
 
       if (sentencesPlay instanceof Map) {
@@ -106,7 +107,7 @@ class OrderQuestionService {
       return { sentence: jsonObject }
     } catch (error) {
       // Manejar errores
-      LOG.error('Error al obtener las oraciones de la evaluación:', error)
+      LOG.error('Error al obtener las oraciones de la evaluación get evaluation:', error)
       throw new Error('Error al obtener las oraciones de la evaluación')
     }
   }
@@ -118,11 +119,11 @@ class OrderQuestionService {
     const sentencesPlay = new Map()
     let response = new Map()
 
-    let value
+    let value = null
     LOG.info(`El tamaño del mapa es: ${sizeMap}`)
-    for (let i = 0; i < sizeMap; i++) {
+    for (let i = 1; i <= sizeMap; i++) {
       value = map.get(i)
-
+      LOG.info(`la información obtenida del mapa es: ${map.get(i)}`)
       // desordenar palabra
       response = await this.unorder(i, value, sentencesPlay)
       LOG.info(`el mapa tiene el dato ${i}: ${response.get(i)}`)
@@ -170,7 +171,7 @@ class OrderQuestionService {
       }
       return sentences
     } catch (error) {
-      LOG.error('Error al obtener las oraciones de la evaluación:', error)
+      LOG.error('Error al obtener las oraciones de la evaluación get activities:', error)
       throw new Error('Error al obtener las oraciones de la evaluación')
     }
   }

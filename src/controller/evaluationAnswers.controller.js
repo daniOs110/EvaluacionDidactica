@@ -31,6 +31,8 @@ evaluationAnswerRouter.post('/answer/sortSentence', authTypeUserMiddleware, asyn
       return res.status(404).json({ message: 'Usuario no reconocido' })
   }
   LOG.info(`The user type is ${typeUser} and the id: ${idUser}`)
+  // ahora debo saber las respuestas correctas asociadas a la evaluación y las que el usuario contesto
+
   return res.status(200).json(idUser)
 })
 
