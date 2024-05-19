@@ -45,9 +45,9 @@ orderQuestionRouter.post('/dinamic/orderQuestion/delete', authMiddleware, async 
   }
 })
 
-orderQuestionRouter.get('/dinamic/orderQuestion/getActivity/:idActividad', authMiddleware, async (req, res) => {
+orderQuestionRouter.get('/dinamic/orderQuestion/getActivity/:idEvaluacion', authMiddleware, async (req, res) => {
   // const user = req.user
-  const idActivity = req.params.idActividad
+  const idActivity = req.params.idEvaluacion
   try {
     LOG.info(`el id de evaluación es ${idActivity}`)
     // llamar al metodo que devuelva la evaluacion que coincida con el id

@@ -113,7 +113,7 @@ class CreateEvaluationService {
     LOG.info(`Creando evaluación para el usuario ${userName}, con id: ${userId}`)
     let transaction
     const currentDate = new Date().toISOString()
-    LOG.info(`El fecha actual a momentod e crear una evaluacion es: ${currentDate}`)
+    LOG.info(`El fecha actual al momento de crear una evaluacion es: ${currentDate}`)
     try {
       transaction = await sequelize.transaction()
       // const isActive = await this.isActive(evaluationData)
