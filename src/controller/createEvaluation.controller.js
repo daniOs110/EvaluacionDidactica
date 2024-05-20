@@ -2,6 +2,7 @@ const createEvaluationRouter = require('express').Router()
 const createEvaluationService = require('../service/createEvaluation.service')
 const LOG = require('../app/logger')
 const authMiddleware = require('../middleware/session')
+const authTypeUserMiddleware = require('../middleware/logged')
 const { validateCreateEvaluation } = require('../validators/users.validator')
 const { convertActivationData } = require('../middleware/activtionDate')
 const { convertDeactivationData } = require('../middleware/deactivationDate')
@@ -62,7 +63,7 @@ createEvaluationRouter.delete('/evaluation/delete/:idEvaluation', authMiddleware
   }
 })
 
-createEvaluationRouter.get('/evaluation/getDinamics', authMiddleware, async (req, res) => {
+createEvaluationRouter.get('/evaluation/getDinamics', authTypeUserMiddleware, async (req, res) => {
   try {
     const dinamicInfo = await createEvaluationService.getCombinedInfo()
     if (dinamicInfo === null) {
