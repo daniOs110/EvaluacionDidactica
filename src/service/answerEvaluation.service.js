@@ -102,6 +102,25 @@ class AnswerEvaluationService {
     }
   }
 
+  splitSentence (sentence) {
+    const words = sentence.split(' ')
+    for (let i = 0; i < words.length; i++) {
+      if ((words.length - 1) === i) {
+        LOG.info(`La ultima palabra es: ${words[i]}`)
+        if (words[i].length < 3) {
+          LOG.info(`La ultima palabra ${words[i]} es menor o igual a 2 caracteres `)
+          words[i - 1] = words[i - 1] + ' ' + words[i]
+          words.splice(i, 1) // delete word < 2
+        }
+      } else if (words[i].length < 3) {
+        LOG.info(`La palabra ${words[i]} es menor o igual a 2 caracteres `)
+        words[i + 1] = words[i] + ' ' + words[i + 1]
+        words.splice(i, 1) // delete word < 2
+      }
+    }
+    return words
+  }
+
   async statusAnswer (activityInfo, answersUser, typeUser, idUser) {
     // debo guardar en resultados_evaluaciones cada respuesta
     LOG.info('entrando al servicio status answer')
@@ -137,11 +156,11 @@ class AnswerEvaluationService {
       const evaluation = {
         id_resultado_evaluaciones: answerSaved.id_resultado_evaluaciones,
         id_ordenamiento: idOrdenamiento,
-        oracion,
+        oracion: this.splitSentence(oracion),
         id_evaluacion: idEvaluacion,
         num_pregunta: numPregunta,
         correcta: correctaEstatus,
-        oracion_usuario: oracionUsuario
+        oracion_usuario: this.splitSentence(oracionUsuario)
       }
       this.resultEvaluations.push(evaluation)
     }

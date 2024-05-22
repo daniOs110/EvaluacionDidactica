@@ -137,7 +137,7 @@ class OrderQuestionService {
       if ((palabras.length - 1) === i) {
         LOG.info(`La ultima palabra es: ${palabras[i]}`)
         if (palabras[i].length < 3) {
-          LOG.info(`La ultima palabra palabra ${palabras[i]} es menor o igual a 2 caracteres `)
+          LOG.info(`La ultima palabra ${palabras[i]} es menor o igual a 2 caracteres `)
           palabras[i - 1] = palabras[i - 1] + ' ' + palabras[i]
           palabras.splice(i, 1) // delete word < 2
         }
