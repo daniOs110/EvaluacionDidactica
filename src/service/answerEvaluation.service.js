@@ -9,6 +9,7 @@ class AnswerEvaluationService {
 
   async alreadyAnswered (idEvaluation, idUser, typeUser) {
     let transaction
+
     try {
       transaction = await sequelize.transaction()
       let userRegisterAnswer = null
@@ -122,6 +123,7 @@ class AnswerEvaluationService {
   }
 
   async statusAnswer (activityInfo, answersUser, typeUser, idUser) {
+    LOG.info(`status answer devuelve ${this.resultEvaluations}`)
     // debo guardar en resultados_evaluaciones cada respuesta
     LOG.info('entrando al servicio status answer')
     // iterando sobre las respuestas correctas

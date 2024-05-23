@@ -18,6 +18,9 @@ class ReportExcelService {
       const workbook = new ExcelJS.Workbook()
       const worksheet = workbook.addWorksheet(`Reporte evaluación ${evaluationTitle}`)
 
+      // necesitamos un servicio que nos traiga cuantas respuetas contesto bien cada usuario
+      // tiene que separar si es usuario invitado consulta la tabla usuario invitado para traer nombre
+      // si no consulta usuario registrado para traer nombre
       // Definir las columnas del Excel
       worksheet.columns = [
         { header: 'ID', key: 'id', width: 10 },
