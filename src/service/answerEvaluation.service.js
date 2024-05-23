@@ -123,7 +123,8 @@ class AnswerEvaluationService {
 
   async statusAnswer (activityInfo, answersUser, typeUser, idUser) {
     // debo guardar en resultados_evaluaciones cada respuesta
-    LOG.info('entrando al servicio status answer')
+    LOG.info('Entrando al servicio status answer')
+    this.resultEvaluations = []
     // iterando sobre las respuestas correctas
     for (const activity of activityInfo) {
       // const { idOrdenamiento, oracion, idEvaluacion, numPregunta, orden } = activity
@@ -164,7 +165,8 @@ class AnswerEvaluationService {
       }
       this.resultEvaluations.push(evaluation)
     }
-    return this.resultEvaluations
+        
+    return this.resultEvaluations.sort((a, b) => a.num_pregunta - b.num_pregunta);
   }
 }
 
