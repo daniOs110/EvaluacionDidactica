@@ -36,6 +36,6 @@ Sorting.init({
 })
 
 // Definir las relaciones
-Sorting.belongsTo(Evaluations, { foreignKey: 'id_evaluacion', as: 'evaluacion' })
+Sorting.belongsTo(Evaluations, { foreignKey: 'id_evaluacion', as: 'evaluacion', onDelete: 'CASCADE' })
 
 module.exports = Sorting

@@ -1,6 +1,7 @@
 const evaluation = require('../model/schema/evaluation.schemas')
 const dinamics = require('../model/schema/dinamic.schema')
 const clasification = require('../model/schema/clasifications.schema')
+const sort = require('../model/schema/sorting.schema')
 const sequelize = require('../config/database')
 // const { parseISO, format, isBefore, isEqual, parse } = require('date-fns')
 const TIMEZONE = process.env.TIME_ZONE
@@ -208,7 +209,16 @@ class CreateEvaluationService {
         LOG.error('User id not have authorization to delete this evaluatión')
         return { error: 'Forbidden', statusCode: 403, message: 'No tienes autorización para borrar esta evaluación' }
       }
+      // revisar si tiene preguntas asociadas a la evalucion, si la tiene se eliminan tambien
+      const existingSentences = await sort.findAll({
+        where: {
+          id_evaluacion: evaluationId
+        }
+      })
 
+      if (existingSentences.length > 0) {
+        return null
+      }
       // Elimina la entrada
       await existingEvaluation.destroy({ transaction })
 
