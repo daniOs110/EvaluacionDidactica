@@ -9,13 +9,25 @@ const orderQuestionRouter = require('../controller/orderQuestion.controller')
 const useEvaluationRouter = require('../controller/useEvaluation.controller')
 const evaluationAnswerRouter = require('../controller/evaluationAnswers.controller')
 
-const whiteList = ['http://localhost:3000']
+const whiteList = ['http://localhost:3000', 'https://app-didactic-evaluations.web.app']
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
 
 const app = express()
 
 app.use(morgan('dev'))
 app.use(express.json())
-app.use(cors())
+app.use(cors(corsOptions))
 
 app.get('/', (req, res) => {
   res.send('This is express')
