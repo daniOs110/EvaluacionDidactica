@@ -216,8 +216,15 @@ class CreateEvaluationService {
         }
       })
 
-      if (existingSentences.length > 0) {
-        return null
+      if (existingSentences.length !== 0) {
+        LOG.info('The evaluation have senteces into sort table')
+        // eliminamos las oraciones dadas de alta
+        await Sorting.destroy({
+          where: {
+            id_evaluacion: evaluationId
+          }
+        })
+        LOG.info('Sentences have been deleted from the sort table')
       }
       // Elimina la entrada
       await existingEvaluation.destroy({ transaction })
