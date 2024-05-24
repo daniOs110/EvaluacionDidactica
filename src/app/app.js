@@ -1,6 +1,7 @@
 const express = require('express')
 const router = require('../router/product.router')
 const createUserRouter = require('../controller/users.controller')
+const adminRouter = require('../controller/admin.controller')
 const morgan = require('morgan')
 const cors = require('cors')
 const validateTokenRouter = require('../controller/validateSession.controller')
@@ -34,6 +35,6 @@ app.get('/', (req, res) => {
 })
 app.use(express.json())
 app.use('/api/v1', router)
-app.use('/lerner', createUserRouter, validateTokenRouter, createEvaluationRouter, orderQuestionRouter, useEvaluationRouter, evaluationAnswerRouter)
+app.use('/lerner', createUserRouter, adminRouter, validateTokenRouter, createEvaluationRouter, orderQuestionRouter, useEvaluationRouter, evaluationAnswerRouter)
 
 module.exports = app
