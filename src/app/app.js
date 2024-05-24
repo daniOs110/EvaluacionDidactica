@@ -23,11 +23,26 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   allowedHeaders: ['Content-Type', 'Authorization']
 }
+const whiteList = ['https://app-didactic-evaluations.web.app']
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whiteList.indexOf(origin) !== -1 || !origin) {
+      callback(null, true)
+    } else {
+      callback(new Error('Not allowed by CORS'))
+    }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}
 
 const app = express()
 
 app.use(morgan('dev'))
 app.use(express.json())
+// app.use(cors(corsOptions))
+app.use(cors())
 // app.use(cors(corsOptions))
 app.use(cors());
 

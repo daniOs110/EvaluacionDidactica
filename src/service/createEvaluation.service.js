@@ -1,6 +1,9 @@
 const evaluation = require('../model/schema/evaluation.schemas')
 const dinamics = require('../model/schema/dinamic.schema')
 const clasification = require('../model/schema/clasifications.schema')
+const sort = require('../model/schema/sorting.schema')
+const question = require('../model/schema/questions.schema')
+const answer = require('../model/schema/response.schema')
 const sequelize = require('../config/database')
 // const { parseISO, format, isBefore, isEqual, parse } = require('date-fns')
 const TIMEZONE = process.env.TIME_ZONE
@@ -207,6 +210,50 @@ class CreateEvaluationService {
       if (userId !== reqUserId) {
         LOG.error('User id not have authorization to delete this evaluatión')
         return { error: 'Forbidden', statusCode: 403, message: 'No tienes autorización para borrar esta evaluación' }
+      }
+      // revisar si tiene preguntas asociadas a la evalucion, si la tiene se eliminan tambien
+      const existingSentences = await sort.findAll({
+        where: {
+          id_evaluacion: evaluationId
+        }
+      })
+
+      if (existingSentences.length !== 0) {
+        LOG.info('The evaluation have senteces into sort table')
+        // eliminamos las oraciones dadas de alta
+        await sort.destroy({
+          where: {
+            id_evaluacion: evaluationId
+          }
+        })
+        LOG.info('Sentences have been deleted from the sort table')
+      }
+      // revisando el tipo pregunta/respuesta
+      const existingQuestion = await question.findAll({
+        where: {
+          id_evaluacion: evaluationId
+        }
+      })
+      if (existingQuestion.length !== 0) {
+        LOG.info('The evaluation have senteces into question table')
+
+        // obtengo los valores de idPregunta
+        const idQuestion = existingQuestion.map(question => question.id_pregunta)
+        // eliminar las respuestas dadas de alta
+        idQuestion.forEach(async (idQuestions) => {
+          const answersResponse = await answer.destroy({
+            where: {
+              id_pregunta: idQuestions
+            }
+          })
+        })
+        // eliminamos las preguntas dadas de alta
+        await question.destroy({
+          where: {
+            id_evaluacion: evaluationId
+          }
+        })
+        LOG.info('Sentences have been deleted from the sort table')
       }
 
       // Elimina la entrada

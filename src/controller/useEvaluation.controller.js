@@ -64,6 +64,7 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   }
   // Verificar que el id de evaluacion exista y este activa si no mandar mensaje de error
   let dataEvaluation
+  /** NOTA CAMBIAR EL SWITCH DE ID POR EL TIPO DE DINAMICA **/
   switch (typeEvaluation) {
     case 1:
       LOG.info('Es tipo ordena la pregunta')
