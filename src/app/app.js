@@ -10,7 +10,7 @@ const orderQuestionRouter = require('../controller/orderQuestion.controller')
 const useEvaluationRouter = require('../controller/useEvaluation.controller')
 const evaluationAnswerRouter = require('../controller/evaluationAnswers.controller')
 
-const whiteList = ['http://localhost:3000', 'https://app-didactic-evaluations.web.app']
+const whiteList = ['https://app-didactic-evaluations.web.app']
 
 const corsOptions = {
   origin: function (origin, callback) {
@@ -29,7 +29,7 @@ const app = express()
 app.use(morgan('dev'))
 app.use(express.json())
 // app.use(cors(corsOptions))
-app.use(cors(corsOptions));
+app.use(cors());
 
 app.get('/', (req, res) => {
   res.send('This is express')
