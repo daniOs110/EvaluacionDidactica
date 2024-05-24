@@ -1,12 +1,10 @@
 const orderQuestionRouter = require('express').Router()
-// const createEvaluationService = require('../service/createEvaluation.service')
 const LOG = require('../app/logger')
 // const { verifyToken } = require('../helpers/handlerJwt')
 // const ErrorMessages = require('../utils/errorMessages')
 // const SuccesfullMessages = require('../utils/succesfullMessages')
 const authMiddleware = require('../middleware/session')
 const { validateAddLetter } = require('../validators/users.validator')
-// const { convertActivationData } = require('../middleware/activtionDate')
 const { matchedData } = require('express-validator')
 const AddLetterDTO = require('../dtos/dinamics/sort/addLetter.dto')
 const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.service')
@@ -60,6 +58,10 @@ orderQuestionRouter.get('/dinamic/orderQuestion/getActivity/:idEvaluacion', auth
     LOG.error(`error al traer la actividad: ${error}`)
     return res.status(500).json({ error: 'Internal server error' })
   }
+})
+
+orderQuestionRouter.post('/dinamic/orderItem/addItems', authMiddleware, async (req, res) => {
+
 })
 
 orderQuestionRouter.get('/dinamic/orderQuestion/users/showSentence/:evaluationToken', async (req, res) => {
