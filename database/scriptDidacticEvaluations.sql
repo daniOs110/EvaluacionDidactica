@@ -161,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `ordenamiento` (
   `id_evaluacion` INT NOT NULL,
   `num_pregunta` INT NOT NULL,
   `orden` INT NULL,
+  `instruccion` VARCHAR(150) NULL
   PRIMARY KEY (`id_ordenamiento`),
   UNIQUE INDEX `id_ordenamiento_UNIQUE` (`id_ordenamiento` ASC),
   INDEX `id_evaluacion_idx` (`id_evaluacion` ASC),

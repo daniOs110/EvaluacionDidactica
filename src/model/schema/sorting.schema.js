@@ -25,6 +25,10 @@ Sorting.init({
   orden: {
     type: DataTypes.INTEGER,
     allowNull: true // Permitir que el campo sea nulo según tu definición en la tabla
+  },
+  instruccion: {
+    type: DataTypes.STRING(255),
+    allowNull: true
   }
 },
 {

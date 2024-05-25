@@ -3,6 +3,7 @@ const sequelize = require('../../../config/database')
 
 const LOG = require('../../../app/logger')
 const Sorting = require('../../../model/schema/sorting.schema')
+const Answers = require('../../../model/schema/evaluation.results.schema')
 
 class OrderQuestionService {
   async addLetter (letterData, userData) {
@@ -49,9 +50,18 @@ class OrderQuestionService {
       if (!existingSentence) {
         return null
       }
+      // buscar en la tabla de resultado evaluaciones el campo id_pregunta_ordenamiento
+      await Answers.destroy({
+        where: {
+          id_pregunta_ordenamiento: orderId
+        },
+        transaction
+      })
+
       // Elimina la entrada
       await existingSentence.destroy({ transaction })
 
+      // confirma la transaccion
       await transaction.commit()
 
       return { message: 'Oracion eliminada exitosamente.' }
@@ -173,6 +183,42 @@ class OrderQuestionService {
     } catch (error) {
       LOG.error('Error al obtener las oraciones de la evaluación get activities:', error)
       throw new Error('Error al obtener las oraciones de la evaluación')
+    }
+  }
+
+  async addItems (instruccion, idEvaluacion, numPregunta, orden, oracion) {
+    // guardarla en DB
+    const transaction = await sequelize.transaction()
+    try {
+      LOG.info(`la informacion traida es oracion: ${oracion}, idEvalucion: ${idEvaluacion}, numPregunta: ${numPregunta}, orden: ${orden}, instruccion: ${instruccion}`)
+      const [existingSortItem, created] = await sorting.findOrCreate({
+        where: {
+          id_evaluacion: idEvaluacion,
+          num_pregunta: numPregunta,
+          orden
+        },
+        defaults: {
+          oracion,
+          id_evaluacion: idEvaluacion,
+          num_pregunta: numPregunta,
+          orden,
+          instruccion
+        },
+        transaction
+      })
+      if (!created) {
+        LOG.info('oración previamente creada, se actualizo')
+        existingSortItem.oracion = oracion
+        existingSortItem.instruccion = instruccion
+        await existingSortItem.save({ transaction })
+      }
+
+      await transaction.commit()
+      return { item: existingSortItem }
+    } catch (error) {
+      LOG.error(`Ocurrio un error al agregar las oraciones a la evaluacion, error: ${error.message()}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al agregar oracion a evaluación:' + error.message)
     }
   }
 }
