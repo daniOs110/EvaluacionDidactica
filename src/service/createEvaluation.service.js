@@ -4,6 +4,8 @@ const clasification = require('../model/schema/clasifications.schema')
 const sort = require('../model/schema/sorting.schema')
 const question = require('../model/schema/questions.schema')
 const answer = require('../model/schema/response.schema')
+const AnswersEvaluation = require('../model/schema/evaluation.results.schema')
+
 const sequelize = require('../config/database')
 // const { parseISO, format, isBefore, isEqual, parse } = require('date-fns')
 const TIMEZONE = process.env.TIME_ZONE
@@ -211,11 +213,20 @@ class CreateEvaluationService {
         LOG.error('User id not have authorization to delete this evaluatión')
         return { error: 'Forbidden', statusCode: 403, message: 'No tienes autorización para borrar esta evaluación' }
       }
+      // eliminar respuestas asociadas a la evaluacion
+      await AnswersEvaluation.destroy({
+        where: {
+          id_evaluacion: evaluationId
+        },
+        transaction
+      })
+
       // revisar si tiene preguntas asociadas a la evalucion, si la tiene se eliminan tambien
       const existingSentences = await sort.findAll({
         where: {
           id_evaluacion: evaluationId
-        }
+        },
+        transaction
       })
 
       if (existingSentences.length !== 0) {
@@ -224,7 +235,8 @@ class CreateEvaluationService {
         await sort.destroy({
           where: {
             id_evaluacion: evaluationId
-          }
+          },
+          transaction
         })
         LOG.info('Sentences have been deleted from the sort table')
       }
@@ -232,7 +244,8 @@ class CreateEvaluationService {
       const existingQuestion = await question.findAll({
         where: {
           id_evaluacion: evaluationId
-        }
+        },
+        transaction
       })
       if (existingQuestion.length !== 0) {
         LOG.info('The evaluation have senteces into question table')
@@ -240,20 +253,22 @@ class CreateEvaluationService {
         // obtengo los valores de idPregunta
         const idQuestion = existingQuestion.map(question => question.id_pregunta)
         // eliminar las respuestas dadas de alta
-        idQuestion.forEach(async (idQuestions) => {
-          const answersResponse = await answer.destroy({
+        for (const idQuestions of idQuestion) {
+          await answer.destroy({
             where: {
               id_pregunta: idQuestions
-            }
+            },
+            transaction
           })
-        })
+        }
         // eliminamos las preguntas dadas de alta
         await question.destroy({
           where: {
             id_evaluacion: evaluationId
-          }
+          },
+          transaction
         })
-        LOG.info('Sentences have been deleted from the sort table')
+        LOG.info('Sentences have been deleted from the Q/A table')
       }
 
       // Elimina la entrada
