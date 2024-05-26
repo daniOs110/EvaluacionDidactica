@@ -38,11 +38,9 @@ class AnswerEvaluationService {
       LOG.debug(`User register search = ${userRegisterAnswer}`)
       if (userRegisterAnswer === null || userRegisterAnswer === undefined) {
         // no encontro que el usuario haya respondido la evalaucion antes
-
         await transaction.commit()
         LOG.info('The user didnt response de evaluation before, he could conitnue')
-        return 'all good'
-
+        return { statusCode: 200, message: 'El usuario no ha respondido la evaluación anteriormente, puede continuar.', data: 'all good' }
         // return { error: `user: ${idUser} not exist`, statusCode: 404, message: `El tipo de usuario ingresado: ${typeUser} no existe o no se encontro en base de datos` }
       }
       if (userRegisterAnswer) {
