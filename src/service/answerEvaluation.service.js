@@ -15,30 +15,40 @@ class AnswerEvaluationService {
       let userRegisterAnswer = null
       if (typeUser === 'REGISTER') {
         LOG.info('Checking service already answer by register user')
-        userRegisterAnswer = await resultEvaluations.findAll({
+        userRegisterAnswer = await resultEvaluations.findOne({
           where: {
             id_evaluacion: idEvaluation,
             id_usuario_registrado: idUser
           }
         }, { transaction })
+        LOG.debug('Termine de buscar un usuario en la tabla registrado')
       } else if (typeUser === 'GUEST') {
         LOG.info('Checking service already answer by guest user ')
-        userRegisterAnswer = await resultEvaluations.findAll({
+        userRegisterAnswer = await resultEvaluations.findOne({
           where: {
             id_evaluacion: idEvaluation,
             id_usuario_invitado: idUser
           }
         }, { transaction })
+        LOG.debug('Termine de buscar un usuario en la tabla invitado')
       } else {
+        await transaction.rollback()
         return { error: `Error type of user: ${typeUser} not exist`, statusCode: 500, message: `El tipo de usuario ingresado: ${typeUser} no existe` }
       }
-      if (userRegisterAnswer.length > 0) {
+      LOG.debug(`User register search = ${userRegisterAnswer}`)
+      if (userRegisterAnswer === null || userRegisterAnswer === undefined) {
+        // no encontro que el usuario haya respondido la evalaucion antes
+
+        await transaction.commit()
+        LOG.info('The user didnt response de evaluation before, he could conitnue')
+        return 'all good'
+
+        // return { error: `user: ${idUser} not exist`, statusCode: 404, message: `El tipo de usuario ingresado: ${typeUser} no existe o no se encontro en base de datos` }
+      }
+      if (userRegisterAnswer) {
         await transaction.commit()
         LOG.error(`The user already response the evaluation and the lenght of array is ${userRegisterAnswer.length}`)
         return { error: 'The user already response the evaluation', statusCode: 409, message: 'El usuario ya respondio la evaluación.' }
-      } else {
-        LOG.info('The user didnt response de evaluation before, he could conitnue')
-        return 'all good'
       }
     } catch (error) {
       LOG.error(`Ocurrio un error al buscar si el usuario habia respondido la evaluación, error: ${error}`)
