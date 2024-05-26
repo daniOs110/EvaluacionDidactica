@@ -7,6 +7,7 @@ const authTypeUserMiddleware = require('../middleware/logged')
 const EvaluationService = require('../service/evaluation.service')
 const createEvaluationService = require('../service/createEvaluation.service')
 const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.service')
+const AnswerEvaluationService = require('../service/answerEvaluation.service')
 
 useEvaluationRouter.get('/evaluation/share/:idEvaluation', authMiddleware, async (req, res) => {
   const idEvaluation = req.params.idEvaluation
@@ -37,6 +38,26 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   const user = req.user
   const typeUser = req.type
   const pin = req.body.pin
+  // saber id de usuario para verificar que no haya contestado la evaluación
+  if (user === null || user === undefined) {
+    return res.status(500).json({ message: 'el usuario es nulo o indefinido' })
+  }
+  let idUser
+  switch (typeUser) {
+    case 'REGISTER':
+      LOG.info(`The user is ${typeUser}`)
+      idUser = user.get('id_info_usuario')
+      break
+    case ('GUEST'):
+      LOG.info(`The user is ${typeUser}`)
+      idUser = user.get('id_usuarios_invitados')
+      break
+    default:
+      LOG.error(`Type of user not recognized ${typeUser}`)
+      return res.status(404).json({ message: 'Usuario no reconocido' })
+  }
+
+  LOG.info(`The user type is ${typeUser} and the id: ${idUser}`)
   // decodificar el pin para saber a que evaluacion pertenece
   const decode = hashids.decode(pin)
   LOG.info(decode)
@@ -56,13 +77,20 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   }
   // que tipo de evaluacion es
   const typeEvaluation = evaluationsInfo.get('id_dinamica')
+  // Verificar que el id de evaluacion exista y este activa si no mandar mensaje de error
   const isActive = evaluationsInfo.get('active')
   LOG.info(`The atibute isActive of evaluation is: ${isActive}`)
   if (!isActive) {
     LOG.error(`The evaluation with id: ${idEvaluation} is inactive`)
     return res.status(404).json({ message: 'Evaluación inactiva' })
   }
-  // Verificar que el id de evaluacion exista y este activa si no mandar mensaje de error
+  // verificar que no se haya respondido antes la evaluacion por el mismo usuario
+  const evaluationAnswered = await AnswerEvaluationService.alreadyAnswered(idEvaluation, idUser, typeUser)
+  if (evaluationAnswered.error) {
+    // Si se encontró un error, se devuelve el código de estado correspondiente
+    return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
+  }
+  LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
   let dataEvaluation
   /** NOTA CAMBIAR EL SWITCH DE ID POR EL TIPO DE DINAMICA **/
   switch (typeEvaluation) {

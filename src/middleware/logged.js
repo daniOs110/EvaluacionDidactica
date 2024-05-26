@@ -26,15 +26,16 @@ const authTypeUserMiddleware = async (req, res, next) => {
     if (dataToken._id !== null && dataToken._id !== undefined) {
       user = await UserInfo.findByPk(dataToken._id)
       typeUser = 'REGISTER'
-      LOG.info(`recover data from userInfo the type of user is ${typeUser}`)
+      LOG.info(`recover data from userInfo the type of user is ${typeUser} and user is ${user}  y el id del token es: ${dataToken._id}`)
     } else if (dataToken._idGuest !== null && dataToken._idGuest !== undefined) {
       user = await GuestUser.findByPk(dataToken._idGuest)
       typeUser = 'GUEST'
-      LOG.info(`recover data from guestUser the type of user is ${typeUser}`)
+      LOG.info(`recover data from guestUser the type of user is ${typeUser} and user is ${user} y el id del token es: ${dataToken._idGuest}`)
     }
     req.user = user // para devolver los datos del usuario
     req.token = token // devolvemos el token
     req.type = typeUser
+    LOG.info(`El usuario es ${user} y el tipo de usuario ${typeUser}`)
     next()
   } catch (error) {
     return res.status(401).json({ message: ErrorMessages.NOT_SESSION })

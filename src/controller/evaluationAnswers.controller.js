@@ -11,7 +11,10 @@ evaluationAnswerRouter.post('/answer/sortSentence', authTypeUserMiddleware, asyn
   const typeUser = req.type
   const idEvaluation = parseInt(req.body.idEvaluacion, 10)
   const answersUser = req.body.sentence // falta meterle una validacion a estos datos (mientras se quedara asi)
-  LOG.info(`El tipo de dato answer user es: ${typeof answersUser}`)
+  LOG.info(`El tipo de dato answer user es: ${typeof answersUser} y el id de usuario es: ${user}`)
+  if (user === null || user === undefined) {
+    return res.status(500).json({ message: 'el usuario es nulo o indefinido' })
+  }
   /**
    * idEvaluacion
    * idPreguntaOrdenamiento (numPregunta/oracion) VIENE en el mapa

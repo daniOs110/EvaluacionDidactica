@@ -65,7 +65,9 @@ class AnswerEvaluationService {
      */
     let transaction
     const currentDate = new Date()
-    const currentTime = currentDate.toLocaleTimeString()
+    // const currentTime = currentDate.toLocaleTimeString()
+    const currentTime = currentDate.toTimeString().split(' ')[0]
+    LOG.debug(`la fecha actual es ${currentDate} y la hora actual es ${currentTime}`)
 
     try {
       transaction = await sequelize.transaction()
@@ -167,8 +169,8 @@ class AnswerEvaluationService {
       }
       this.resultEvaluations.push(evaluation)
     }
-        
-    return this.resultEvaluations.sort((a, b) => a.num_pregunta - b.num_pregunta);
+
+    return this.resultEvaluations.sort((a, b) => a.num_pregunta - b.num_pregunta)
   }
 }
 
