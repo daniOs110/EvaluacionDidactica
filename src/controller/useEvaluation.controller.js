@@ -85,12 +85,12 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
     return res.status(404).json({ message: 'Evaluación inactiva' })
   }
   // verificar que no se haya respondido antes la evaluacion por el mismo usuario
-  // const evaluationAnswered = await AnswerEvaluationService.alreadyAnswered(idEvaluation, idUser, typeUser)
-  // if (evaluationAnswered.error) {
-  //   // Si se encontró un error, se devuelve el código de estado correspondiente
-  //   return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
-  // }
-  // LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
+  const evaluationAnswered = await AnswerEvaluationService.alreadyAnswered(idEvaluation, idUser, typeUser)
+  if (evaluationAnswered.error) {
+    // Si se encontró un error, se devuelve el código de estado correspondiente
+    return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
+  }
+  LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
   let dataEvaluation
   /** NOTA CAMBIAR EL SWITCH DE ID POR EL TIPO DE DINAMICA **/
   switch (typeEvaluation) {

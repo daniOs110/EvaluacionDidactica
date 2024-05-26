@@ -39,12 +39,12 @@ evaluationAnswerRouter.post('/answer/sortSentence', authTypeUserMiddleware, asyn
   LOG.info(`The user type is ${typeUser} and the id: ${idUser}`)
   try {
     // verificar que no se haya respondido antes la evaluacion por el mismo usuario
-    // const evaluationAnswered = await AnswerEvaluationService.alreadyAnswered(idEvaluation, idUser, typeUser)
-    // if (evaluationAnswered.error) {
-    //   // Si se encontró un error, se devuelve el código de estado correspondiente
-    //   return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
-    // }
-    // LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
+    const evaluationAnswered = await AnswerEvaluationService.alreadyAnswered(idEvaluation, idUser, typeUser)
+    if (evaluationAnswered.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
+    }
+    LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
     // ahora debo saber las respuestas correctas asociadas a la evaluación y las que el usuario contesto
     const evaluationsInfo = await createEvaluationService.findEvaluationById(idEvaluation)
     if (evaluationsInfo === null) {
