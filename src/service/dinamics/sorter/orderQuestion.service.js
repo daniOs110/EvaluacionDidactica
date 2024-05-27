@@ -83,30 +83,43 @@ class OrderQuestionService {
           num_pregunta: numQuestion
         }
       }, { transaction })
+      // Obtiene los id_ordenamiento de todas las entradas encontradas
+      const idOrdenamientos = existingQuestion.map(question => question.id_ordenamiento)
 
       const idOrdenamiento = await sorting.findOne({
-        attributes: ['idOrdenamiento'],
+        attributes: ['id_ordenamiento'],
         where: {
           id_evaluacion: idEvaluation,
           num_pregunta: numQuestion,
           orden: 1
         }
       }, { transaction })
-      LOG.info(`El id de ordenamiento es ${idOrdenamiento}`)
 
       if (!existingQuestion) {
         return { error: 'Not found', statusCode: 404, message: 'La oración con el numero de pregunta proporcionado no fue encontrada.' }
       }
+      if (!idOrdenamiento) {
+        return { error: 'Not found', statusCode: 404, message: 'La oración con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+      // Extrae el valor del id_ordenamiento
+      LOG.info(`El id de ordenamiento es ${idOrdenamiento.id_ordenamiento}`)
+      const idOrder = idOrdenamiento.id_ordenamiento
 
+      // Elimina la entrada utilizando el id_ordenamiento
       await Answers.destroy({
         where: {
-          id_pregunta_ordenamiento: idOrdenamiento
+          id_pregunta_ordenamiento: idOrder
         },
         transaction
       })
 
-      // Elimina la entrada
-      await existingQuestion.destroy({ transaction })
+      // Elimina todas las entradas encontradas en sorting
+      await sorting.destroy({
+        where: {
+          id_ordenamiento: idOrdenamientos
+        },
+        transaction
+      })
 
       // confirma la transaccion
       await transaction.commit()
