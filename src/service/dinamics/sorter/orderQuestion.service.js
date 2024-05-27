@@ -122,6 +122,87 @@ class OrderQuestionService {
     }
   }
 
+  async getItemsEvaluation (idEvaluacion) {
+    try {
+      // Buscar todas las oraciones que pertenecen a la evaluación con el id dado
+      LOG.info(`El id de evaluacion es: ${idEvaluacion}`)
+      const sentences = await Sorting.findAll({
+        where: {
+          id_evaluacion: idEvaluacion
+        }
+      })
+      if (sentences.length === 0) {
+        console.log('No se encontraron oraciones para la evaluación:', idEvaluacion)
+        return null
+      }
+      // Crear un objeto para almacenar el par clave-valor (numPregunta - oracion)
+      const sentencesMap = new Map()
+
+      // Iterar sobre las oraciones encontradas y almacenarlas en el objeto
+      sentences.forEach(sentence => {
+        LOG.info(`Guardando la pregunta ${sentence.num_pregunta}, con el valor ${sentence.oracion} y el orden ${sentence.orden}`)
+        if (!sentencesMap.has(sentence.num_pregunta)) {
+          sentencesMap.set(sentence.num_pregunta, [])
+        }
+        sentencesMap.get(sentence.num_pregunta).push({ orden: sentence.orden, oracion: sentence.oracion, instruccion: sentence.instruccion })
+      })
+
+      const sentencesPlay = await this.unorderItems(sentencesMap)
+      if (sentencesPlay.size === 0) {
+        throw new Error('Error al obtener las oraciones de la evaluación ')
+      }
+
+      if (sentencesPlay instanceof Map) {
+        LOG.info('si es un mapa')
+      }
+
+      const jsonObject = {}
+      for (const [clave, valor] of sentencesPlay) {
+        jsonObject[clave] = valor
+      }
+
+      // const jsonString = JSON.stringify(jsonObject)
+      return { sentence: jsonObject }
+    } catch (error) {
+      // Manejar errores
+      LOG.error('Error al obtener las oraciones de la evaluación get evaluation:', error)
+      throw new Error('Error al obtener las oraciones de la evaluación')
+    }
+  }
+
+  async unorderItems (sentenceMap) {
+    const response = new Map()
+    let instruction
+    // Iterar sobre el map agrupado
+    sentenceMap.forEach((sentences, numPregunta) => {
+      LOG.info(`Procesando la pregunta ${numPregunta}`)
+
+      instruction = sentences.map(sentence => ({ instruccion: sentence.instruccion }))
+      const instructionShow = instruction[0]
+      const pairs = sentences.map(sentence => ({ orden: sentence.orden, oracion: sentence.oracion }))
+
+      // desordenar el array
+      const shuffledPairs = this.shuffleArray(pairs)
+
+      // separamos los pares desordenados en un array de orden - oracion
+      const shuffledOrdenes = shuffledPairs.map(pair => pair.orden)
+      const shuffledOraciones = shuffledPairs.map(pair => pair.oracion)
+
+      response.set(numPregunta, { numPregunta, instructionShow, orden: shuffledOrdenes, oraciones: shuffledOraciones })
+    })
+
+    return response
+  }
+
+  // Función para desordenar un array (algoritmo de Fisher-Yates)
+  shuffleArray (array) {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]
+    }
+    return array
+  }
+
   async unorderSentence (sentenceMap) {
     // recibo una oracion y la devuelvo desordenada
     const sizeMap = sentenceMap.size
