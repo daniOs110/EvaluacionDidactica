@@ -7,6 +7,7 @@ const { formatInTimeZone } = require('date-fns-tz')
 class AnswerEvaluationService {
   constructor () {
     this.resultEvaluations = []
+    this.resultItemsEvaluations = []
   }
 
   typeUserId (typeUser, user) {
@@ -154,44 +155,60 @@ class AnswerEvaluationService {
 
   async statusItemAnswer (answersUser, typeUser, idUser, activityInfo, idEvaluation) {
     let statusAnswer
-    let answerSaved
 
-    for (const activity of activityInfo) {
-      const idOrdenamiento = activity.id_ordenamiento
-      const oracion = activity.oracion
-      const idEvaluacion = activity.id_evaluacion
-      const numPregunta = activity.num_pregunta
-      // const orden = activity.orden
-      const evaluation = {
-        id_resultado_evaluaciones: answerSaved.id_resultado_evaluaciones,
-        id_ordenamiento: idOrdenamiento,
-        oracion: this.splitSentence(oracion),
-        id_evaluacion: idEvaluacion,
-        num_pregunta: numPregunta,
-        correcta: statusAnswer
-        // oracion_usuario: this.splitSentence(oracionUsuario)
-      }
-      this.resultEvaluations.push(evaluation)
-    }
+    LOG.info('Entrando al servicio status item answer')
+    this.resultItemsEvaluations = []
     let arrayUserAnswer
-
+    let answerSaved
     for (const key of Object.keys(answersUser)) {
       const question = answersUser[key]
       arrayUserAnswer = question.answer
-      LOG.debug(`Question Number: ${question.numPregunta}`)
+      const numQuestion = question.numPregunta
+      LOG.debug(`Question Number: ${numQuestion}`)
       LOG.debug(`Answers: ${arrayUserAnswer}`)
       // llamamos a un servicio para que nos diga si esta en orden el array
       statusAnswer = this.isArrayOrder(arrayUserAnswer)
       const arraySaved = JSON.stringify(arrayUserAnswer)
-      LOG.info(`La pregunta ${question.numPregunta} tiene el estatus correcto: ${statusAnswer}`)
+      LOG.info(`La pregunta ${numQuestion} tiene el estatus correcto: ${statusAnswer}`)
+      // filtro mi array de actividades de ordenamiento para solo mostrar las que coinciden con el numero de pregunta
+      const filteredActivities = activityInfo.filter(activity => activity.num_pregunta === numQuestion)
+      if (!filteredActivities.length > 0) {
+        return { error: `Not activities asociated with quetion ${numQuestion}`, statusCode: 404, message: 'No se encontraron items asociados a la rpegunta' }
+      }
+      // Crear el array respuestasCorrectas
+      const respuestasCorrectas = filteredActivities.map(activity => {
+        return {
+          id: activity.orden, // o activity.id_ordenamiento dependiendo de lo que necesites
+          texto: activity.oracion
+        }
+      })
+      const respuestasMap = new Map(respuestasCorrectas.map(respuesta => [respuesta.id, respuesta.texto]))
+
+      const respuestasUsuario = arrayUserAnswer.map(id => {
+        return {
+          id,
+          texto: respuestasMap.get(id) || 'Texto no encontrado'
+        }
+      })
+
       try {
-        answerSaved = await this.saveData(typeUser, idUser, idEvaluation, question.numPregunta, statusAnswer, arraySaved)
+        answerSaved = await this.saveData(typeUser, idUser, idEvaluation, filteredActivities[0].id_ordenamiento, statusAnswer, arraySaved)
       } catch (error) {
         LOG.error(`error al guardar respuestas de usuario: ${error.message}`)
         return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
       }
+      const evaluation = {
+        num_pregunta: numQuestion,
+        id_resultado_evaluaciones: answerSaved.id_resultado_evaluaciones,
+        descripcion: filteredActivities[0].instruccion,
+        correcta: statusAnswer,
+        respuestasCorrectas,
+        respuestasUsuario
+      }
+      this.resultItemsEvaluations.push(evaluation)
     }
-    return this.resultEvaluations.sort((a, b) => a.num_pregunta - b.num_pregunta)
+    // return null
+    return this.resultItemsEvaluations.sort((a, b) => a.num_pregunta - b.num_pregunta)
   }
 
   isArrayOrder (array) {

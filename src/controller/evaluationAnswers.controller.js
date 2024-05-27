@@ -26,7 +26,7 @@ evaluationAnswerRouter.post('/answer/sortItem', authTypeUserMiddleware, async (r
       // Si se encontró un error, se devuelve el código de estado correspondiente
       return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
     }
-    LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
+    LOG.info(`Service alreadyAnswered say ${evaluationAnswered.data}`)
     // ahora debo saber las respuestas correctas asociadas a la evaluación y las que el usuario contesto
     const evaluationsInfo = await createEvaluationService.findEvaluationById(idEvaluation)
     if (evaluationsInfo === null) {
@@ -76,7 +76,7 @@ evaluationAnswerRouter.post('/answer/sortSentence', authTypeUserMiddleware, asyn
       // Si se encontró un error, se devuelve el código de estado correspondiente
       return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
     }
-    LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
+    LOG.info(`Service alreadyAnswered say ${evaluationAnswered.data}`)
     // ahora debo saber las respuestas correctas asociadas a la evaluación y las que el usuario contesto
     const evaluationsInfo = await createEvaluationService.findEvaluationById(idEvaluation)
     if (evaluationsInfo === null) {
