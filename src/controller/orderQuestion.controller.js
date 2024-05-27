@@ -43,6 +43,25 @@ orderQuestionRouter.post('/dinamic/orderQuestion/delete', authMiddleware, async 
   }
 })
 
+orderQuestionRouter.post('/dinamic/orderItem/deleteQuestion', authMiddleware, async (req, res) => {
+  const idEvaluation = req.body.idEvaluacion
+  const numQuestion = req.body.numPregunta
+  try {
+    // se va a recibir la oracion y se guardara en bd
+    LOG.info(`la data traida es idEvaluacion: ${idEvaluation} y numero de pregunta ${numQuestion}`)
+    const deleteLetter = await orderQuestionService.deleteQuestion(idEvaluation, numQuestion)
+
+    if (deleteLetter.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(deleteLetter.statusCode).json({ error: deleteLetter.error, message: deleteLetter.message })
+    }
+    return res.status(201).json(deleteLetter)
+  } catch (error) {
+    LOG.error(`error al agregar la oración: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 orderQuestionRouter.get('/dinamic/orderQuestion/getActivity/:idEvaluacion', authMiddleware, async (req, res) => {
   // const user = req.user
   const idActivity = req.params.idEvaluacion

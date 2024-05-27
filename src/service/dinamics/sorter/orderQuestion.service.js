@@ -72,6 +72,53 @@ class OrderQuestionService {
     }
   }
 
+  async deleteQuestion (idEvaluation, numQuestion) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // Busca la entrada por su ID
+      const existingQuestion = await sorting.findAll({
+        where: {
+          id_evaluacion: idEvaluation,
+          num_pregunta: numQuestion
+        }
+      }, { transaction })
+
+      const idOrdenamiento = await sorting.findOne({
+        attributes: ['idOrdenamiento'],
+        where: {
+          id_evaluacion: idEvaluation,
+          num_pregunta: numQuestion,
+          orden: 1
+        }
+      }, { transaction })
+      LOG.info(`El id de ordenamiento es ${idOrdenamiento}`)
+
+      if (!existingQuestion) {
+        return { error: 'Not found', statusCode: 404, message: 'La oración con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+
+      await Answers.destroy({
+        where: {
+          id_pregunta_ordenamiento: idOrdenamiento
+        },
+        transaction
+      })
+
+      // Elimina la entrada
+      await existingQuestion.destroy({ transaction })
+
+      // confirma la transaccion
+      await transaction.commit()
+
+      return { message: 'Oracion eliminada exitosamente.' }
+    } catch (error) {
+      LOG.error(`Ocurrió un error al eliminar la oración, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al eliminar oración:' + error.message)
+    }
+  }
+
   async getEvaluation (idEvaluacion) {
     try {
       // Buscar todas las oraciones que pertenecen a la evaluación con el id dado
