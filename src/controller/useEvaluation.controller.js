@@ -77,6 +77,8 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   }
   // que tipo de evaluacion es
   const typeEvaluation = evaluationsInfo.get('id_dinamica')
+  let typeDinamic
+
   // Verificar que el id de evaluacion exista y este activa si no mandar mensaje de error
   const isActive = evaluationsInfo.get('active')
   LOG.info(`The atibute isActive of evaluation is: ${isActive}`)
@@ -90,9 +92,8 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
     // Si se encontró un error, se devuelve el código de estado correspondiente
     return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
   }
-  LOG.info(`Service alreadyAnswered say ${evaluationAnswered}`)
+  LOG.info(`Service alreadyAnswered say ${evaluationAnswered.data}`)
   let dataEvaluation
-  /** NOTA CAMBIAR EL SWITCH DE ID POR EL TIPO DE DINAMICA **/
   switch (typeEvaluation) {
     case 1:
       LOG.info('Es tipo ordena la pregunta')
@@ -103,6 +104,11 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
       break
     case 2:
       LOG.info('Es tipo ordena los items')
+      typeDinamic = 'ordena los item'
+      dataEvaluation = await orderQuestionService.getItemsEvaluation(idEvaluation)
+      if (dataEvaluation === null) {
+        return res.status(404).json({ message: 'No se encontro evaluación' })
+      }
       break
     case 3:
       LOG.info('Es tipo gato')
@@ -110,6 +116,7 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   }
 
   LOG.info(`El tipo de evaluacion es ${typeEvaluation}`)
+  LOG.info(`El tipo de dinamica es: ${typeDinamic}`)
   LOG.info(`El id de la evaluacion es: ${decode}`)
   LOG.info(`el pin es: ${pin} y el tipo de usuario es ${typeUser}`)
 
