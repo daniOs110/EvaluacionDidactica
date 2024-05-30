@@ -33,6 +33,7 @@ PosicionCrucigrama.init({
 }, {
   sequelize,
   modelName: 'posicion_crucigrama',
+  freezeTableName: true,
   timestamps: false
 })
 

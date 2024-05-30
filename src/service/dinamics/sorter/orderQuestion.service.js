@@ -142,7 +142,7 @@ class OrderQuestionService {
         }
       })
       if (sentences.length === 0) {
-        console.log('No se encontraron oraciones para la evaluación:', idEvaluacion)
+        LOG.info('No se encontraron oraciones para la evaluación:', idEvaluacion)
         return null
       }
       // Crear un objeto para almacenar el par clave-valor (numPregunta - oracion)

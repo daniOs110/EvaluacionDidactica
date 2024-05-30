@@ -26,6 +26,7 @@ Valor.init({
 }, {
   sequelize,
   modelName: 'valor',
+  freezeTableName: true,
   timestamps: false
 })
 

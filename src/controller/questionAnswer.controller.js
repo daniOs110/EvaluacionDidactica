@@ -7,6 +7,43 @@ const authMiddleware = require('../middleware/session')
 // const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.service')
 const questionAnswerService = require('../service/dinamics/questionAnswer/questionAnswer.service')
 
+questionAnswerRouter.post('/dinamic/crossword/add', authMiddleware, async (req, res) => {
+  const idEvaluation = req.body.idEvaluacion
+  const gridCols = req.body.gridCols
+  const gridRows = req.body.gridRows
+  const data = req.body.answers
+  const saveQuestions = []
+  const saveAnswers = []
+  let saveQuestion = null
+  let saveAnswer = null
+
+  try {
+    const boardData = await questionAnswerService.saveGrid(idEvaluation, gridCols, gridRows)
+    for (const crossword of data) {
+      const answer = crossword.answer
+      const clue = crossword.clue
+      const orientation = crossword.orientation
+      const position = crossword.position
+      const startX = crossword.startX
+      const startY = crossword.startY
+      // guardar pregunta y respuesta
+      saveQuestion = await questionAnswerService.addQuestion(idEvaluation, clue, 1, position)
+      saveQuestions.push(saveQuestion)
+      if (saveQuestion && saveQuestion.question) {
+        const idQuestion = saveQuestion.question.id_pregunta
+        saveAnswer = await questionAnswerService.addBoardAnswers(idQuestion, answer, orientation, startX, startY)
+        saveAnswers.push(saveAnswer)
+      } else {
+        return res.status(404).json({ message: `no se pudo guardar la pregunta ${position}.` })
+      }
+    }
+    return res.status(201).json({ boardData, saveQuestions, saveAnswers })
+  } catch (error) {
+    LOG.error(`error al agregar la pregunta y respuesta al crucigrama: ${error.message}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 questionAnswerRouter.post('/dinamic/wordSearch/add', authMiddleware, async (req, res) => {
   const idEvaluation = req.body.idEvaluacion
   const gridCols = req.body.gridCols
@@ -14,14 +51,16 @@ questionAnswerRouter.post('/dinamic/wordSearch/add', authMiddleware, async (req,
   const data = req.body.palabras
   const saveWords = []
   let saveWord = null
+
   try {
+    const boardData = await questionAnswerService.saveGrid(idEvaluation, gridCols, gridRows)
     for (const palabra of data) {
       const idWord = palabra.idPalabra
       const word = palabra.palabra
       saveWord = await questionAnswerService.addWord(idEvaluation, idWord, word)
       saveWords.push(saveWord)
     }
-    return res.status(201).json({ saveWords })
+    return res.status(201).json({ boardData, saveWords })
   } catch (error) {
     LOG.error(`error al agregar las palabras a la sopa de letras: ${error}`)
     return res.status(500).json({ message: 'Internal server error' })

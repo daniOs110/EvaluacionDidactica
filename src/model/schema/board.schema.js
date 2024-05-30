@@ -25,6 +25,7 @@ Tablero.init({
 }, {
   sequelize,
   modelName: 'tablero',
+  freezeTableName: true,
   timestamps: false
 })
 

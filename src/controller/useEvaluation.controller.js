@@ -8,6 +8,7 @@ const EvaluationService = require('../service/evaluation.service')
 const createEvaluationService = require('../service/createEvaluation.service')
 const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.service')
 const AnswerEvaluationService = require('../service/answerEvaluation.service')
+const questionAnswerService = require('../service/dinamics/questionAnswer/questionAnswer.service')
 
 useEvaluationRouter.get('/evaluation/share/:idEvaluation', authMiddleware, async (req, res) => {
   const idEvaluation = req.params.idEvaluation
@@ -111,7 +112,27 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
       }
       break
     case 3:
-      LOG.info('Es tipo gato')
+      LOG.info('Opción multiple')
+      typeDinamic = 'Opción multiple'
+      dataEvaluation = await questionAnswerService.getQuestionAnswerEvaluation(idEvaluation)
+      if (dataEvaluation === null) {
+        return res.status(404).json({ message: 'No se encontro evaluación' })
+      }
+      break
+    case 5:
+      LOG.info('Crucigrama')
+      dataEvaluation = await questionAnswerService.getCrosswordEvaluation(idEvaluation)
+      if (dataEvaluation === null) {
+        return res.status(404).json({ message: 'No se encontro evaluación' })
+      }
+      break
+    case 6:
+      LOG.info('Sopa de letras')
+      typeDinamic = 'Sopa de letras'
+      dataEvaluation = await questionAnswerService.getWordSearchEvaluation(idEvaluation)
+      if (dataEvaluation === null) {
+        return res.status(404).json({ message: 'No se encontro evaluación' })
+      }
       break
   }
 
