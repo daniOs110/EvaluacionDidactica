@@ -4,6 +4,7 @@ const sequelize = require('../../../config/database')
 const LOG = require('../../../app/logger')
 const Sorting = require('../../../model/schema/sorting.schema')
 const Answers = require('../../../model/schema/evaluation.results.schema')
+const Value = require('../../../model/schema/value.schema')
 
 class OrderQuestionService {
   async addLetter (letterData, userData) {
@@ -54,6 +55,12 @@ class OrderQuestionService {
       await Answers.destroy({
         where: {
           id_pregunta_ordenamiento: orderId
+        },
+        transaction
+      })
+      await Value.destroy({
+        where: {
+          id_odenamiento: orderId
         },
         transaction
       })
@@ -109,6 +116,13 @@ class OrderQuestionService {
       await Answers.destroy({
         where: {
           id_pregunta_ordenamiento: idOrder
+        },
+        transaction
+      })
+      // eliminar valor asociado al item
+      await Value.destroy({
+        where: {
+          id_odenamiento: idOrder
         },
         transaction
       })

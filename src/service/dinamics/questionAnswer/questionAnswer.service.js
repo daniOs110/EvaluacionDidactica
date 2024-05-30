@@ -2,6 +2,8 @@ const Question = require('../../../model/schema/questions.schema')
 const AnswerOption = require('../../../model/schema/response.schema')
 const Board = require('../../../model/schema/board.schema')
 const PositionBoard = require('../../../model/schema/positionCrosswords.schema')
+const Answers = require('../../../model/schema/evaluation.results.schema')
+const Value = require('../../../model/schema/value.schema')
 const sequelize = require('../../../config/database')
 
 const LOG = require('../../../app/logger')
@@ -350,6 +352,73 @@ class QuestionAnswerService {
       // Manejar errores
       LOG.error('Error al obtener los datos de la evaluación para sopa de letras:', error)
       throw new Error('Error al obtener la informacion de la evaluación')
+    }
+  }
+
+  async deleteQuestion (idEvaluation, numQuestion) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // Busca la entrada por su ID
+      const existingQuestion = await Question.findOne({
+        attributes: ['id_pregunta'],
+        where: {
+          id_evaluacion: idEvaluation,
+          num_pregunta: numQuestion
+        }
+      }, { transaction })
+
+      if (!existingQuestion) {
+        return { error: 'Not found', statusCode: 404, message: 'La pregunta con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+      // Obtiene los id_pregunta de todas las entradas encontradas
+      const idQuestion = existingQuestion.id_pregunta
+
+      // Extrae el valor del id_ordenamiento
+      LOG.info(`El id de pregunta a eliminar es es ${idQuestion}`)
+
+      // Elimina la entrada utilizando el id_ordenamiento
+      await Answers.destroy({
+        where: {
+          id_pregunta: idQuestion
+        },
+        transaction
+      })
+      await PositionBoard.destroy({
+        where: {
+          id_pregunta: idQuestion
+        },
+        transaction
+      })
+      await Value.destroy({
+        where: {
+          id_pregunta: idQuestion
+        },
+        transaction
+      })
+      await AnswerOption.destroy({
+        where: {
+          id_pregunta: idQuestion
+        },
+        transaction
+      })
+
+      // Elimina todas las entradas encontradas en sorting
+      await Question.destroy({
+        where: {
+          id_pregunta: idQuestion
+        },
+        transaction
+      })
+
+      // confirma la transaccion
+      await transaction.commit()
+
+      return { message: 'pregunta eliminada exitosamente.' }
+    } catch (error) {
+      LOG.error(`Ocurrió un error al eliminar la pregunta, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al eliminar la pregunta:' + error.message)
     }
   }
 }

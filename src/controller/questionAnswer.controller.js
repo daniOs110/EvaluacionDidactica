@@ -156,5 +156,23 @@ questionAnswerRouter.get('/dinamic/getActivity/wordSearch/:idEvaluacion', authMi
     return res.status(500).json({ error: 'Internal server error' })
   }
 })
+questionAnswerRouter.post('/dinamic/deleteQuestion', authMiddleware, async (req, res) => {
+  const idEvaluation = req.body.idEvaluacion
+  const numQuestion = req.body.numPregunta
+  try {
+    // se va a recibir la oracion y se guardara en bd
+    LOG.info(`la información recibida es idEvaluacion: ${idEvaluation} y numero de pregunta ${numQuestion}`)
+    const deleteQuestion = await questionAnswerService.deleteQuestion(idEvaluation, numQuestion)
+
+    if (deleteQuestion.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(deleteQuestion.statusCode).json({ error: deleteQuestion.error, message: deleteQuestion.message })
+    }
+    return res.status(201).json(deleteQuestion)
+  } catch (error) {
+    LOG.error(`error al agregar la oración: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
 
 module.exports = questionAnswerRouter
