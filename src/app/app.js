@@ -9,6 +9,7 @@ const createEvaluationRouter = require('../controller/createEvaluation.controlle
 const orderQuestionRouter = require('../controller/orderQuestion.controller')
 const useEvaluationRouter = require('../controller/useEvaluation.controller')
 const evaluationAnswerRouter = require('../controller/evaluationAnswers.controller')
+const questionAnswerRouter = require('../controller/QuestionAnswer.controller')
 
 const whiteList = ['https://app-didactic-evaluations.web.app']
 
@@ -36,7 +37,7 @@ app.get('/', (req, res) => {
 })
 app.use(express.json())
 app.use('/api/v1', router)
-app.use('/lerner', createUserRouter, adminRouter, validateTokenRouter, createEvaluationRouter, orderQuestionRouter, useEvaluationRouter, evaluationAnswerRouter)
+app.use('/lerner', createUserRouter, adminRouter, validateTokenRouter, createEvaluationRouter, orderQuestionRouter, useEvaluationRouter, evaluationAnswerRouter, questionAnswerRouter)
 
 module.exports = app
 

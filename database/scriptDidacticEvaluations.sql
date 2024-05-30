@@ -234,5 +234,71 @@ ENGINE = InnoDB;
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB
+
+
+
+-- -----------------------------------------------------
+-- Table `evaluaciones_didacticas`.`valor`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `valor` (
+  `id_valor` INT NOT NULL AUTO_INCREMENT,
+  `id_pregunta` INT NULL,
+  `id_ordenamiento` INT NULL,
+  `porcentaje` INT NOT NULL,
+  PRIMARY KEY (`id_valor`),
+  INDEX `id_pregunta_idx` (`id_pregunta` ASC) VISIBLE,
+  INDEX `id_ordenamiento_idx` (`id_ordenamiento` ASC) VISIBLE,
+  CONSTRAINT `id_pregunta`
+    FOREIGN KEY (`id_pregunta`)
+    REFERENCES `evaluaciones_didacticas`.`preguntas` (`id_pregunta`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `id_ordenamiento`
+    FOREIGN KEY (`id_ordenamiento`)
+    REFERENCES `ordenamiento` (`id_ordenamiento`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `evaluaciones_didacticas`.`tablero`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tablero` (
+  `id_tablero` INT NOT NULL AUTO_INCREMENT,
+  `id_evaluacion` INT NOT NULL,
+  `columna` INT NOT NULL,
+  `fila` INT NOT NULL,
+  PRIMARY KEY (`id_tablero`),
+  INDEX `id_evaluacion_idx` (`id_evaluacion` ASC) VISIBLE,
+  CONSTRAINT `fk_tablero_evaluacion`
+    FOREIGN KEY (`id_evaluacion`)
+    REFERENCES `evaluaciones` (`id_evaluaciones`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `evaluaciones_didacticas`.`posicion_crucigrama`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `posicion_crucigrama` (
+  `id_posicion_crucigrama` INT NOT NULL AUTO_INCREMENT,
+  `id_pregunta` INT NOT NULL,
+  `respuesta_texto` VARCHAR(45) NOT NULL,
+  `orientacion` VARCHAR(45) NOT NULL,
+  `inicio_x` INT NOT NULL,
+  `inicio_y` INT NOT NULL,
+  PRIMARY KEY (`id_posicion_crucigrama`),
+  INDEX `id_pregunta_idx` (`id_pregunta` ASC) VISIBLE,
+  CONSTRAINT `fk_posicion_crucigrama`
+    FOREIGN KEY (`id_pregunta`)
+    REFERENCES `preguntas` (`id_pregunta`)
+    ON DELETE CASCADE
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+    
+    
+
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
