@@ -1,5 +1,5 @@
 const { Sequelize, Model, DataTypes } = require('sequelize')
-const sequelize = require('../config/database')
+const sequelize = require('../../config/database')
 const Evaluacion = require('../schema/evaluation.schemas')
 
 class Tablero extends Model {}

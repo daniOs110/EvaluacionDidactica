@@ -1,5 +1,5 @@
 const { Sequelize, Model, DataTypes } = require('sequelize')
-const sequelize = require('../config/database')
+const sequelize = require('../../config/database')
 const Pregunta = require('../schema/questions.schema')
 
 class PosicionCrucigrama extends Model {}
