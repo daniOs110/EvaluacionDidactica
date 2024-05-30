@@ -258,12 +258,13 @@ class QuestionAnswerService {
         LOG.info(`No se encontraron preguntas asociadas a la evaluación: ${idEvaluation}`)
         return null
       }
-      const respuestas = []
+
       for (const question of questions) {
         const idQuestion = question.id_pregunta
         const numQuestion = question.num_pregunta
         const questionText = question.pregunta
         const numAnswers = question.numero_respuestas
+        const respuestas = []
         LOG.info(`the id question is ${numQuestion}`)
         // buscar en la tabla de respuestas las opciones asociadas al id_pregunta
         const answers = await AnswerOption.findAll({
@@ -295,7 +296,7 @@ class QuestionAnswerService {
         }
         this.resultQuestionAnswerEvaluation.push(preguntas)
       }
-      return this.resultEvaluations.sort((a, b) => a.idPregunta - b.idPregunta)
+      return this.resultQuestionAnswerEvaluation.sort((a, b) => a.idPregunta - b.idPregunta)
     } catch (error) {
       // Manejar errores
       LOG.error('Error al obtener los datos de la evaluación para dinamica de opcion multiple:', error)
@@ -312,7 +313,7 @@ class QuestionAnswerService {
           id_evaluacion: idEvaluacion
         }
       })
-      if (board.length === 0) {
+      if (!board) {
         LOG.info(`No se encontraron datos de tablero asociados a la evaluación: ${idEvaluacion}`)
         return null
       }

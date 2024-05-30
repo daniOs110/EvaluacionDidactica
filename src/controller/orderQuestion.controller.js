@@ -78,7 +78,22 @@ orderQuestionRouter.get('/dinamic/orderQuestion/getActivity/:idEvaluacion', auth
     return res.status(500).json({ error: 'Internal server error' })
   }
 })
-
+orderQuestionRouter.get('/dinamic/orderItem/getActivity/:idEvaluacion', authMiddleware, async (req, res) => {
+  // const user = req.user
+  const idActivity = req.params.idEvaluacion
+  try {
+    LOG.info(`el id de evaluación es ${idActivity}`)
+    // llamar al metodo que devuelva la evaluacion que coincida con el id
+    const activityInfo = await orderQuestionService.getItemsEvaluation(idActivity)
+    if (activityInfo === null) {
+      return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
+    }
+    return res.status(200).json(activityInfo)
+  } catch (error) {
+    LOG.error(`error al traer la actividad: ${error}`)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+})
 orderQuestionRouter.post('/dinamic/orderItem/addItems', authMiddleware, async (req, res) => {
   const idEvaluation = req.body.idEvaluacion
   const dinamic = req.body.Dinamica

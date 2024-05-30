@@ -108,4 +108,53 @@ questionAnswerRouter.post('/dinamic/questionAnswer/add', authMiddleware, async (
   }
 })
 
+questionAnswerRouter.get('/dinamic/getActivity/questionAnswer/:idEvaluacion', authMiddleware, async (req, res) => {
+  // const user = req.user
+  const idActivity = req.params.idEvaluacion
+  try {
+    LOG.info(`el id de evaluación es ${idActivity}`)
+    // llamar al metodo que devuelva la evaluacion que coincida con el id
+    const activityInfo = await questionAnswerService.getQuestionAnswerEvaluation(idActivity)
+    if (activityInfo === null) {
+      return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
+    }
+    return res.status(200).json(activityInfo)
+  } catch (error) {
+    LOG.error(`error al traer la actividad: ${error}`)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+})
+questionAnswerRouter.get('/dinamic/getActivity/crossword/:idEvaluacion', authMiddleware, async (req, res) => {
+  // const user = req.user
+  const idActivity = req.params.idEvaluacion
+  try {
+    LOG.info(`el id de evaluación es ${idActivity}`)
+    // llamar al metodo que devuelva la evaluacion que coincida con el id
+    const activityInfo = await questionAnswerService.getCrosswordEvaluation(idActivity)
+    if (activityInfo === null) {
+      return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
+    }
+    return res.status(200).json(activityInfo)
+  } catch (error) {
+    LOG.error(`error al traer la actividad: ${error}`)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+})
+questionAnswerRouter.get('/dinamic/getActivity/wordSearch/:idEvaluacion', authMiddleware, async (req, res) => {
+  // const user = req.user
+  const idActivity = req.params.idEvaluacion
+  try {
+    LOG.info(`el id de evaluación es ${idActivity}`)
+    // llamar al metodo que devuelva la evaluacion que coincida con el id
+    const activityInfo = await questionAnswerService.getWordSearchEvaluation(idActivity)
+    if (activityInfo === null) {
+      return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
+    }
+    return res.status(200).json(activityInfo)
+  } catch (error) {
+    LOG.error(`error al traer la actividad: ${error}`)
+    return res.status(500).json({ error: 'Internal server error' })
+  }
+})
+
 module.exports = questionAnswerRouter
