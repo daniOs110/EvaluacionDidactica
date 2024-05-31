@@ -84,7 +84,7 @@ orderQuestionRouter.get('/dinamic/orderItem/getActivity/:idEvaluacion', authMidd
   try {
     LOG.info(`el id de evaluación es ${idActivity}`)
     // llamar al metodo que devuelva la evaluacion que coincida con el id
-    const activityInfo = await orderQuestionService.getItemsEvaluation(idActivity)
+    const activityInfo = await orderQuestionService.getItemsEvaluationInOrder(idActivity)
     if (activityInfo === null) {
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }

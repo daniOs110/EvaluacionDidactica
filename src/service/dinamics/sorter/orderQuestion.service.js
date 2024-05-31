@@ -196,6 +196,47 @@ class OrderQuestionService {
     }
   }
 
+  async getItemsEvaluationInOrder(idEvaluacion) {
+    try {
+      // Buscar todas las oraciones que pertenecen a la evaluación con el id dado
+      LOG.info(`El id de evaluacion es: ${idEvaluacion}`);
+      const sentences = await Sorting.findAll({
+        where: {
+          id_evaluacion: idEvaluacion
+        }
+      });
+      if (sentences.length === 0) {
+        console.log('No se encontraron oraciones para la evaluación:', idEvaluacion);
+        return null;
+      }
+  
+      // Crear un objeto para almacenar el par clave-valor (numPregunta - oracion)
+      const sentencesMap = new Map();
+  
+      // Iterar sobre las oraciones encontradas y almacenarlas en el objeto
+      sentences.forEach(sentence => {
+        LOG.info(`Guardando la pregunta ${sentence.num_pregunta}, con el valor ${sentence.oracion} y el orden ${sentence.orden} y descripcion: ${sentence.instruccion} `);
+        if (!sentencesMap.has(sentence.num_pregunta)) {
+          sentencesMap.set(sentence.num_pregunta, {
+            numPregunta: sentence.num_pregunta,
+            descripcion: sentence.instruccion,
+            respuestas: []
+          });
+        }
+        const sentenceData = sentencesMap.get(sentence.num_pregunta);
+        sentenceData.respuestas.push({ id: sentence.orden, texto: sentence.oracion });
+      });
+  
+      // Transformar sentencesMap en el formato deseado
+      const sentencesArray = Array.from(sentencesMap.values());
+      return { sortItemsActivities: sentencesArray };
+    } catch (error) {
+      // Manejar errores
+      LOG.error('Error al obtener las oraciones de la evaluación get evaluation:', error);
+      throw new Error('Error al obtener las oraciones de la evaluación');
+    }
+  }  
+
   async getItemsEvaluation (idEvaluacion) {
     try {
       // Buscar todas las oraciones que pertenecen a la evaluación con el id dado

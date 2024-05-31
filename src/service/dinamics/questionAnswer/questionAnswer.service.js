@@ -355,6 +355,109 @@ class QuestionAnswerService {
     }
   }
 
+  async deleteAnswer (idEvaluation, numQuestion, idOption) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // Busca la entrada por su ID
+      const existingQuestion = await Question.findOne({
+        attributes: ['id_pregunta'],
+        where: {
+          id_evaluacion: idEvaluation,
+          num_pregunta: numQuestion
+        }
+      }, { transaction })
+
+      if (!existingQuestion) {
+        return { error: 'Not found', statusCode: 404, message: 'La pregunta con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+      // Obtiene los id_pregunta de todas las entradas encontradas
+      const idQuestion = existingQuestion.id_pregunta
+
+      const existingAnswer = await AnswerOption.findOne({
+        attributes: ['id_respuesta'],
+        where: {
+          id_pregunta: idQuestion,
+          id_opcion: idOption
+        }
+      }, { transaction })
+
+      if (!existingAnswer) {
+        return { error: 'Not found', statusCode: 404, message: 'La pregunta con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+      // Obtiene los id_pregunta de todas las entradas encontradas
+      const idAnswer = existingAnswer.id_respuesta
+      // Extrae el valor del id_ordenamiento
+      LOG.info(`El id de pregunta a eliminar es es ${idAnswer}`)
+
+      // Elimina la entrada utilizando el id_ordenamiento
+      await AnswerOption.destroy({
+        where: {
+          id_respuesta: idAnswer
+        },
+        transaction
+      })
+      await transaction.commit()
+
+      return { message: 'opcion de respuesta eliminada exitosamente.' }
+    } catch (error) {
+      LOG.error(`Ocurrió un error al eliminar la opcion de respuesta, error: ${error.message}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al eliminar la pregunta:' + error.message)
+    }
+  }
+
+  async deleteAnswerCrossword (idEvaluation, numQuestion) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // Busca la entrada por su ID
+      const existingQuestion = await Question.findOne({
+        attributes: ['id_pregunta'],
+        where: {
+          id_evaluacion: idEvaluation,
+          num_pregunta: numQuestion
+        }
+      }, { transaction })
+
+      if (!existingQuestion) {
+        return { error: 'Not found', statusCode: 404, message: 'La pregunta con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+      // Obtiene los id_pregunta de todas las entradas encontradas
+      const idQuestion = existingQuestion.id_pregunta
+
+      const existingAnswer = await PositionBoard.findOne({
+        attributes: ['id_posicion_crucigrama'],
+        where: {
+          id_pregunta: idQuestion
+        }
+      }, { transaction })
+
+      if (!existingAnswer) {
+        return { error: 'Not found', statusCode: 404, message: 'La respuesta con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+      // Obtiene los id_pregunta de todas las entradas encontradas
+      const idAnswer = existingAnswer.id_posicion_crucigrama
+      // Extrae el valor del id_ordenamiento
+      LOG.info(`El id de pregunta a eliminar es es ${idAnswer}`)
+
+      // Elimina la entrada utilizando el id_ordenamiento
+      await PositionBoard.destroy({
+        where: {
+          id_posicion_crucigrama: idAnswer
+        },
+        transaction
+      })
+      await transaction.commit()
+
+      return { message: 'opcion de respuesta crucigrama eliminada exitosamente.' }
+    } catch (error) {
+      LOG.error(`Ocurrió un error al eliminar la opcion de respuesta, error: ${error.message}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al eliminar la pregunta:' + error.message)
+    }
+  }
+
   async deleteQuestion (idEvaluation, numQuestion) {
     let transaction
     try {
