@@ -175,4 +175,42 @@ questionAnswerRouter.post('/dinamic/deleteQuestion', authMiddleware, async (req,
   }
 })
 
+questionAnswerRouter.post('/dinamic/delete/answer', authMiddleware, async (req, res) => {
+  const idEvaluation = req.body.idEvaluacion
+  const numQuestion = req.body.numPregunta
+  const idOption = req.body.idOpcion
+  try {
+    // se va a recibir la oracion y se guardara en bd
+    LOG.info(`la información recibida es idEvaluacion: ${idEvaluation} y numero de pregunta ${numQuestion}`)
+    const deleteQuestion = await questionAnswerService.deleteAnswer(idEvaluation, numQuestion, idOption)
+
+    if (deleteQuestion.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(deleteQuestion.statusCode).json({ error: deleteQuestion.error, message: deleteQuestion.message })
+    }
+    return res.status(201).json(deleteQuestion)
+  } catch (error) {
+    LOG.error(`error al borrar la opcion de respuesta: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+questionAnswerRouter.post('/dinamic/delete/answerCrossWord', authMiddleware, async (req, res) => {
+  const idEvaluation = req.body.idEvaluacion
+  const numQuestion = req.body.numPregunta
+  try {
+    // se va a recibir la oracion y se guardara en bd
+    LOG.info(`la información recibida es idEvaluacion: ${idEvaluation} y numero de pregunta ${numQuestion}`)
+    const deleteQuestion = await questionAnswerService.deleteAnswerCrossword(idEvaluation, numQuestion)
+
+    if (deleteQuestion.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(deleteQuestion.statusCode).json({ error: deleteQuestion.error, message: deleteQuestion.message })
+    }
+    return res.status(201).json(deleteQuestion)
+  } catch (error) {
+    LOG.error(`error al borrar la opcion de respues crucigrama: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 module.exports = questionAnswerRouter

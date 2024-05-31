@@ -9,7 +9,7 @@ const createEvaluationRouter = require('../controller/createEvaluation.controlle
 const orderQuestionRouter = require('../controller/orderQuestion.controller')
 const useEvaluationRouter = require('../controller/useEvaluation.controller')
 const evaluationAnswerRouter = require('../controller/evaluationAnswers.controller')
-const questionAnswerRouter = require('../controller/QuestionAnswer.controller')
+const questionAnswerRouter = require('../controller/questionAnswer.controller')
 
 const whiteList = ['https://app-didactic-evaluations.web.app']
 
