@@ -16,4 +16,15 @@ adminRouter.get('/admin/users', authMiddleware, adminCheck, async (req, res) => 
   }
 });
 
+adminRouter.delete('/admin/users/:id', authMiddleware, adminCheck, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const result = await adminService.deleteUser(id);
+    return res.status(200).json(result);
+  } catch (error) { 
+    LOG.error('Error eliminando el usuario: ', error);
+    return res.status(500).json({ message: 'Error interno del servidor' });
+  }
+});
+
 module.exports = adminRouter
