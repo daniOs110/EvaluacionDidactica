@@ -9,3 +9,6 @@ ADD COLUMN hora_desactivacion TIME NULL;
 
 alter table evaluaciones_didacticas.respuestas add column id_opcion int not null;
 alter table evaluaciones_didacticas.preguntas add column num_pregunta int not null;
+
+ALTER TABLE railway.preguntas
+ADD COLUMN nuevo_campo INT NOT NULL;
