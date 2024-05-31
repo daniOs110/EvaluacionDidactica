@@ -42,5 +42,38 @@ class AdminService {
         }
     }  
 
+    async deleteUser(id_info_usuario) {
+        const transaction = await sequelize.transaction();
+        try {
+            // Verificar el rol del usuario a eliminar
+            const userToDelete = await UserInfo.findOne({
+                where: { id_info_usuario },
+                include: [{
+                    model: UserCredentials,
+                    as: 'usuario',
+                    include: [{ model: RolDeUsuario, as: 'role' }]
+                }]
+            });
+
+            if (!userToDelete) {
+                throw new Error('Usuario no encontrado');
+            }
+
+            if (userToDelete.usuario.role.rol_de_usuario === 'admin') {
+                throw new Error('No se puede eliminar un usuario con rol de administrador');
+            }
+
+            // Eliminar el usuario
+            await UserInfo.destroy({ where: { id_info_usuario }, transaction });
+            await UserCredentials.destroy({ where: { id_credenciales_usuario: userToDelete.usuario.id_credenciales_usuario }, transaction });
+
+            await transaction.commit();
+            return { message: 'Usuario eliminado exitosamente' };
+        } catch (error) {
+            await transaction.rollback();
+            throw new Error('Error eliminando el usuario: ' + error.message);
+        }
+    }    
+
 }
 module.exports = new AdminService()
