@@ -60,7 +60,7 @@ class OrderQuestionService {
       })
       await Value.destroy({
         where: {
-          id_odenamiento: orderId
+          id_ordenamiento: orderId
         },
         transaction
       })

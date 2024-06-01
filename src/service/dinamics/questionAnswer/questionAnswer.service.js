@@ -183,14 +183,14 @@ class QuestionAnswerService {
   async getCrosswordEvaluation (idEvaluation) {
     this.resultQuestionAnswerEvaluation = []
     try {
-      LOG.info(`El id de evaluacion es: ${idEvaluation} pruebaaaa`)
+      LOG.info(`El id de evaluacion es: ${idEvaluation}`)
       // Buscar datos de tablero
       const questions = await Question.findAll({
         where: {
           id_evaluacion: idEvaluation
         }
       })
-      LOG.info(`the id question is ${idEvaluation} and the num question: ${questions.length}`)
+      LOG.info(`the id evaluation is ${idEvaluation} and the num question: ${questions.length}`)
       if (questions.length === 0) {
         LOG.info(`No se encontraron preguntas asociadas a la evaluación: ${idEvaluation}`)
         return null

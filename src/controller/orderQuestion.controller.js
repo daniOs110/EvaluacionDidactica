@@ -8,7 +8,6 @@ const { validateAddLetter } = require('../validators/users.validator')
 const { matchedData } = require('express-validator')
 const AddLetterDTO = require('../dtos/dinamics/sort/addLetter.dto')
 const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.service')
-const { error } = require('winston')
 
 orderQuestionRouter.post('/dinamic/orderQuestion/add', validateAddLetter, authMiddleware, async (req, res) => {
   const user = req.user
