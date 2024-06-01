@@ -43,6 +43,26 @@ orderQuestionRouter.post('/dinamic/orderQuestion/delete', authMiddleware, async 
   }
 })
 
+orderQuestionRouter.post('/dinamic/orderItem/delete/item', authMiddleware, async (req, res) => {
+  const idEvaluation = req.body.idEvaluacion
+  const numQuestion = req.body.numPregunta
+  const idItem = req.body.item
+  try {
+    // se va a recibir la oracion y se buscara en bd
+    LOG.info(`la data traida es idEvaluacion: ${idEvaluation} y numero de pregunta ${numQuestion} e item ${idItem}`)
+    const deleteLetter = await orderQuestionService.deleteItem(idEvaluation, numQuestion, idItem)
+
+    if (deleteLetter.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(deleteLetter.statusCode).json({ error: deleteLetter.error, message: deleteLetter.message })
+    }
+    return res.status(201).json(deleteLetter)
+  } catch (error) {
+    LOG.error(`error al eliminar el item: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
+
 orderQuestionRouter.post('/dinamic/orderItem/deleteQuestion', authMiddleware, async (req, res) => {
   const idEvaluation = req.body.idEvaluacion
   const numQuestion = req.body.numPregunta

@@ -110,19 +110,19 @@ class OrderQuestionService {
       }
       // Extrae el valor del id_ordenamiento
       LOG.info(`El id de ordenamiento es ${idOrdenamiento.id_ordenamiento}`)
-      const idOrder = idOrdenamiento.id_ordenamiento
+      // const idOrder = idOrdenamiento.id_ordenamiento
 
       // Elimina la entrada utilizando el id_ordenamiento
       await Answers.destroy({
         where: {
-          id_pregunta_ordenamiento: idOrder
+          id_pregunta_ordenamiento: idOrdenamientos
         },
         transaction
       })
       // eliminar valor asociado al item
       await Value.destroy({
         where: {
-          id_odenamiento: idOrder
+          id_ordenamiento: idOrdenamientos
         },
         transaction
       })
@@ -143,6 +143,64 @@ class OrderQuestionService {
       LOG.error(`Ocurrió un error al eliminar la oración, error: ${error}`)
       if (transaction) await transaction.rollback()
       throw new Error('Error al eliminar oración:' + error.message)
+    }
+  }
+
+  async deleteItem (idEvaluation, numQuestion, idItem) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // Busca la entrada por su ID
+
+      const idOrdenamiento = await sorting.findOne({
+        attributes: ['id_ordenamiento'],
+        where: {
+          id_evaluacion: idEvaluation,
+          num_pregunta: numQuestion,
+          orden: idItem
+        }
+      }, { transaction })
+
+      if (!idOrdenamiento) {
+        return { error: 'Not found', statusCode: 404, message: 'La oración con el numero de pregunta proporcionado no fue encontrada.' }
+      }
+      // Extrae el valor del id_ordenamiento
+      const idOrder = idOrdenamiento.id_ordenamiento
+      LOG.info(`El id de ordenamiento es ${idOrder}`)
+
+      // Elimina la entrada utilizando el id_ordenamiento
+      await Answers.destroy({
+        where: {
+          id_pregunta_ordenamiento: idOrder
+        },
+        transaction
+      })
+      LOG.debug('Respuestas eliminadas correctamente')
+      // eliminar valor asociado al item
+      await Value.destroy({
+        where: {
+          id_ordenamiento: idOrder
+        },
+        transaction
+      })
+      LOG.debug('Valores eliminados correctamente')
+      // Elimina todas las entradas encontradas en sorting
+      await sorting.destroy({
+        where: {
+          id_ordenamiento: idOrder
+        },
+        transaction
+      })
+      LOG.debug('id ordenamiento eliminado correctamente')
+
+      // confirma la transaccion
+      await transaction.commit()
+
+      return { message: 'item eliminado exitosamente.' }
+    } catch (error) {
+      LOG.error(`Ocurrió un error al eliminar el item, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al eliminar item:' + error.message)
     }
   }
 
@@ -196,46 +254,46 @@ class OrderQuestionService {
     }
   }
 
-  async getItemsEvaluationInOrder(idEvaluacion) {
+  async getItemsEvaluationInOrder (idEvaluacion) {
     try {
       // Buscar todas las oraciones que pertenecen a la evaluación con el id dado
-      LOG.info(`El id de evaluacion es: ${idEvaluacion}`);
+      LOG.info(`El id de evaluacion es: ${idEvaluacion}`)
       const sentences = await Sorting.findAll({
         where: {
           id_evaluacion: idEvaluacion
         }
-      });
+      })
       if (sentences.length === 0) {
-        console.log('No se encontraron oraciones para la evaluación:', idEvaluacion);
-        return null;
+        console.log('No se encontraron oraciones para la evaluación:', idEvaluacion)
+        return null
       }
-  
+
       // Crear un objeto para almacenar el par clave-valor (numPregunta - oracion)
-      const sentencesMap = new Map();
-  
+      const sentencesMap = new Map()
+
       // Iterar sobre las oraciones encontradas y almacenarlas en el objeto
       sentences.forEach(sentence => {
-        LOG.info(`Guardando la pregunta ${sentence.num_pregunta}, con el valor ${sentence.oracion} y el orden ${sentence.orden} y descripcion: ${sentence.instruccion} `);
+        LOG.info(`Guardando la pregunta ${sentence.num_pregunta}, con el valor ${sentence.oracion} y el orden ${sentence.orden} y descripcion: ${sentence.instruccion} `)
         if (!sentencesMap.has(sentence.num_pregunta)) {
           sentencesMap.set(sentence.num_pregunta, {
             numPregunta: sentence.num_pregunta,
             descripcion: sentence.instruccion,
             respuestas: []
-          });
+          })
         }
-        const sentenceData = sentencesMap.get(sentence.num_pregunta);
-        sentenceData.respuestas.push({ id: sentence.orden, texto: sentence.oracion });
-      });
-  
+        const sentenceData = sentencesMap.get(sentence.num_pregunta)
+        sentenceData.respuestas.push({ id: sentence.orden, texto: sentence.oracion })
+      })
+
       // Transformar sentencesMap en el formato deseado
-      const sentencesArray = Array.from(sentencesMap.values());
-      return { sortItemsActivities: sentencesArray };
+      const sentencesArray = Array.from(sentencesMap.values())
+      return { sortItemsActivities: sentencesArray }
     } catch (error) {
       // Manejar errores
-      LOG.error('Error al obtener las oraciones de la evaluación get evaluation:', error);
-      throw new Error('Error al obtener las oraciones de la evaluación');
+      LOG.error('Error al obtener las oraciones de la evaluación get evaluation:', error)
+      throw new Error('Error al obtener las oraciones de la evaluación')
     }
-  }  
+  }
 
   async getItemsEvaluation (idEvaluacion) {
     try {
