@@ -6,6 +6,7 @@ const authMiddleware = require('../middleware/session')
 // const AddLetterDTO = require('../dtos/dinamics/sort/addLetter.dto')
 // const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.service')
 const questionAnswerService = require('../service/dinamics/questionAnswer/questionAnswer.service')
+const createEvaluationService = require('../service/createEvaluation.service')
 
 questionAnswerRouter.post('/dinamic/crossword/add', authMiddleware, async (req, res) => {
   const idEvaluation = req.body.idEvaluacion
@@ -108,49 +109,65 @@ questionAnswerRouter.post('/dinamic/questionAnswer/add', authMiddleware, async (
   }
 })
 
-questionAnswerRouter.get('/dinamic/getActivity/questionAnswer/:idEvaluacion', authMiddleware, async (req, res) => {
+questionAnswerRouter.get('/dinamic/questionAnswer/getActivity/:idEvaluacion', authMiddleware, async (req, res) => {
   // const user = req.user
   const idActivity = req.params.idEvaluacion
   try {
     LOG.info(`el id de evaluación es ${idActivity}`)
+    // datos de la evaluacion
+    const evaluationsInfo = await createEvaluationService.findEvaluationById(idActivity)
+    if (evaluationsInfo === null) {
+      return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al id de evaluación' })
+    }
+
     // llamar al metodo que devuelva la evaluacion que coincida con el id
     const activityInfo = await questionAnswerService.getQuestionAnswerEvaluation(idActivity)
     if (activityInfo === null) {
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }
-    return res.status(200).json(activityInfo)
+    return res.status(200).json({ infoEvaluation: evaluationsInfo, activityInfo })
   } catch (error) {
     LOG.error(`error al traer la actividad: ${error}`)
     return res.status(500).json({ error: 'Internal server error' })
   }
 })
-questionAnswerRouter.get('/dinamic/getActivity/crossword/:idEvaluacion', authMiddleware, async (req, res) => {
+questionAnswerRouter.get('/dinamic/crossword/getActivity/:idEvaluacion', authMiddleware, async (req, res) => {
   // const user = req.user
   const idActivity = req.params.idEvaluacion
   try {
     LOG.info(`el id de evaluación es ${idActivity}`)
+    // info de evaluación
+    const evaluationsInfo = await createEvaluationService.findEvaluationById(idActivity)
+    if (evaluationsInfo === null) {
+      return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al id de evaluación' })
+    }
     // llamar al metodo que devuelva la evaluacion que coincida con el id
     const activityInfo = await questionAnswerService.getCrosswordEvaluation(idActivity)
     if (activityInfo === null) {
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }
-    return res.status(200).json(activityInfo)
+    return res.status(200).json({ infoEvaluation: evaluationsInfo, activityInfo })
   } catch (error) {
     LOG.error(`error al traer la actividad: ${error}`)
     return res.status(500).json({ error: 'Internal server error' })
   }
 })
-questionAnswerRouter.get('/dinamic/getActivity/wordSearch/:idEvaluacion', authMiddleware, async (req, res) => {
+questionAnswerRouter.get('/dinamic/wordSearch/getActivity/:idEvaluacion', authMiddleware, async (req, res) => {
   // const user = req.user
   const idActivity = req.params.idEvaluacion
   try {
     LOG.info(`el id de evaluación es ${idActivity}`)
+    // info de evaluación
+    const evaluationsInfo = await createEvaluationService.findEvaluationById(idActivity)
+    if (evaluationsInfo === null) {
+      return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al id de evaluación' })
+    }
     // llamar al metodo que devuelva la evaluacion que coincida con el id
     const activityInfo = await questionAnswerService.getWordSearchEvaluation(idActivity)
     if (activityInfo === null) {
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }
-    return res.status(200).json(activityInfo)
+    return res.status(200).json({ infoEvaluation: evaluationsInfo, activityInfo })
   } catch (error) {
     LOG.error(`error al traer la actividad: ${error}`)
     return res.status(500).json({ error: 'Internal server error' })
