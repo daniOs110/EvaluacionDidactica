@@ -9,6 +9,7 @@ class AnswerEvaluationService {
     this.resultEvaluations = []
     this.resultItemsEvaluations = []
     this.resultCrossWordEvaluations = []
+    this.resultMultipleChoiceEvaluations = []
   }
 
   typeUserId (typeUser, user) {
@@ -168,6 +169,61 @@ class AnswerEvaluationService {
       } else {
         // GUEST USER
         newAnswer = await resultEvaluations.create({
+          id_usuario_invitado: idUser,
+          fecha: currentDate,
+          hora: currentTime,
+          id_evaluacion: idEvaluation,
+          id_pregunta: idQuestion,
+          status: statusAnswer,
+          oracion_usuario: userSentence
+        }, { transaction })
+      }
+
+      await transaction.commit()
+      LOG.info('Saving data into resultEvaluations table for dinamic question answer')
+      return { newAnswer }
+    } catch (error) {
+      LOG.error(`Ocurrio un error al crear la evaluación, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
+    }
+  }
+
+  async saveDataMultipleChoice (typeUser, idUser, idEvaluation, idQuestion, statusAnswer, userSentence, idAnswerDb) {
+    /**
+     * idUsuario
+     * idEvaluacion
+     * idPregunta
+     * status
+     * oracionUsuario
+     * Date
+     * Time
+     */
+    const timeZone = 'America/Mexico_City' // recomendable cambiarlo en variables de entorno a futuro
+    let transaction
+    const currentDate = new Date()
+    const currentTime = formatInTimeZone(currentDate, timeZone, 'HH:mm:ss')
+    // const currentTime = currentDate.toTimeString().split(' ')[0]
+    LOG.debug(`la fecha actual es ${currentDate} y la hora actual es ${currentTime}`)
+
+    try {
+      transaction = await sequelize.transaction()
+      let newAnswer = null
+      if (typeUser === 'REGISTER') {
+        newAnswer = await resultEvaluations.create({
+          id_respuesta_seleccionada: idAnswerDb,
+          id_usuario_registrado: idUser,
+          fecha: currentDate,
+          hora: currentTime,
+          id_evaluacion: idEvaluation,
+          id_pregunta: idQuestion,
+          status: statusAnswer,
+          oracion_usuario: userSentence
+        }, { transaction })
+      } else {
+        // GUEST USER
+        newAnswer = await resultEvaluations.create({
+          id_respuesta_seleccionada: idAnswerDb,
           id_usuario_invitado: idUser,
           fecha: currentDate,
           hora: currentTime,
@@ -443,6 +499,68 @@ class AnswerEvaluationService {
       }
     }
     return 'Respuestas guardadas correctamente'
+  }
+
+  async statusMultipleChoiceAnswer (answersUser, typeUser, idUser, activityInfo, idEvaluation) {
+    LOG.info('Entrando al servicio status multiple choice answer')
+    this.resultMultipleChoiceEvaluations = []
+
+    // recorrer respuestas usuarios
+    for (const answerUser of answersUser) {
+      const idQuestionDb = answerUser.idQuestionDb
+      const numPregunta = answerUser.idPregunta
+      for (const answer of answerUser.respuestaSeleccionada) {
+        const idOption = answer.idOpcion
+        const text = answer.texto
+        const status = answer.correcta
+        const idAnswerDb = answer.idRespuestaDb
+        LOG.debug(`the option select is ${idOption}, the id question in db is ${idQuestionDb} and the numQuestion is ${numPregunta} the selected option say: ${text} and the status is ${status}`)
+        try {
+          const answerSaved = await this.saveDataMultipleChoice(typeUser, idUser, idEvaluation, idQuestionDb, status, text, idAnswerDb)
+          LOG.info(`the answer: ${answerSaved} has been saved succesfull`)
+          const evaluation = {
+            id_resultado_evaluaciones: answerSaved.id_resultado_evaluaciones,
+            id_pregunta: idQuestionDb,
+            num_pregunta: numPregunta,
+            answer: text,
+            correcta: status,
+            idOpcion: idOption,
+            idRespuestaDb: idAnswerDb
+          }
+          this.resultMultipleChoiceEvaluations.push(evaluation)
+        } catch (error) {
+          LOG.error(`error al guardar respuestas de usuario: ${error.message}`)
+          return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
+        }
+      }
+    }
+    return this.resultMultipleChoiceEvaluations.sort((a, b) => a.num_pregunta - b.num_pregunta)
+    // const userAnswersMap = new Map()
+    // for (const answerUser of answersUser) {
+    //   const numPregunta = answerUser.numPregunta
+    //   const palabra = answerUser.palabra
+    //   LOG.debug(`the correct word is ${palabra}, and the numQuestion is ${numPregunta}`)
+    //   userAnswersMap.set(numPregunta, palabra)
+    // }
+    // // Comparar los mapas
+    // const results = []
+    // for (const [numPregunta, correctEntry] of correctAnswersMap) {
+    //   const [correctWord, idQuestionDb] = correctEntry
+    //   const userWord = userAnswersMap.get(numPregunta)
+    //   if (!userWord) {
+    //     return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
+    //   }
+
+    //   const isCorrect = this.evaluateAnswer(correctWord, userWord)
+    //   results.push({
+    //     numPregunta,
+    //     userWord,
+    //     correctWord,
+    //     idQuestionDb,
+    //     isCorrect
+    //   })
+
+    // }
   }
 }
 
