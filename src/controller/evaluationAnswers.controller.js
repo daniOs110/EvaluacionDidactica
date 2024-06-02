@@ -155,7 +155,7 @@ evaluationAnswerRouter.post('/answer/wordSearch', authTypeUserMiddleware, async 
   const user = req.user
   const typeUser = req.type
   const idEvaluation = parseInt(req.body.idEvaluacion, 10)
-  const answersUser = req.body.answers
+  const answersUser = req.body.palabras
 
   if (user === null || user === undefined) {
     return res.status(500).json({ message: 'el usuario es nulo o indefinido' })
