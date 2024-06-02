@@ -380,7 +380,6 @@ class AnswerEvaluationService {
         id_pregunta: idQuestionDb,
         clue,
         answer: correctAnswer,
-        id_evaluacion: idEvaluation,
         num_pregunta: position,
         correcta: correctStatus,
         oracion_usuario: userAnswer,

@@ -130,6 +130,10 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
       LOG.info('Sopa de letras')
       typeDinamic = 'Sopa de letras'
       dataEvaluation = await questionAnswerService.getWordSearchEvaluation(idEvaluation)
+      if (dataEvaluation.error) {
+        // Si se encontró un error, se devuelve el código de estado correspondiente
+        return res.status(dataEvaluation.statusCode).json({ error: dataEvaluation.error, message: dataEvaluation.message })
+      }
       if (dataEvaluation === null) {
         return res.status(404).json({ message: 'No se encontro evaluación' })
       }

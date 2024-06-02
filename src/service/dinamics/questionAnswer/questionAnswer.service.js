@@ -309,19 +309,29 @@ class QuestionAnswerService {
     }
   }
 
+  async getBoardData (idEvaluation) {
+    try {
+      const board = await Board.findOne({
+        where: {
+          id_evaluacion: idEvaluation
+        }
+      })
+      if (!board) {
+        LOG.info(`No se encontraron datos de tablero asociados a la evaluación: ${idEvaluation}`)
+        return { error: 'Error finding boardData', statusCode: 404, message: 'not found board data asociated with de evaluation id' }
+      }
+      return board
+    } catch (error) {
+      LOG.error(`Error al obtener los datos de tablero asociados a la evaluación: ${error.message}`)
+      throw new Error('Error al obtener los datos de tablero asociados a la evaluación')
+    }
+  }
+
   async getWordSearchEvaluation (idEvaluacion) {
     try {
       LOG.info(`El id de evaluacion es: ${idEvaluacion}`)
       // Buscar datos de tablero
-      const board = await Board.findOne({
-        where: {
-          id_evaluacion: idEvaluacion
-        }
-      })
-      if (!board) {
-        LOG.info(`No se encontraron datos de tablero asociados a la evaluación: ${idEvaluacion}`)
-        return null
-      }
+      const board = await this.getBoardData(idEvaluacion)
 
       // Buscar todas las oraciones que pertenecen a la evaluación con el id dado
       const words = await Question.findAll({

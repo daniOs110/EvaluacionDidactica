@@ -133,14 +133,19 @@ evaluationAnswerRouter.post('/answer/crossWord', authTypeUserMiddleware, async (
     if (activityInfo === null) {
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }
+    const boardData = await questionAnswerService.getBoardData(idEvaluation)
+    if (boardData.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(boardData.statusCode).json({ error: boardData.error, message: boardData.message })
+    }
     // servicio para saber que oraciones contesto bien el usuario
     const statusAswers = await AnswerEvaluationService.statusCrossWordAnswer(answersUser, typeUser, idUser, activityInfo, idEvaluation)
-    // (activityInfo, answersUser, typeUser, idUser)
-    // if (statusAswers.error) {
-    // // Si se encontró un error, se devuelve el código de estado correspondiente
-    //   return res.status(statusAswers.statusCode).json({ error: statusAswers.error, message: statusAswers.message })
-    // }
-    return res.status(200).json({ evaluation: evaluationsInfo, DataAnswers: statusAswers })
+
+    if (statusAswers.error) {
+    // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(statusAswers.statusCode).json({ error: statusAswers.error, message: statusAswers.message })
+    }
+    return res.status(200).json({ evaluation: evaluationsInfo, boardData, DataAnswers: statusAswers })
   } catch (error) {
     LOG.error(`error al guardar respuestas de usuario: ${error.message}`)
     return res.status(500).json({ message: 'Internal server error' })
