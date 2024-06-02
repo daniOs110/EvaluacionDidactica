@@ -179,7 +179,7 @@ evaluationAnswerRouter.post('/answer/wordSearch', authTypeUserMiddleware, async 
     }
     // servicio para saber que oraciones escribio el profesor
     LOG.debug(`the id evaluation is: ${idEvaluation}`)
-    const activityInfo = await questionAnswerService.getCrosswordEvaluation(idEvaluation)
+    const activityInfo = await questionAnswerService.getWordSearchEvaluation(idEvaluation)
     if (activityInfo === null) {
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }

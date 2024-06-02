@@ -151,7 +151,7 @@ questionAnswerRouter.get('/dinamic/crossword/getActivity/:idEvaluacion', authMid
     if (activityInfo === null) {
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }
-    return res.status(200).json({ infoEvaluation: evaluationsInfo, boardData, activityInfo })
+    return res.status(200).json({ infoEvaluation: evaluationsInfo, activityInfo })
   } catch (error) {
     LOG.error(`error al traer la actividad: ${error}`)
     return res.status(500).json({ error: 'Internal server error' })
@@ -166,6 +166,11 @@ questionAnswerRouter.get('/dinamic/wordSearch/getActivity/:idEvaluacion', authMi
     const evaluationsInfo = await createEvaluationService.findEvaluationById(idActivity)
     if (evaluationsInfo === null) {
       return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al id de evaluación' })
+    }
+    const boardData = await questionAnswerService.getBoardData(idActivity)
+    if (boardData.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(boardData.statusCode).json({ error: boardData.error, message: boardData.message })
     }
     // llamar al metodo que devuelva la evaluacion que coincida con el id
     const activityInfo = await questionAnswerService.getWordSearchEvaluation(idActivity)
@@ -182,6 +187,7 @@ questionAnswerRouter.get('/dinamic/wordSearch/getActivity/:idEvaluacion', authMi
     return res.status(500).json({ error: 'Internal server error' })
   }
 })
+
 questionAnswerRouter.post('/dinamic/deleteQuestion', authMiddleware, async (req, res) => {
   const idEvaluation = req.body.idEvaluacion
   const numQuestion = req.body.numPregunta

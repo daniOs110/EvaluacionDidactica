@@ -345,7 +345,7 @@ class AnswerEvaluationService {
     // recorrer respuestas correctas
     const correctAnswersMap = new Map()
 
-    for (const activity of activityInfo) {
+    for (const activity of activityInfo.resultWordSearchEvaluation) {
       const idQuestionDb = activity.idQuestionDb
       const position = activity.position
       const clue = activity.clue
@@ -393,24 +393,20 @@ class AnswerEvaluationService {
     return this.resultCrossWordEvaluations.sort((a, b) => a.position - b.position)
   }
 
+  convertObjectToMap (obj) {
+    return new Map(Object.entries(obj))
+  }
+
   async statusWordSearchAnswer (answersUser, typeUser, idUser, activityInfo, idEvaluation) {
     LOG.info('Entrando al servicio status crossWord answer')
     this.resultCrossWordEvaluations = []
 
+    // recorrer respuestas correctas
+    const correctAnswersMap = this.onvertObjectToMap(activityInfo.words)
     // recorrer respuestas usuario
     const userAnswersMap = new Map()
-    for (const key of Object.keys(answersUser)) {
-      const question = answersUser[key]
-      const userAnswer = question.answer
-      const position = question.position
-      LOG.debug(`Question Number: ${position} and key ${question}`)
-      LOG.debug(`Answers: ${userAnswer}`)
-      userAnswersMap.set(position, userAnswer)
-    }
-    // recorrer respuestas correctas
-    const correctAnswersMap = new Map()
 
-    for (const activity of activityInfo) {
+    /* for (const answerUser of answersUser) {
       const idQuestionDb = activity.idQuestionDb
       const position = activity.position
       const clue = activity.clue
@@ -421,7 +417,7 @@ class AnswerEvaluationService {
       LOG.debug(`Question Number correct: ${position}`)
       LOG.debug(`correct answers: ${answer} and id db is ${idQuestionDb}`)
       correctAnswersMap.set(position, [answer, idQuestionDb, clue, orientation, startx, starty])
-    }
+    } */
     for (const [position, userAnswer] of userAnswersMap) {
       const [correctAnswer, idQuestionDb, clue, orientation, startx, starty] = correctAnswersMap.get(position)
 

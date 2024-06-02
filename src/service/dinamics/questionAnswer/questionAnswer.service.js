@@ -13,6 +13,7 @@ const LOG = require('../../../app/logger')
 class QuestionAnswerService {
   constructor () {
     this.resultQuestionAnswerEvaluation = []
+    this.resultWordSearchEvaluation = []
   }
 
   async saveGrid (idEvaluation, gridCols, gridRows) {
@@ -196,7 +197,8 @@ class QuestionAnswerService {
         LOG.info(`No se encontraron preguntas asociadas a la evaluación: ${idEvaluation}`)
         return null
       }
-
+      // Buscar datos de tablero
+      const board = await this.getBoardData(idEvaluation)
       for (const question of questions) {
         const idQuestion = question.id_pregunta
         const numQuestion = question.num_pregunta
@@ -239,7 +241,7 @@ class QuestionAnswerService {
         }
         this.resultQuestionAnswerEvaluation.push(preguntas)
       }
-      return this.resultQuestionAnswerEvaluation.sort((a, b) => a.position - b.position)
+      return { resultWordSearchEvaluation: this.resultQuestionAnswerEvaluation.sort((a, b) => a.position - b.position), board }
     } catch (error) {
       // Manejar errores
       LOG.error('Error al obtener los datos de la evaluación para dinamica de crucigrama:', error)
@@ -330,6 +332,7 @@ class QuestionAnswerService {
 
   async getWordSearchEvaluation (idEvaluacion) {
     try {
+      this.resultWordSearchEvaluation = []
       LOG.info(`El id de evaluacion es: ${idEvaluacion}`)
       // Buscar datos de tablero
       const board = await this.getBoardData(idEvaluacion)
@@ -345,23 +348,18 @@ class QuestionAnswerService {
         return null
       }
       // Crear un objeto para almacenar el par clave-valor (numPregunta - oracion)
-      const sentencesMap = new Map()
 
       // Iterar sobre las oraciones encontradas y almacenarlas en el objeto
       words.forEach(sentence => {
         LOG.info(`Guardando la pregunta ${sentence.num_pregunta}, con el valor ${sentence.pregunta}`)
-        sentencesMap.set(sentence.num_pregunta, sentence.pregunta)
+        const word = {
+          idPreguntaDb: sentence.id_pregunta,
+          numPregunta: sentence.num_pregunta,
+          palabra: sentence.pregunta
+        }
+        this.resultWordSearchEvaluation.push(word)
       })
-
-      LOG.info('Transformando el mapa a respuesta json')
-
-      const jsonObject = {}
-      for (const [clave, valor] of sentencesMap) {
-        jsonObject[clave] = valor
-      }
-
-      // const jsonString = JSON.stringify(jsonObject)
-      return { boardData: board, words: jsonObject }
+      return { resultWordSearchEvaluation: this.resultWordSearchEvaluation.sort((a, b) => a.numPregunta - b.numPregunta), board }
     } catch (error) {
       // Manejar errores
       LOG.error('Error al obtener los datos de la evaluación para sopa de letras:', error)
