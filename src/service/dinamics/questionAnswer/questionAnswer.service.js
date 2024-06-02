@@ -282,11 +282,13 @@ class QuestionAnswerService {
             const optionId = answer.id_opcion
             const answerText = answer.opcion_respuesta_texto
             const status = answer.status_respuesta
+            const idAnswerDb = answer.id_respuesta
             LOG.debug(`El id de la opcion es ${optionId} y la respuesta: ${answerText}`)
             const respuesta = {
               idOpcion: optionId,
               texto: answerText,
-              correcta: status
+              correcta: status,
+              idRespuestaDb: idAnswerDb
             }
             respuestas.push(respuesta)
           }
