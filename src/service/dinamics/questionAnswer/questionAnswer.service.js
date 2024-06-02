@@ -230,7 +230,7 @@ class QuestionAnswerService {
         }
         LOG.info('Llenando preguntas en la evaluacion')
         const preguntas = {
-
+          idQuestionDb: idQuestion,
           clue: questionText,
           position: numQuestion,
           answers
@@ -278,10 +278,12 @@ class QuestionAnswerService {
           for (const answer of answers) {
             const optionId = answer.id_opcion
             const answerText = answer.opcion_respuesta_texto
+            const status = answer.status_respuesta
             LOG.debug(`El id de la opcion es ${optionId} y la respuesta: ${answerText}`)
             const respuesta = {
               idOpcion: optionId,
-              texto: answerText
+              texto: answerText,
+              correcta: status
             }
             respuestas.push(respuesta)
           }
@@ -291,6 +293,7 @@ class QuestionAnswerService {
         }
         LOG.info('Llenando preguntas en la evaluacion')
         const preguntas = {
+          idQuestionDb: idQuestion,
           idPregunta: numQuestion,
           pregunta: questionText,
           numeroRespuestas: numAnswers,
