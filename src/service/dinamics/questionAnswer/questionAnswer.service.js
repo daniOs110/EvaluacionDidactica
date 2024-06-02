@@ -168,6 +168,7 @@ class QuestionAnswerService {
       if (!created) {
         LOG.info('opcionde respuesta previamente creada, se actualizo')
         existingAnswer.opcion_respuesta_texto = textAnswer
+        existingAnswer.status_respuesta = status
         await existingAnswer.save({ transaction })
       }
 
