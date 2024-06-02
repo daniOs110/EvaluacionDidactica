@@ -151,5 +151,50 @@ evaluationAnswerRouter.post('/answer/crossWord', authTypeUserMiddleware, async (
     return res.status(500).json({ message: 'Internal server error' })
   }
 })
+evaluationAnswerRouter.post('/answer/wordSearch', authTypeUserMiddleware, async (req, res) => {
+  const user = req.user
+  const typeUser = req.type
+  const idEvaluation = parseInt(req.body.idEvaluacion, 10)
+  const answersUser = req.body.answers
+
+  if (user === null || user === undefined) {
+    return res.status(500).json({ message: 'el usuario es nulo o indefinido' })
+  }
+  const idUser = AnswerEvaluationService.typeUserId(typeUser, user)
+
+  LOG.info(`The user type is ${typeUser} and the id: ${idUser}`)
+
+  try {
+    // verificar que no se haya respondido antes la evaluacion por el mismo usuario
+    const evaluationAnswered = await AnswerEvaluationService.alreadyAnswered(idEvaluation, idUser, typeUser)
+    if (evaluationAnswered.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(evaluationAnswered.statusCode).json({ error: evaluationAnswered.error, message: evaluationAnswered.message })
+    }
+    LOG.info(`Service alreadyAnswered say ${evaluationAnswered.data}`)
+    // ahora debo saber las respuestas correctas asociadas a la evaluación y las que el usuario contesto
+    const evaluationsInfo = await createEvaluationService.findEvaluationById(idEvaluation)
+    if (evaluationsInfo === null) {
+      return res.status(404).json({ message: 'No se encontraron evaluaciones asociadas al id de evaluación' })
+    }
+    // servicio para saber que oraciones escribio el profesor
+    LOG.debug(`the id evaluation is: ${idEvaluation}`)
+    const activityInfo = await questionAnswerService.getCrosswordEvaluation(idEvaluation)
+    if (activityInfo === null) {
+      return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
+    }
+    // servicio para saber que oraciones contesto bien el usuario
+    const statusAswers = await AnswerEvaluationService.statusWordSearchAnswer(answersUser, typeUser, idUser, activityInfo, idEvaluation)
+
+    if (statusAswers.error) {
+    // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(statusAswers.statusCode).json({ error: statusAswers.error, message: statusAswers.message })
+    }
+    return res.status(200).json({ evaluation: evaluationsInfo, DataAnswers: statusAswers })
+  } catch (error) {
+    LOG.error(`error al guardar respuestas de usuario: ${error.message}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
 
 module.exports = evaluationAnswerRouter

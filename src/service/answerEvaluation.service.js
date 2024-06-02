@@ -392,6 +392,71 @@ class AnswerEvaluationService {
     LOG.debug(`the results are ${this.resultCrossWordEvaluations}`)
     return this.resultCrossWordEvaluations.sort((a, b) => a.position - b.position)
   }
+
+  async statusWordSearchAnswer (answersUser, typeUser, idUser, activityInfo, idEvaluation) {
+    LOG.info('Entrando al servicio status crossWord answer')
+    this.resultCrossWordEvaluations = []
+
+    // recorrer respuestas usuario
+    const userAnswersMap = new Map()
+    for (const key of Object.keys(answersUser)) {
+      const question = answersUser[key]
+      const userAnswer = question.answer
+      const position = question.position
+      LOG.debug(`Question Number: ${position} and key ${question}`)
+      LOG.debug(`Answers: ${userAnswer}`)
+      userAnswersMap.set(position, userAnswer)
+    }
+    // recorrer respuestas correctas
+    const correctAnswersMap = new Map()
+
+    for (const activity of activityInfo) {
+      const idQuestionDb = activity.idQuestionDb
+      const position = activity.position
+      const clue = activity.clue
+      const answer = activity.answers[0].answer // Asumiendo que siempre hay una respuesta en el array answers
+      const orientation = activity.answers[0].orientation
+      const startx = activity.answers[0].startX
+      const starty = activity.answers[0].startY
+      LOG.debug(`Question Number correct: ${position}`)
+      LOG.debug(`correct answers: ${answer} and id db is ${idQuestionDb}`)
+      correctAnswersMap.set(position, [answer, idQuestionDb, clue, orientation, startx, starty])
+    }
+    for (const [position, userAnswer] of userAnswersMap) {
+      const [correctAnswer, idQuestionDb, clue, orientation, startx, starty] = correctAnswersMap.get(position)
+
+      if (correctAnswer === undefined || correctAnswer === null) {
+        return { error: 'Error saving user answers', statusCode: 500, message: 'idQuestion in database is null or undefined' }
+      }
+      // const isCorrect = userAnswer === correctAnswer
+      // const idQuestionDb = correctAnswer ? correctAnswer[1] : null
+      const correctStatus = this.evaluateAnswer(correctAnswer, userAnswer)
+      LOG.debug(`user answer is ${userAnswer}, and the id in db is ${idQuestionDb}correct answer is ${correctAnswer} and the status is: ${correctStatus}`)
+
+      let answerSaved = null
+      try {
+        answerSaved = await this.saveDataQuestionAnswer(typeUser, idUser, idEvaluation, idQuestionDb, correctStatus, userAnswer)
+      } catch (error) {
+        LOG.error(`error al guardar respuestas de usuario: ${error.message}`)
+        return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
+      }
+      const evaluation = {
+        id_resultado_evaluaciones: answerSaved.id_resultado_evaluaciones,
+        id_pregunta: idQuestionDb,
+        clue,
+        answer: correctAnswer,
+        num_pregunta: position,
+        correcta: correctStatus,
+        oracion_usuario: userAnswer,
+        orientation,
+        startx,
+        starty
+      }
+      this.resultCrossWordEvaluations.push(evaluation)
+    }
+    LOG.debug(`the results are ${this.resultCrossWordEvaluations}`)
+    return this.resultCrossWordEvaluations.sort((a, b) => a.position - b.position)
+  }
 }
 
 module.exports = new AnswerEvaluationService()
