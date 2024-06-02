@@ -358,10 +358,13 @@ class OrderQuestionService {
       const shuffledPairs = this.shuffleArray(pairs)
 
       // separamos los pares desordenados en un array de orden - oracion
-      const shuffledOrdenes = shuffledPairs.map(pair => pair.orden)
-      const shuffledOraciones = shuffledPairs.map(pair => pair.oracion)
-
-      response.set(numPregunta, { numPregunta, instructionShow, orden: shuffledOrdenes, oraciones: shuffledOraciones })
+      // const shuffledOrdenes = shuffledPairs.map(pair => pair.orden)
+      // const shuffledOraciones = shuffledPairs.map(pair => pair.oracion)
+      const items = shuffledPairs.map(pair => ({
+        orden: pair.orden,
+        oracion: pair.oracion
+      }))
+      response.set(numPregunta, { numPregunta, instructionShow, items })
     })
 
     return response
