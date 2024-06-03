@@ -33,8 +33,8 @@ PosicionCrucigrama.init({
 }, {
   sequelize,
   modelName: 'posicion_crucigrama',
-  freezeTableName: true,
-  timestamps: false
+  timestamps: false,
+  freezeTableName: true
 })
 
 PosicionCrucigrama.belongsTo(Pregunta, { foreignKey: 'id_pregunta', as: 'pregunta', onDelete: 'CASCADE', onUpdate: 'NO ACTION' })
