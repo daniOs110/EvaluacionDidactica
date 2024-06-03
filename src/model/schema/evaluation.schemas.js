@@ -54,7 +54,12 @@ Evaluation.init({
   hora_desactivacion: {
     type: DataTypes.TIME,
     allowNull: true
+  },
+  customizar_puntuacion: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
   }
+
 },
 {
   sequelize,
