@@ -326,7 +326,7 @@ class AnswerEvaluationService {
     for (let i = 0; i < (array.length); i++) {
       valueUser = array[i]
       LOG.debug(`i = ${i} y el valor del array es ${valueUser}`)
-      if (valueUser !== (i + 1)) {
+      if (valueUser !== (i)) {
         // el array no esta en orden
         return false
       }

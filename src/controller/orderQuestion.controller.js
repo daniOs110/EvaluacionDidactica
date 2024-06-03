@@ -117,11 +117,16 @@ orderQuestionRouter.post('/dinamic/orderItem/addItems', authMiddleware, async (r
   const idEvaluation = req.body.idEvaluacion
   const dinamic = req.body.Dinamica
   const data = req.body.preguntas
+  const customScore = req.body.customizarCalificacion
   try {
     LOG.info(`La evaluacion tiene el id: ${idEvaluation}, y es una dinamica tipo: ${dinamic}`)
     // hacer un bucle que itere los enunciados que ingreso el usuario
     let activityData = null
     const responses = []
+    // actualizar el campo customScore in db
+    if (customScore) {
+      // const status = await orderQuestionService.
+    }
     for (const pregunta of data) {
       LOG.info(`pregunta: ${pregunta.idPregunta}, Descripción: ${pregunta.descripcion}`)
       for (const respuesta of pregunta.respuestas) {

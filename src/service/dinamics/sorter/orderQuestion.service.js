@@ -5,6 +5,7 @@ const LOG = require('../../../app/logger')
 const Sorting = require('../../../model/schema/sorting.schema')
 const Answers = require('../../../model/schema/evaluation.results.schema')
 const Value = require('../../../model/schema/value.schema')
+const Evaluation = require('../../../model/schema/evaluation.schemas')
 
 class OrderQuestionService {
   async addLetter (letterData, userData) {
@@ -443,6 +444,17 @@ class OrderQuestionService {
     }
   }
 
+  async updateCustomScore (status) {
+    const transaction = await sequelize.transaction()
+    try {
+      // const customScore = await Evaluation.findOr
+    } catch (error) {
+      LOG.error(`Ocurrio un error al agregar las oraciones a la evaluacion, error: ${error.message()}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al agregar oracion a evaluación:' + error.message)
+    }
+  }
+
   async addItems (instruccion, idEvaluacion, numPregunta, orden, oracion) {
     // guardarla en DB
     const transaction = await sequelize.transaction()
@@ -467,6 +479,7 @@ class OrderQuestionService {
         LOG.info('oración previamente creada, se actualizo')
         existingSortItem.oracion = oracion
         existingSortItem.instruccion = instruccion
+        existingSortItem.orden = orden
         await existingSortItem.save({ transaction })
       }
 
