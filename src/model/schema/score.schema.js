@@ -6,6 +6,11 @@ const RegisterUser = require('./user.info.schema')
 class CalificacionUsuarios extends Model {}
 
 CalificacionUsuarios.init({
+  id_calificacion: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   id_usuario_invitado: {
     type: DataTypes.INTEGER,
     allowNull: true,
