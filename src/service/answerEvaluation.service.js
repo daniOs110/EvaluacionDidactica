@@ -1,4 +1,5 @@
 const resultEvaluations = require('../model/schema/evaluation.results.schema')
+const scoreUsers = require('../model/schema/score.schema')
 const sequelize = require('../config/database')
 const LOG = require('../app/logger')
 const { format } = require('date-fns')
@@ -270,6 +271,8 @@ class AnswerEvaluationService {
     this.resultItemsEvaluations = []
     let arrayUserAnswer
     let answerSaved
+    const countTotalQuetions = 0
+    const countCorrectAnswers = 0
     for (const key of Object.keys(answersUser)) {
       const question = answersUser[key]
       arrayUserAnswer = question.answer
@@ -308,7 +311,7 @@ class AnswerEvaluationService {
         return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
       }
       const evaluation = {
-        num_pregunta: numQuestion,
+        num_pregunta: numQuestion, // este actualizara mi numero total de preguntas en mi tabla
         id_resultado_evaluaciones: answerSaved.id_resultado_evaluaciones,
         descripcion: filteredActivities[0].instruccion,
         correcta: statusAnswer,
@@ -340,15 +343,16 @@ class AnswerEvaluationService {
     // debo guardar en resultados_evaluaciones cada respuesta
     LOG.info('Entrando al servicio status answer')
     this.resultEvaluations = []
+    let countTotalQuetions = 0
+    let countCorrectAnswers = 0
     // iterando sobre las respuestas correctas
     for (const activity of activityInfo) {
       // const { idOrdenamiento, oracion, idEvaluacion, numPregunta, orden } = activity
-
+      countTotalQuetions = countTotalQuetions + 1
       const idOrdenamiento = activity.id_ordenamiento
       const oracion = activity.oracion
       const idEvaluacion = activity.id_evaluacion
       const numPregunta = activity.num_pregunta
-      const orden = activity.orden
 
       let oracionUsuario = null
       let correctaEstatus = null
@@ -361,6 +365,17 @@ class AnswerEvaluationService {
         }
       } else {
         return { error: 'Bad format user sentence', statusCode: 404, message: 'Las respuestas que ingreso el usuario no son un objeto json.' }
+      }
+      if (correctaEstatus) {
+        // guarda en la nueva tabla
+        /**
+         * id_usuario_invitado
+         * id_usuario_registrado
+         * id_evaluacion
+         * correcta = countCorrectAnswers
+         * total_pregunta = countTotalQuetions
+        */
+        countCorrectAnswers = countCorrectAnswers + 1
       }
       let answerSaved = null
       try {
@@ -470,14 +485,14 @@ class AnswerEvaluationService {
     for (const answerUser of answersUser) {
       const numPregunta = answerUser.numPregunta
       const palabra = answerUser.palabra
-      LOG.debug(`the correct word is ${palabra}, and the numQuestion is ${numPregunta}`)
+      LOG.debug(`the user word is ${palabra}, and the numQuestion is ${numPregunta}`)
       userAnswersMap.set(numPregunta, palabra)
     }
     // Comparar los mapas
     const results = []
-    for (const [numPregunta, correctEntry] of correctAnswersMap) {
+    for (const [numPregunta, userWord] of userAnswersMap) {
+      const correctEntry = correctAnswersMap.get(numPregunta)
       const [correctWord, idQuestionDb] = correctEntry
-      const userWord = userAnswersMap.get(numPregunta)
       if (!userWord) {
         return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
       }
@@ -501,12 +516,77 @@ class AnswerEvaluationService {
     return 'Respuestas guardadas correctamente'
   }
 
+  /* async addScoreUser (typeUser, idGuestUser, idRegisterUser, idEvaluation, corrects, totalQuestions) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      LOG.info(`la data a guardar es idUsuaio invitado: ${idGuestUser}, id usuario registrado: ${idRegisterUser}, id evaluacion: ${idEvaluation} correctas: ${corrects} total preguntas ${totalQuestions}`)
+      switch (typeUser) {
+        case 'REGISTER':
+          LOG.info('register user')
+          const [existingAnswer, created] = await scoreUsers.findOrCreate({
+            where: {
+              id_usuario_registrado: idRegisterUser,
+              id_evaluacion: idEvaluation
+            },
+            defaults: {
+              id_usuario_registrado: idRegisterUser,
+              id_evaluacion: idEvaluation,
+              correcta: corrects,
+              total_pregunta: totalQuestions
+            },
+            transaction
+          })
+          if (!created) {
+            LOG.info('opcionde respuesta previamente creada, se actualizo')
+            existingAnswer.correcta = corrects
+            existingAnswer.total_pregunta = totalQuestions
+            await existingAnswer.save({ transaction })
+          }
+          break
+        case 'GUEST':
+          LOG.info('guest user')
+          break
+      }
+
+      await transaction.commit()
+      return { answer: existingAnswer }
+    } catch (error) {
+      LOG.error(`Ocurrio un error al agregar la opcion de respuesta a la evaluacion, error: ${error}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al agregar opcion de pregunta a la evaluación:' + error.message)
+    }
+  } */
+
   async statusMultipleChoiceAnswer (answersUser, typeUser, idUser, activityInfo, idEvaluation) {
     LOG.info('Entrando al servicio status multiple choice answer')
     this.resultMultipleChoiceEvaluations = []
 
     // recorrer respuestas usuarios
+    // esto es para crear un mapa el cual despues voy a recorrer sobre activity info para saber cuantas
+    // respuestas correctas tiene cada pregunta e ir armando el promedio
+    // const answerReport = [idQuestionDb, { idOption, status }]
+    const answerActivity = new Map()
+    let totalQuestions = 0
+    for (const activity of activityInfo) {
+      const idQuestionDb = activity.idQuestionDb
+      const numPregunta = activity.idPregunta
+      for (const answer of activity.respuestas) {
+        const idOption = answer.idOpcion
+        const status = answer.correcta
+        const idAnswerDb = answer.idRespuestaDb
+        if (status) {
+          answerActivity.set(idAnswerDb, { idQuestionDb, numPregunta, idOption, status })
+        }
+      }
+      totalQuestions = numPregunta
+    }
+    LOG.info(`The evaluation ${idEvaluation} have ${totalQuestions} questions`)
+    const answerReport = new Map()
+    let countTotalQuetions = 0
+    let countCorrectAnswers = 0
     for (const answerUser of answersUser) {
+      countTotalQuetions = countTotalQuetions + 1
       const idQuestionDb = answerUser.idQuestionDb
       const numPregunta = answerUser.idPregunta
       for (const answer of answerUser.respuestaSeleccionada) {
@@ -514,6 +594,11 @@ class AnswerEvaluationService {
         const text = answer.texto
         const status = answer.correcta
         const idAnswerDb = answer.idRespuestaDb
+        if (status) {
+          countCorrectAnswers = countCorrectAnswers + 1
+        }
+
+        answerReport.set(idAnswerDb, { idQuestionDb, numPregunta, idOption, status })
         LOG.debug(`the option select is ${idOption}, the id question in db is ${idQuestionDb} and the numQuestion is ${numPregunta} the selected option say: ${text} and the status is ${status}`)
         try {
           const answerSaved = await this.saveDataMultipleChoice(typeUser, idUser, idEvaluation, idQuestionDb, status, text, idAnswerDb)
@@ -534,33 +619,34 @@ class AnswerEvaluationService {
         }
       }
     }
+    // Inicializar un mapa para los resultados
+    /* const results = new Map()
+
+    // Contar respuestas correctas por pregunta
+    answerActivity.forEach((value) => {
+      const { numPregunta } = value
+      if (!results.has(numPregunta)) {
+        results.set(numPregunta, { totalCorrect: 0, userCorrect: 0 })
+      }
+      const result = results.get(numPregunta)
+      result.totalCorrect += 1
+    })
+
+    // Contar respuestas correctas del usuario por pregunta
+    answerReport.forEach((value, key) => {
+      const { numPregunta, idOption } = value
+      if (answerActivity.has(key) && answerActivity.get(key).status) {
+        const result = results.get(numPregunta)
+        result.userCorrect += 1
+      }
+    })
+
+    // Mostrar los resultados
+    results.forEach((value, key) => {
+      LOG.info(`Pregunta ${key}: ${value.userCorrect}/${value.totalCorrect} respuestas correctas`)
+    }) */
+
     return this.resultMultipleChoiceEvaluations.sort((a, b) => a.num_pregunta - b.num_pregunta)
-    // const userAnswersMap = new Map()
-    // for (const answerUser of answersUser) {
-    //   const numPregunta = answerUser.numPregunta
-    //   const palabra = answerUser.palabra
-    //   LOG.debug(`the correct word is ${palabra}, and the numQuestion is ${numPregunta}`)
-    //   userAnswersMap.set(numPregunta, palabra)
-    // }
-    // // Comparar los mapas
-    // const results = []
-    // for (const [numPregunta, correctEntry] of correctAnswersMap) {
-    //   const [correctWord, idQuestionDb] = correctEntry
-    //   const userWord = userAnswersMap.get(numPregunta)
-    //   if (!userWord) {
-    //     return { error: 'Error saving user answers', statusCode: 500, message: 'Las respuestas que ingreso el usuario no se pudieron almacenar.' }
-    //   }
-
-    //   const isCorrect = this.evaluateAnswer(correctWord, userWord)
-    //   results.push({
-    //     numPregunta,
-    //     userWord,
-    //     correctWord,
-    //     idQuestionDb,
-    //     isCorrect
-    //   })
-
-    // }
   }
 }
 
