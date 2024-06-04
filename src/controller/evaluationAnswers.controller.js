@@ -89,7 +89,7 @@ evaluationAnswerRouter.post('/answer/sortSentence', authTypeUserMiddleware, asyn
       return res.status(404).json({ error: 'No hay actividades asociadas a la evaluación' })
     }
     // servicio para saber que oraciones contesto el usuario
-    const statusAswers = await AnswerEvaluationService.statusAnswer(activityInfo, answersUser, typeUser, idUser)
+    const statusAswers = await AnswerEvaluationService.statusAnswer(activityInfo, answersUser, typeUser, idUser, idEvaluation)
     if (statusAswers.error) {
     // Si se encontró un error, se devuelve el código de estado correspondiente
       return res.status(statusAswers.statusCode).json({ error: statusAswers.error, message: statusAswers.message })

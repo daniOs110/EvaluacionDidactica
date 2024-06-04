@@ -272,16 +272,20 @@ class AnswerEvaluationService {
     let arrayUserAnswer
     let answerSaved
     const countTotalQuetions = 0
-    const countCorrectAnswers = 0
+    let countCorrectAnswers = 0
     for (const key of Object.keys(answersUser)) {
       const question = answersUser[key]
       arrayUserAnswer = question.answer
       const numQuestion = question.numPregunta
-      LOG.debug(`Question Number: ${numQuestion}`)
+      LOG.debug(`Question Number: ${numQuestion} total question at the moment: ${countTotalQuetions + 1}`)
       LOG.debug(`Answers: ${arrayUserAnswer}`)
       // llamamos a un servicio para que nos diga si esta en orden el array
       statusAnswer = this.isArrayOrder(arrayUserAnswer)
       const arraySaved = JSON.stringify(arrayUserAnswer)
+      if (statusAnswer) {
+        countCorrectAnswers = countCorrectAnswers + 1
+      }
+      const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, numQuestion)
       LOG.info(`La pregunta ${numQuestion} tiene el estatus correcto: ${statusAnswer}`)
       // filtro mi array de actividades de ordenamiento para solo mostrar las que coinciden con el numero de pregunta
       const filteredActivities = activityInfo.filter(activity => activity.num_pregunta === numQuestion)
@@ -338,7 +342,7 @@ class AnswerEvaluationService {
     return true
   }
 
-  async statusAnswer (activityInfo, answersUser, typeUser, idUser) {
+  async statusAnswer (activityInfo, answersUser, typeUser, idUser, idEvaluation) {
     LOG.info(`status answer devuelve ${this.resultEvaluations}`)
     // debo guardar en resultados_evaluaciones cada respuesta
     LOG.info('Entrando al servicio status answer')
@@ -353,7 +357,7 @@ class AnswerEvaluationService {
       const oracion = activity.oracion
       const idEvaluacion = activity.id_evaluacion
       const numPregunta = activity.num_pregunta
-
+      LOG.debug(`numquestion: ${numPregunta} and counter is equal: ${countTotalQuetions}`)
       let oracionUsuario = null
       let correctaEstatus = null
 
@@ -367,16 +371,9 @@ class AnswerEvaluationService {
         return { error: 'Bad format user sentence', statusCode: 404, message: 'Las respuestas que ingreso el usuario no son un objeto json.' }
       }
       if (correctaEstatus) {
-        // guarda en la nueva tabla
-        /**
-         * id_usuario_invitado
-         * id_usuario_registrado
-         * id_evaluacion
-         * correcta = countCorrectAnswers
-         * total_pregunta = countTotalQuetions
-        */
         countCorrectAnswers = countCorrectAnswers + 1
       }
+      const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, numPregunta)
       let answerSaved = null
       try {
         answerSaved = await this.saveData(typeUser, idUser, idEvaluacion, idOrdenamiento, correctaEstatus, oracionUsuario)
@@ -415,7 +412,7 @@ class AnswerEvaluationService {
     }
     // recorrer respuestas correctas
     const correctAnswersMap = new Map()
-
+    let countTotalQuestion = 0
     for (const activity of activityInfo.resultWordSearchEvaluation) {
       const idQuestionDb = activity.idQuestionDb
       const position = activity.position
@@ -424,10 +421,13 @@ class AnswerEvaluationService {
       const orientation = activity.answers[0].orientation
       const startx = activity.answers[0].startX
       const starty = activity.answers[0].startY
+      countTotalQuestion = countTotalQuestion + 1
       LOG.debug(`Question Number correct: ${position}`)
       LOG.debug(`correct answers: ${answer} and id db is ${idQuestionDb}`)
       correctAnswersMap.set(position, [answer, idQuestionDb, clue, orientation, startx, starty])
     }
+    LOG.info(`Number total of questions are ${countTotalQuestion}`)
+    let countCorrectAnswers = 0
     for (const [position, userAnswer] of userAnswersMap) {
       const [correctAnswer, idQuestionDb, clue, orientation, startx, starty] = correctAnswersMap.get(position)
 
@@ -437,6 +437,10 @@ class AnswerEvaluationService {
       // const isCorrect = userAnswer === correctAnswer
       // const idQuestionDb = correctAnswer ? correctAnswer[1] : null
       const correctStatus = this.evaluateAnswer(correctAnswer, userAnswer)
+      if (correctStatus) {
+        countCorrectAnswers = countCorrectAnswers + 1
+      }
+      const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, countTotalQuestion)
       LOG.debug(`user answer is ${userAnswer}, and the id in db is ${idQuestionDb}correct answer is ${correctAnswer} and the status is: ${correctStatus}`)
 
       let answerSaved = null
@@ -474,10 +478,12 @@ class AnswerEvaluationService {
 
     // recorrer respuestas correcta
     const correctAnswersMap = new Map()
+    let countTotalQuestion = 0
     for (const word of activityInfo.resultWordSearchEvaluation) {
       const idQuestionDb = word.idPreguntaDb
       const numPregunta = word.numPregunta
       const palabra = word.palabra
+      countTotalQuestion = countTotalQuestion + 1
       LOG.debug(`the word id ${palabra}, the id question in db is ${idQuestionDb} and the numQuestion is ${numPregunta}`)
       correctAnswersMap.set(numPregunta, [palabra, idQuestionDb])
     }
@@ -488,8 +494,10 @@ class AnswerEvaluationService {
       LOG.debug(`the user word is ${palabra}, and the numQuestion is ${numPregunta}`)
       userAnswersMap.set(numPregunta, palabra)
     }
+    LOG.info(`Total questions: ${countTotalQuestion}`)
     // Comparar los mapas
     const results = []
+    let countCorrectAnswers = 0
     for (const [numPregunta, userWord] of userAnswersMap) {
       const correctEntry = correctAnswersMap.get(numPregunta)
       const [correctWord, idQuestionDb] = correctEntry
@@ -498,6 +506,10 @@ class AnswerEvaluationService {
       }
 
       const isCorrect = this.evaluateAnswer(correctWord, userWord)
+      if (isCorrect) {
+        countCorrectAnswers = countCorrectAnswers + 1
+      }
+      const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, countTotalQuestion)
       results.push({
         numPregunta,
         userWord,
@@ -516,21 +528,22 @@ class AnswerEvaluationService {
     return 'Respuestas guardadas correctamente'
   }
 
-  /* async addScoreUser (typeUser, idGuestUser, idRegisterUser, idEvaluation, corrects, totalQuestions) {
+  async addScoreUser (typeUser, idUser, idEvaluation, corrects, totalQuestions) {
     let transaction
     try {
       transaction = await sequelize.transaction()
-      LOG.info(`la data a guardar es idUsuaio invitado: ${idGuestUser}, id usuario registrado: ${idRegisterUser}, id evaluacion: ${idEvaluation} correctas: ${corrects} total preguntas ${totalQuestions}`)
+      LOG.info(`la información a guardar es tipo usuario: ${typeUser}, id usuario: ${idUser}, id evaluación: ${idEvaluation} correctas: ${corrects} total preguntas ${totalQuestions}`)
+      let existingAnswer, created
       switch (typeUser) {
         case 'REGISTER':
-          LOG.info('register user')
-          const [existingAnswer, created] = await scoreUsers.findOrCreate({
+          LOG.info('register user');
+          [existingAnswer, created] = await scoreUsers.findOrCreate({
             where: {
-              id_usuario_registrado: idRegisterUser,
+              id_usuario_registrado: idUser,
               id_evaluacion: idEvaluation
             },
             defaults: {
-              id_usuario_registrado: idRegisterUser,
+              id_usuario_registrado: idUser,
               id_evaluacion: idEvaluation,
               correcta: corrects,
               total_pregunta: totalQuestions
@@ -538,25 +551,48 @@ class AnswerEvaluationService {
             transaction
           })
           if (!created) {
-            LOG.info('opcionde respuesta previamente creada, se actualizo')
+            LOG.info('opción de respuesta previamente creada, se actualizó')
             existingAnswer.correcta = corrects
             existingAnswer.total_pregunta = totalQuestions
             await existingAnswer.save({ transaction })
           }
           break
         case 'GUEST':
-          LOG.info('guest user')
+          LOG.info('guest user');
+          [existingAnswer, created] = await scoreUsers.findOrCreate({
+            where: {
+              id_usuario_invitado: idUser, // corregido a idGuestUser
+              id_evaluacion: idEvaluation
+            },
+            defaults: {
+              id_usuario_invitado: idUser, // corregido a idGuestUser
+              id_evaluacion: idEvaluation,
+              correcta: corrects,
+              total_pregunta: totalQuestions
+            },
+            transaction
+          })
+          if (!created) {
+            LOG.info('opción de respuesta previamente creada, se actualizó')
+            existingAnswer.correcta = corrects
+            existingAnswer.total_pregunta = totalQuestions
+            await existingAnswer.save({ transaction })
+          }
           break
+        default:
+          LOG.error('error al guardar respuestas en tabla calificacion de usuario: ')
+          return { error: 'Error saving user answers', statusCode: 500, message: 'La calificacion del usuario no se pudo almacenar.' }
       }
 
       await transaction.commit()
       return { answer: existingAnswer }
     } catch (error) {
-      LOG.error(`Ocurrio un error al agregar la opcion de respuesta a la evaluacion, error: ${error}`)
+      LOG.error(`Ocurrió un error al agregar la opción de respuesta a la evaluación, error: ${error}`)
       if (transaction) await transaction.rollback()
-      throw new Error('Error al agregar opcion de pregunta a la evaluación:' + error.message)
+      LOG.error(`error al guardar respuestas respuestas en tabla calificacion de usuario ${error.message}`)
+      return { error: 'Error saving user answers', statusCode: 500, message: 'La calificacion del usuario no se pudo almacenar.' }
     }
-  } */
+  }
 
   async statusMultipleChoiceAnswer (answersUser, typeUser, idUser, activityInfo, idEvaluation) {
     LOG.info('Entrando al servicio status multiple choice answer')
@@ -597,7 +633,8 @@ class AnswerEvaluationService {
         if (status) {
           countCorrectAnswers = countCorrectAnswers + 1
         }
-
+        const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, totalQuestions)
+        LOG.debug(`Total question is: ${totalQuestions} and the count of questions: ${countCorrectAnswers}`)
         answerReport.set(idAnswerDb, { idQuestionDb, numPregunta, idOption, status })
         LOG.debug(`the option select is ${idOption}, the id question in db is ${idQuestionDb} and the numQuestion is ${numPregunta} the selected option say: ${text} and the status is ${status}`)
         try {
@@ -612,6 +649,7 @@ class AnswerEvaluationService {
             idOpcion: idOption,
             idRespuestaDb: idAnswerDb
           }
+          // LOG.debug(`Report correct answers: ${reportAnswer.answer.existingAnswer.correcta}`)
           this.resultMultipleChoiceEvaluations.push(evaluation)
         } catch (error) {
           LOG.error(`error al guardar respuestas de usuario: ${error.message}`)
@@ -619,6 +657,7 @@ class AnswerEvaluationService {
         }
       }
     }
+
     // Inicializar un mapa para los resultados
     /* const results = new Map()
 
