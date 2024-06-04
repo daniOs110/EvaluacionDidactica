@@ -524,7 +524,7 @@ class OrderQuestionService {
       await transaction.commit()
       return { item: existingSortItem }
     } catch (error) {
-      LOG.error(`Ocurrio un error al agregar las oraciones a la evaluacion, error: ${error.message()}`)
+      LOG.error(`Ocurrio un error al agregar las oraciones a la evaluacion, error: ${error.message}`)
       if (transaction) await transaction.rollback()
       throw new Error('Error al agregar oracion a evaluación:' + error.message)
     }
