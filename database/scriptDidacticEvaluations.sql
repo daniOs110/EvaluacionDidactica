@@ -81,6 +81,7 @@ CREATE TABLE IF NOT EXISTS `evaluaciones` (
   `descripcion` VARCHAR(500) NULL,
   `fecha_desactivacion` DATE NULL,
   `hora_desactivacion` TIME NULL,
+  `customizar_puntuacion` BOOLEAN DEFAULT FALSE,
   PRIMARY KEY (`id_evaluaciones`),
   UNIQUE INDEX `id_evaluaciones_UNIQUE` (`id_evaluaciones` ASC),
   INDEX `id_usuario_idx` (`id_usuario` ASC),
@@ -297,7 +298,32 @@ CREATE TABLE IF NOT EXISTS `posicion_crucigrama` (
     ON DELETE CASCADE
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-    
+
+-- -----------------------------------------------------
+-- Table `evaluaciones_didacticas`.`calificacion_usuarios`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `calificacion_usuarios` (
+  `id_calificacion` INT NOT NULL AUTO_INCREMENT,
+  `id_usuario_invitado` INT NULL,
+  `id_usuario_registrado` INT NULL,
+  `id_evaluacion` INT NOT NULL,
+  `correcta` INT NOT NULL,
+  `total_pregunta` INT NULL,
+  PRIMARY KEY (`id_calificacion`),
+  UNIQUE INDEX `id_calificacion_UNIQUE` (`id_calificacion` ASC) VISIBLE,
+  INDEX `id_usuario_invitado_idx` (`id_usuario_invitado` ASC) VISIBLE,
+  INDEX `id_usuario_registrado_idx` (`id_usuario_registrado` ASC) VISIBLE,
+  CONSTRAINT `id_usuario_invitado`
+    FOREIGN KEY (`id_usuario_invitado`)
+    REFERENCES `usuarios_invitados` (`id_usuarios_invitados`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `id_usuario_registrado`
+    FOREIGN KEY (`id_usuario_registrado`)
+    REFERENCES `info_usuarios` (`id_info_usuario`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB; 
     
 
 DEFAULT CHARACTER SET = utf8mb4

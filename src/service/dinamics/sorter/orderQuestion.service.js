@@ -8,7 +8,7 @@ const Value = require('../../../model/schema/value.schema')
 const Evaluation = require('../../../model/schema/evaluation.schemas')
 
 class OrderQuestionService {
-  async addLetter (letterData, userData) {
+  async addLetter (letterData, userData /*, customizarPuntuacion, porcentaje */) {
     // const userId = userData.get('id_info_usuario')
     // const userName = userData.get('nombre')
     let transaction
@@ -33,6 +33,32 @@ class OrderQuestionService {
         existingSentece.oracion = letterData.letter
         await existingSentece.save({ transaction })
       }
+      /* const idOrdenamiento = existingSentece.id_ordenamiento
+      customizarPuntuacion = false
+      if (customizarPuntuacion) {
+        let existingValue = null
+        LOG.debug(`Buscando o creando valor con id_ordenamiento: ${idOrdenamiento}`)
+        // necesito saber el id_ordenamiento para buscar por id_ordenamiento en la tabla valor
+        const [existingValueInstance, createdScore] = await Value.findOrCreate({
+          where: {
+            id_ordenamiento: idOrdenamiento
+          },
+          defaults: {
+            id_ordenamiento: idOrdenamiento,
+            porcentaje
+          },
+          transaction
+        })
+        LOG.debug(`Valor encontrado o creado: ${JSON.stringify(existingValueInstance)}, creado: ${createdScore}`)
+
+        existingValue = existingValueInstance
+        if (!createdScore) {
+          LOG.info('Valor previamente creado, se actualiza el porcentaje')
+          existingValue.porcentaje = porcentaje
+          await existingValue.save({ transaction })
+        }
+      } */
+      LOG.debug('Commit de la transacción')
 
       await transaction.commit()
       return { letter: existingSentece }
@@ -444,22 +470,32 @@ class OrderQuestionService {
     }
   }
 
-  async updateCustomScore (status) {
+  async updateCustomScore (idEvaluation, customScoreStatus) {
     const transaction = await sequelize.transaction()
     try {
-      // const customScore = await Evaluation.findOr
+      const customScore = await Evaluation.findByPk(idEvaluation)
+      if (customScore) {
+        customScore.customizar_puntuacion = customScoreStatus
+        await customScore.save({ transaction })
+        LOG.info('Información de evaluación encontrada y actualizada.')
+      } else {
+        LOG.info('No se encontró la evaluación con el id proporcionado.')
+      }
+      await transaction.commit()
+      return 'update custom score status'
     } catch (error) {
-      LOG.error(`Ocurrio un error al agregar las oraciones a la evaluacion, error: ${error.message()}`)
+      LOG.error(`Ocurrio un error al actualizar el campo de la tabla evaluacion, error: ${error.message}`)
       if (transaction) await transaction.rollback()
       throw new Error('Error al agregar oracion a evaluación:' + error.message)
     }
   }
 
-  async addItems (instruccion, idEvaluacion, numPregunta, orden, oracion) {
+  async addItems (instruccion, idEvaluacion, numPregunta, orden, oracion/*, porcentaje, customizarPuntuacion */) {
     // guardarla en DB
     const transaction = await sequelize.transaction()
     try {
-      LOG.info(`la informacion traida es oracion: ${oracion}, idEvalucion: ${idEvaluacion}, numPregunta: ${numPregunta}, orden: ${orden}, instruccion: ${instruccion}`)
+      LOG.info(`la informacion traida es oracion: ${oracion}, idEvalucion: ${idEvaluacion}, numPregunta: ${numPregunta}, orden: ${orden}, 
+      instruccion: ${instruccion}`)
       const [existingSortItem, created] = await sorting.findOrCreate({
         where: {
           id_evaluacion: idEvaluacion,
@@ -482,6 +518,8 @@ class OrderQuestionService {
         existingSortItem.orden = orden
         await existingSortItem.save({ transaction })
       }
+      const idOrdenamiento = existingSortItem.id_ordenamiento
+      LOG.debug(`el id de ordentamiento es ${idOrdenamiento}`)
 
       await transaction.commit()
       return { item: existingSortItem }
@@ -491,6 +529,42 @@ class OrderQuestionService {
       throw new Error('Error al agregar oracion a evaluación:' + error.message)
     }
   }
+
+  /* async updateScore (customizarPuntuacion, idOrdenamiento, porcentaje) {
+    const transaction = await sequelize.transaction({ timeout: 5000 }) // Añadir un timeout de 5 segundos
+    try {
+      let existingValue = null
+      if (customizarPuntuacion) {
+        LOG.debug(`Buscando o creando valor con id_ordenamiento: ${idOrdenamiento}`)
+        // necesito saber el id_ordenamiento para buscar por id_ordenamiento en la tabla valor
+        const [existingValueInstance, createdScore] = await Value.findOrCreate({
+          where: {
+            id_ordenamiento: idOrdenamiento
+          },
+          defaults: {
+            id_ordenamiento: idOrdenamiento,
+            porcentaje
+          },
+          transaction
+        })
+        LOG.debug(`Valor encontrado o creado: ${JSON.stringify(existingValueInstance)}, creado: ${createdScore}`)
+
+        existingValue = existingValueInstance
+        if (!createdScore) {
+          LOG.info('Valor previamente creado, se actualiza el porcentaje')
+          existingValue.porcentaje = porcentaje
+          await existingValue.save({ transaction })
+        }
+      }
+      LOG.debug('Commit de la transacción')
+      await transaction.commit()
+      return existingValue
+    } catch (error) {
+      LOG.error(`Ocurrio un error al actualizar el porcentaje en la tabla valor, error: ${error.message()}`)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al agregar el porcentaje a la evaluación:' + error.message)
+    }
+  } */
 }
 
 module.exports = new OrderQuestionService()

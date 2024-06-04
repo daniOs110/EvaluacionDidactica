@@ -11,13 +11,18 @@ const orderQuestionService = require('../service/dinamics/sorter/orderQuestion.s
 
 orderQuestionRouter.post('/dinamic/orderQuestion/add', validateAddLetter, authMiddleware, async (req, res) => {
   const user = req.user
+  // const customScore = req.body.customizarCalificacion
+  // const percentage = req.body.porcentaje
   try {
     // se va a recibir la oracion y se guardara en bd
     LOG.info(`la data traida es oracion: ${req.letter}, idEvalucion: ${req.idEvaluacion}, numPregunta: ${req.questionNumber}`)
     // no se si aquiu me serviria tener el tipio de dinamica (ordena los items, ordena el enunciado)
     const validatedData = matchedData(req)
     const newLetterDTO = new AddLetterDTO(validatedData.letter, validatedData.idEvaluacion, validatedData.idDinamica, validatedData.questionNumber)
-    const addLetter = await orderQuestionService.addLetter(newLetterDTO, user) // lamamos al servicio de crear evaluacion
+    const addLetter = await orderQuestionService.addLetter(newLetterDTO, user /*, customScore, percentage */) // lamamos al servicio de crear evaluacion
+
+    //  const statusUpdate = await orderQuestionService.updateCustomScore(validatedData.idEvaluacion, customScore)
+    // LOG.info(`customScore say: ${statusUpdate}`)
     return res.status(201).json(addLetter)
   } catch (error) {
     LOG.error(`error al agregar la oración: ${error}`)
@@ -117,22 +122,20 @@ orderQuestionRouter.post('/dinamic/orderItem/addItems', authMiddleware, async (r
   const idEvaluation = req.body.idEvaluacion
   const dinamic = req.body.Dinamica
   const data = req.body.preguntas
-  const customScore = req.body.customizarCalificacion
+  // const customScore = req.body.customizarCalificacion
   try {
     LOG.info(`La evaluacion tiene el id: ${idEvaluation}, y es una dinamica tipo: ${dinamic}`)
     // hacer un bucle que itere los enunciados que ingreso el usuario
     let activityData = null
     const responses = []
     // actualizar el campo customScore in db
-    if (customScore) {
-      // const status = await orderQuestionService.
-    }
     for (const pregunta of data) {
       LOG.info(`pregunta: ${pregunta.idPregunta}, Descripción: ${pregunta.descripcion}`)
+      // const valueCustomScore = pregunta.porcentaje
       for (const respuesta of pregunta.respuestas) {
         LOG.info(`id de ordenamiento: ${respuesta.id}, enunciado: ${respuesta.texto}`)
         // aqui va el sequelize que inserte los datos que necesitamos
-        activityData = await orderQuestionService.addItems(pregunta.descripcion, idEvaluation, pregunta.idPregunta, respuesta.id, respuesta.texto)
+        activityData = await orderQuestionService.addItems(pregunta.descripcion, idEvaluation, pregunta.idPregunta, respuesta.id, respuesta.texto /*, valueCustomScore, customScore */)
         responses.push(activityData)
       }
     }

@@ -17,9 +17,11 @@ questionAnswerRouter.post('/dinamic/crossword/add', authMiddleware, async (req, 
   const saveAnswers = []
   let saveQuestion = null
   let saveAnswer = null
+  const customScoreStatus = req.body.customizarCalificacion
 
   try {
     const boardData = await questionAnswerService.saveGrid(idEvaluation, gridCols, gridRows)
+    const percenteageMaxValue = 0
     for (const crossword of data) {
       const answer = crossword.answer
       const clue = crossword.clue
@@ -27,6 +29,9 @@ questionAnswerRouter.post('/dinamic/crossword/add', authMiddleware, async (req, 
       const position = crossword.position
       const startX = crossword.startX
       const startY = crossword.startY
+      /* const percentage = crossword.porcentaje
+      percenteageMaxValue = percenteageMaxValue + percentage
+      LOG.debug(`the percentaje is ${percentage} and the sum actualy is: ${percenteageMaxValue}`) */
       // guardar pregunta y respuesta
       saveQuestion = await questionAnswerService.addQuestion(idEvaluation, clue, 1, position)
       saveQuestions.push(saveQuestion)
@@ -38,6 +43,19 @@ questionAnswerRouter.post('/dinamic/crossword/add', authMiddleware, async (req, 
         return res.status(404).json({ message: `no se pudo guardar la pregunta ${position}.` })
       }
     }
+
+    if (customScoreStatus && percenteageMaxValue !== undefined && percenteageMaxValue !== null) {
+      if (percenteageMaxValue !== 100) {
+        LOG.debug('Entre a la validación de porcentaje')
+        LOG.debug(`percentage sum is: ${percenteageMaxValue} and the total sum of the percentages must be equal to 100.`)
+        // return res.status(406).json({ message: 'La suma total de porcentajes debe ser igual a 100' })
+      }
+    }
+    /* if (customScoreStatus !== undefined && customScoreStatus !== null) {
+      const statusUpdate = await orderQuestionService.updateCustomScore(idEvaluation, customScoreStatus)
+      LOG.info(`customScore say: ${statusUpdate}`)
+    } */
+
     return res.status(201).json({ boardData, saveQuestions, saveAnswers })
   } catch (error) {
     LOG.error(`error al agregar la pregunta y respuesta al crucigrama: ${error.message}`)
