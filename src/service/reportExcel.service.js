@@ -1,64 +1,90 @@
-// const ExcelJS = require('exceljs')
 const resultEvaluations = require('../model/schema/evaluation.results.schema')
 const scoreEvaluation = require('../model/schema/score.schema')
 const guestUser = require('../model/schema/guest.user.schema')
 const registerUser = require('../model/schema/user.info.schema')
 const evaluationInfo = require('../model/schema/evaluation.schemas')
+const XLSX = require('xlsx')
+const fs = require('fs')
 const LOG = require('../app/logger')
 
 class ReportExcelService {
   constructor () {
     this.resultScoreEvaluations = []
+    this.reportInfo = []
   }
 
-  /* async generateExcel (idEvaluation, evaluationTitle) {
+  async generateExcel (idEvaluation) {
     try {
-    // Obtener los datos de la base de datos
-      const evaluations = await resultEvaluations.findAll({
-        where: {
-          id_evaluacion: idEvaluation
-        }
-      })
-      if (!evaluations > 0) {
-        return { error: 'Any response answers found in data base', statusCode: 404, message: 'No se encontro información de respuestas asociadas a la evalaución.' }
+      // Obtener los datos de la base de datos
+      const reportExcelInfo = await this.findEvaluationScores(idEvaluation)
+      if (!reportExcelInfo || !reportExcelInfo.report || reportExcelInfo.report.length === 0) {
+        return { error: 'No data for excel report', statusCode: 404, message: 'No se encontro información para llenar el archivo excel' }
       }
+      const { titleEvaluation, totalQuestions, report } = reportExcelInfo
       // Crear un nuevo libro de trabajo
-      const workbook = new ExcelJS.Workbook()
-      const worksheet = workbook.addWorksheet(`Reporte evaluación ${evaluationTitle}`)
+      const workbook = XLSX.utils.book_new()
 
-      // necesitamos un servicio que nos traiga cuantas respuetas contesto bien cada usuario
-      // tiene que separar si es usuario invitado consulta la tabla usuario invitado para traer nombre
-      // si no consulta usuario registrado para traer nombre
-      // Definir las columnas del Excel
-      worksheet.columns = [
-        { header: 'ID', key: 'id', width: 10 },
-        { header: 'Nombre', key: 'nombre', width: 30 },
-        { header: 'Respuestas correctas', key: 'respuestasCorrectas', width: 20 },
-        { header: 'Porcentaje', key: 'porcentaje', width: 20 }
+      // Crear una hoja de trabajo con un título en las primeras celdas
+      const worksheetData = [
+        ['Reporte de Evaluaciones'],
+        [titleEvaluation],
+        [],
+        ['ID', 'Nombre Completo', 'Respuestas Correctas', 'Preguntas totales', 'Porcentaje']
       ]
 
-      // Agregar los datos al worksheet
-      let i = 1
-      evaluations.forEach(evaluation => {
-        i++
-        LOG.info('prueba')
-        // separar si es usuario registrado o usuario invitado (traemos el nombre y apellidos si es que tiene)
-        // llamamos al servicio que nos devuelva los datos
-        // necesitamos un metodo que nos diga el numero total de preguntas, cuantas contesto bien el usuario y cuanto es el porcentaje
-        worksheet.addRow({
-          id: i,
-          nombre: evaluation.name,
-          respuestasCorrectas: evaluation.startDate,
-          porcentaje: evaluation.endDate
+      // Agregar datos del array `resultScoreEvaluations`
+      report.forEach(scoreInfo => {
+        const formattedPorcentaje = scoreInfo.porcentaje.toFixed(2)
+        worksheetData.push([
+          scoreInfo.idReporte,
+          scoreInfo.nombreCompleto,
+          scoreInfo.respuestasCorrectas,
+          totalQuestions,
+          `${formattedPorcentaje}%`
+        ])
+      })
+
+      // Crear una hoja de trabajo a partir de los datos
+      const worksheet = XLSX.utils.aoa_to_sheet(worksheetData)
+
+      // Establecer estilos para la hoja de trabajo
+      const styles = {
+        header: {
+          font: { bold: true },
+          fill: { fgColor: { rgb: 'FFA500' } } // Color de fondo naranja
+        },
+        data: {
+          fill: { fgColor: { rgb: 'FFFF00' } } // Color de fondo amarillo para datos
+        }
+      }
+      // Convertir la hoja de trabajo en un array de objetos JavaScript
+      const data = XLSX.utils.sheet_to_json(worksheet, { header: 1 })
+      // Aplicar estilos a las celdas
+      data.forEach((row, rowIndex) => {
+        row.forEach((cell, columnIndex) => {
+          const cellRef = XLSX.utils.encode_cell({ r: rowIndex, c: columnIndex })
+          if (rowIndex < 4) {
+            // Estilo para las celdas de título y encabezado
+            worksheet[cellRef].s = styles.header
+          } else {
+            // Estilo para las celdas de datos
+            worksheet[cellRef].s = styles.data
+          }
         })
       })
 
-      return workbook
+      // Agregar la hoja de trabajo al libro de trabajo
+      XLSX.utils.book_append_sheet(workbook, worksheet, 'Reporte')
+
+      // Generar el archivo Excel en un buffer
+      const excelBuffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' })
+
+      return excelBuffer
     } catch (error) {
       console.error('Error generating Excel:', error)
       return { error: 'Error generating excel report', statusCode: 500, message: 'Ocurrio un error al generar el reporte excel.' }
     }
-  } */
+  }
 
   async findEvaluationScores (idEvaluation) {
     this.resultScoreEvaluations = []
@@ -67,12 +93,16 @@ class ReportExcelService {
         id_evaluacion: idEvaluation
       }
     })
-    if (!evaluations > 0) {
+    if (!evaluations.length > 0) {
       return { error: 'Any response answers found in data base', statusCode: 404, message: 'No se encontro información de respuestas asociadas a la evalaución.' }
     }
     const infoEvaluation = await evaluationInfo.findByPk(idEvaluation)
+    if (!infoEvaluation) {
+      return { error: 'Id evaluation not exist', statusCode: 404, message: 'No se encontro información de evaluación.' }
+    }
     const titleEvaluation = infoEvaluation.nombre
     let idReport = 0
+    let totalQuestions = 0
     LOG.debug(`The title of evaluation is: ${titleEvaluation}`)
     for (const evaluation of evaluations) {
       idReport = idReport + 1
@@ -80,7 +110,7 @@ class ReportExcelService {
       const idRegisterUser = evaluation.id_usuario_registrado
       // const idEvaluationFound = evaluation.id_evaluacion
       const scoreCorrectAnswers = evaluation.correcta
-      const totalQuestions = evaluation.total_pregunta
+      totalQuestions = evaluation.total_pregunta
       let userName = null
       let firstName = null
       let secondName = null
@@ -130,7 +160,8 @@ class ReportExcelService {
       }
       this.resultScoreEvaluations.push(scoreInfo)
     }
-    return { titleEvaluation, report: this.resultScoreEvaluations.sort((a, b) => b.porcentaje - a.porcentaje) }
+    LOG.debug('Finish the iteration')
+    return { titleEvaluation, totalQuestions, report: this.resultScoreEvaluations.sort((a, b) => b.porcentaje - a.porcentaje) }
   }
 }
 module.exports = new ReportExcelService()
