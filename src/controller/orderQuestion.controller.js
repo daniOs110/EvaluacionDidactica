@@ -16,7 +16,6 @@ orderQuestionRouter.post('/dinamic/orderQuestion/add', validateAddLetter, authMi
   try {
     // se va a recibir la oracion y se guardara en bd
     LOG.info(`la data traida es oracion: ${req.letter}, idEvalucion: ${req.idEvaluacion}, numPregunta: ${req.questionNumber}`)
-    // no se si aquiu me serviria tener el tipio de dinamica (ordena los items, ordena el enunciado)
     const validatedData = matchedData(req)
     const newLetterDTO = new AddLetterDTO(validatedData.letter, validatedData.idEvaluacion, validatedData.idDinamica, validatedData.questionNumber)
     const addLetter = await orderQuestionService.addLetter(newLetterDTO, user /*, customScore, percentage */) // lamamos al servicio de crear evaluacion
@@ -34,7 +33,6 @@ orderQuestionRouter.post('/dinamic/orderQuestion/delete', authMiddleware, async 
   try {
     // se va a recibir la oracion y se guardara en bd
     LOG.info(`la data traida es idOrdenamiento: ${req.body.idOrdenamieto}`)
-    // no se si aquiu me serviria tener el tipio de dinamica (ordena los items, ordena el enunciado)
     const orderId = req.body.idOrdenamiento
     const deleteLetter = await orderQuestionService.deleteSentence(orderId) // lamamos al servicio de crear evaluacion
     if (deleteLetter == null) {

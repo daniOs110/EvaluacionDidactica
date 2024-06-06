@@ -479,10 +479,12 @@ class AnswerEvaluationService {
     // recorrer respuestas correcta
     const correctAnswersMap = new Map()
     let countTotalQuestion = 0
+    let totalQuestions = 0
     for (const word of activityInfo.resultWordSearchEvaluation) {
       const idQuestionDb = word.idPreguntaDb
       const numPregunta = word.numPregunta
       const palabra = word.palabra
+      totalQuestions = numPregunta
       countTotalQuestion = countTotalQuestion + 1
       LOG.debug(`the word id ${palabra}, the id question in db is ${idQuestionDb} and the numQuestion is ${numPregunta}`)
       correctAnswersMap.set(numPregunta, [palabra, idQuestionDb])
@@ -494,7 +496,7 @@ class AnswerEvaluationService {
       LOG.debug(`the user word is ${palabra}, and the numQuestion is ${numPregunta}`)
       userAnswersMap.set(numPregunta, palabra)
     }
-    LOG.info(`Total questions: ${countTotalQuestion}`)
+    LOG.info(`Total questions: ${countTotalQuestion + 1}`)
     // Comparar los mapas
     const results = []
     let countCorrectAnswers = 0
@@ -509,6 +511,8 @@ class AnswerEvaluationService {
       if (isCorrect) {
         countCorrectAnswers = countCorrectAnswers + 1
       }
+
+      LOG.info(`Total questions is ${totalQuestions} and the count fix is ${countTotalQuestion + 1}`)
       const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, countTotalQuestion)
       results.push({
         numPregunta,
@@ -633,7 +637,7 @@ class AnswerEvaluationService {
         if (status) {
           countCorrectAnswers = countCorrectAnswers + 1
         }
-        const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, totalQuestions)
+        const reportAnswer = await this.addScoreUser(typeUser, idUser, idEvaluation, countCorrectAnswers, (totalQuestions + 1))
         LOG.debug(`Total question is: ${totalQuestions} and the count of questions: ${countCorrectAnswers}`)
         answerReport.set(idAnswerDb, { idQuestionDb, numPregunta, idOption, status })
         LOG.debug(`the option select is ${idOption}, the id question in db is ${idQuestionDb} and the numQuestion is ${numPregunta} the selected option say: ${text} and the status is ${status}`)
