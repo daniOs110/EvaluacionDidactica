@@ -181,7 +181,7 @@ class CreateEvaluationService {
         hora_activacion: evaluationData.activationTime,
         duracion: evaluationData.duration,
         id_usuario: userId,
-        id_dinamica: evaluationData.idDinamic,
+        // id_dinamica: evaluationData.idDinamic,
         fecha_desactivacion: evaluationData.deactivationDate,
         hora_desactivacion: evaluationData.deactivationTime,
         fecha_creacion: currentDate,

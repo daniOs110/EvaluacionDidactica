@@ -80,9 +80,39 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
   const typeEvaluation = evaluationsInfo.get('id_dinamica')
   let typeDinamic
 
-  // Verificar que el id de evaluacion exista y este activa si no mandar mensaje de error
-  const isActive = evaluationsInfo.get('active')
+  let isActive = evaluationsInfo.get('active')
   LOG.info(`The atibute isActive of evaluation is: ${isActive}`)
+
+  // verificar que la evaluación entre en los rangos de activa
+  const now = new Date()
+  const activationDate = new Date(`${evaluationsInfo.get('fecha_activacion')} ${evaluationsInfo.get('hora_activacion')}`)
+  const deactivationDate = evaluationsInfo.get('fecha_desactivacion')
+    ? new Date(`${evaluationsInfo.get('fecha_desactivacion')} ${evaluationsInfo.get('hora_desactivacion')}`)
+    : null
+
+  if (now < activationDate || (deactivationDate && now > deactivationDate)) {
+    LOG.error(`The evaluation with id: ${idEvaluation} is out of the active period`)
+    return res.status(404).json({ message: 'Evaluación fuera del periodo activo' })
+  }
+  /** *** test */
+
+  if (now >= activationDate && (!deactivationDate || now <= deactivationDate)) {
+    if (!isActive) {
+      // Actualizar a activo si no lo está
+      isActive = true
+      await createEvaluationService.updateEvaluationStatus(idEvaluation, true) // crear este metodo
+      LOG.info(`Evaluation with id: ${idEvaluation} has been activated`)
+    }
+  } else {
+    if (isActive) {
+      // Actualizar a inactivo si no lo está
+      isActive = false
+      await createEvaluationService.updateEvaluationStatus(idEvaluation, false)
+      LOG.info(`Evaluation with id: ${idEvaluation} has been deactivated`)
+    }
+  }
+  /** */
+  // Verificar que el id de evaluacion exista y este activa si no mandar mensaje de error
   if (!isActive) {
     LOG.error(`The evaluation with id: ${idEvaluation} is inactive`)
     return res.status(404).json({ message: 'Evaluación inactiva' })
