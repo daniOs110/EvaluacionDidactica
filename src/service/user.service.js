@@ -164,7 +164,7 @@ class UserService {
                         Restablecer tu contraseña
                       </a>                      
                       <p>Gracias</p>
-                      <p>El equipo de [Nombre de la aplicación/servicio]</p>                      
+                      <p>El equipo de Donkademy</p>                      
                     </td>
                   </tr>
                 </table>
@@ -215,7 +215,7 @@ class UserService {
                       Verificar correo electrónico
                     </a>                                 
                     <p>Gracias</p>
-                    <p>El equipo de [Nombre de la aplicación/servicio]</p>                      
+                    <p>El equipo de Donkademy</p>                      
                   </td>
                 </tr>
               </table>
@@ -271,6 +271,7 @@ class UserService {
       throw new Error('Error al actualizar contraseña de usuario:' + error.message)
     }
   }
+
   async updateUser (id, updatedUserData) {
     let transaction
     try {
@@ -299,7 +300,7 @@ class UserService {
       if (transaction) await transaction.rollback()
       throw new Error('Error al actualizar el usuario: ' + error.message)
     }
-  }  
+  }
 }
 
 module.exports = new UserService()
