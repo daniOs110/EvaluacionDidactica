@@ -23,6 +23,24 @@ createEvaluationRouter.post('/evaluation/create', authMiddleware, validateCreate
     return res.status(500).json({ message: 'Internal server error' })
   }
 })
+createEvaluationRouter.post('/evaluation/duplicate', authMiddleware, async (req, res) => {
+  const user = req.user
+  const userId = parseInt(user.get('id_info_usuario'))
+  const idEvaluation = req.body.idEvaluacion
+  LOG.info(`id user is ${userId}`)
+  try {
+    // Llamar al servicio para duplicar la evaluación
+    const duplicatedEvaluation = await createEvaluationService.duplicateEvaluation(idEvaluation, userId)
+    if (duplicatedEvaluation.error) {
+      // Si se encontró un error, se devuelve el código de estado correspondiente
+      return res.status(duplicatedEvaluation.statusCode).json({ error: duplicatedEvaluation.error, message: duplicatedEvaluation.message })
+    }
+    return res.status(201).json(duplicatedEvaluation)
+  } catch (error) {
+    LOG.error(`Error al duplicar la evaluación: ${error}`)
+    return res.status(500).json({ message: 'Internal server error' })
+  }
+})
 
 createEvaluationRouter.post('/evaluation/update/:idEvaluation', authMiddleware, validateCreateEvaluation, convertActivationData, convertDeactivationData, async (req, res) => {
   const user = req.user

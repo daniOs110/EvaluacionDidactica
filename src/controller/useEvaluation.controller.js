@@ -90,10 +90,10 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
     ? new Date(`${evaluationsInfo.get('fecha_desactivacion')} ${evaluationsInfo.get('hora_desactivacion')}`)
     : null
 
-  if (now < activationDate || (deactivationDate && now > deactivationDate)) {
+  /* if (now < activationDate || (deactivationDate && now > deactivationDate)) {
     LOG.error(`The evaluation with id: ${idEvaluation} is out of the active period`)
     return res.status(404).json({ message: 'Evaluación fuera del periodo activo' })
-  }
+  } */
   /** *** test */
 
   if (now >= activationDate && (!deactivationDate || now <= deactivationDate)) {
