@@ -108,6 +108,7 @@ class ReportExcelService {
       idReport = idReport + 1
       const idGuestUser = evaluation.id_usuario_invitado
       const idRegisterUser = evaluation.id_usuario_registrado
+
       // const idEvaluationFound = evaluation.id_evaluacion
       const scoreCorrectAnswers = evaluation.correcta
       totalQuestions = evaluation.total_pregunta
@@ -120,7 +121,7 @@ class ReportExcelService {
         LOG.debug(`guest user id ${idGuestUser}, correct answers ${scoreCorrectAnswers} total questions ${totalQuestions} `)
         const user = await guestUser.findByPk(idGuestUser)
         finalName = user.nombre
-        LOG.debug(`Data to send is username ${userName}, `)
+        LOG.debug(`Data to send is username ${finalName}, `)
       } else if (idRegisterUser !== null || idRegisterUser !== undefined) {
         LOG.debug(`register user id ${idRegisterUser}, correct answers ${scoreCorrectAnswers} total questions ${totalQuestions} `)
         const user = await registerUser.findByPk(idGuestUser)
