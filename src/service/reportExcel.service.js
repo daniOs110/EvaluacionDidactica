@@ -124,10 +124,11 @@ class ReportExcelService {
         LOG.debug(`Data to send is username ${finalName}, `)
       } else if (idRegisterUser !== null && idRegisterUser !== undefined) {
         LOG.debug(`register user id ${idRegisterUser}, correct answers ${scoreCorrectAnswers} total questions ${totalQuestions} `)
-        const user = await registerUser.findByPk(idGuestUser)
+        const user = await registerUser.findByPk(idRegisterUser)
         userName = user.nombre
         firstName = user.apellido_paterno
         secondName = user.apellido_materno
+        LOG.debug(`te name of regiter user is ${userName} ${firstName} ${secondName}`)
         function isValid (value) {
           return value !== null && value !== undefined && value.trim() !== ''
         }
