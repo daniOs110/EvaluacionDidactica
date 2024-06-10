@@ -117,12 +117,12 @@ class ReportExcelService {
       let secondName = null
       let finalName = null
       let percentaje = 0
-      if (idGuestUser !== null || idGuestUser !== undefined) {
+      if (idGuestUser !== null && idGuestUser !== undefined) {
         LOG.debug(`guest user id ${idGuestUser}, correct answers ${scoreCorrectAnswers} total questions ${totalQuestions} `)
         const user = await guestUser.findByPk(idGuestUser)
         finalName = user.nombre
         LOG.debug(`Data to send is username ${finalName}, `)
-      } else if (idRegisterUser !== null || idRegisterUser !== undefined) {
+      } else if (idRegisterUser !== null && idRegisterUser !== undefined) {
         LOG.debug(`register user id ${idRegisterUser}, correct answers ${scoreCorrectAnswers} total questions ${totalQuestions} `)
         const user = await registerUser.findByPk(idGuestUser)
         userName = user.nombre
