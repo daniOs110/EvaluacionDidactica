@@ -5,6 +5,7 @@ const sort = require('../model/schema/sorting.schema')
 const question = require('../model/schema/questions.schema')
 const answer = require('../model/schema/response.schema')
 const AnswersEvaluation = require('../model/schema/evaluation.results.schema')
+const board = require('../model/schema/board.schema')
 const { Sequelize } = require('sequelize')
 
 const sequelize = require('../config/database')
@@ -58,7 +59,11 @@ class CreateEvaluationService {
       LOG.info(`Duplicating question of id evaluation ${idEvaluacion}`)
       let preguntas = []
       let preguntasMap = {}
-
+      // Duplicar tablero
+      let newBoard
+      if (idDinamica === 5 || idDinamica === 6) {
+        newBoard = await this.duplicateBoard(idEvaluacion, newIdEvaluation)
+      }
       // Duplicar preguntas
       if (idDinamica === 3 || idDinamica === 5 || idDinamica === 6) {
         const result = await this.duplicatePreguntasGenerales(idEvaluacion, newIdEvaluation)
@@ -76,7 +81,7 @@ class CreateEvaluationService {
         }
         const answersCrossword = await this.duplicatePosicionesCrucigrama(idEvaluacion, preguntasMap)
 
-        return { preguntas, answersCrossword }
+        return { preguntas, answersCrossword, newBoard }
       } else if (idDinamica === 3) {
         const answer = await this.duplicateRespuestas(idEvaluacion, preguntasMap)
         return { preguntas, answer }
@@ -85,6 +90,27 @@ class CreateEvaluationService {
       return preguntas
     } catch (error) {
       throw new Error(`Error al duplicar las preguntas: ${error.message}`)
+    }
+  }
+
+  async duplicateBoard (idEvaluacion, newIdEvaluation) {
+    try {
+      // Obtener las preguntas para la evaluación específica
+      const originalBoard = await board.findOne({
+        where: {
+          id_evaluacion: idEvaluacion
+        }
+      })
+      // Crear una copia de la pregunta con un nuevo id_pregunta
+      const newBoard = await board.create({
+        id_evaluacion: newIdEvaluation, // Dejar que la base de datos asigne un nuevo ID
+        columna: originalBoard.get('columna'),
+        fila: originalBoard.get('fila')
+      })
+
+      return { newBoard }
+    } catch (error) {
+      throw new Error(`Error al duplicar las preguntas generales: ${error.message}`)
     }
   }
 
