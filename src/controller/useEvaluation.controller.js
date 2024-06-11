@@ -85,9 +85,9 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
 
   // verificar que la evaluación entre en los rangos de activa
   const now = new Date()
-  const activationDate = new Date(`${evaluationsInfo.get('fecha_activacion')} ${evaluationsInfo.get('hora_activacion')}`)
+  const activationDate = new Date(`${evaluationsInfo.get('fecha_activacion')}T${evaluationsInfo.get('hora_activacion')}`)
   const deactivationDate = evaluationsInfo.get('fecha_desactivacion')
-    ? new Date(`${evaluationsInfo.get('fecha_desactivacion')} ${evaluationsInfo.get('hora_desactivacion')}`)
+    ? new Date(`${evaluationsInfo.get('fecha_desactivacion')}T${evaluationsInfo.get('hora_desactivacion')}`)
     : null
 
   /* if (now < activationDate || (deactivationDate && now > deactivationDate)) {
@@ -95,7 +95,7 @@ useEvaluationRouter.post('/evaluation/joinEvaluation', authTypeUserMiddleware, a
     return res.status(404).json({ message: 'Evaluación fuera del periodo activo' })
   } */
   /** *** test */
-
+  LOG.info(`activation date = ${activationDate} and deactivation date = ${deactivationDate} and now = ${now}`)
   if (now >= activationDate && (!deactivationDate || now <= deactivationDate)) {
     if (!isActive) {
       // Actualizar a activo si no lo está
