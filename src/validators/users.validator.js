@@ -14,6 +14,16 @@ const validateRegisterUser = [
     return validateResult(req, res, next)
   }
 ]
+const validateUpdateUser = [
+  check('correo').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
+  check('nombre').exists().notEmpty().custom(validateName).withMessage(ErrorMessages.NAME_REQUIRED),
+  check('apellidoPaterno').exists().notEmpty().custom(validateName).withMessage(ErrorMessages.FIRST_NAME_REQUIRED),
+  check('apellidoMaterno').optional().isString().custom(validateName).withMessage(ErrorMessages.LAST_NAME_REQUIRED),
+  check('verificado').exists().isBoolean().withMessage(ErrorMessages.PASSWORD_FORMAT),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
 const validateLoginUser = [
   check('email').exists().isEmail().notEmpty().withMessage(ErrorMessages.EMAIL_INVALID),
   check('password').exists().notEmpty().isLength({ min: 3, max: 15 }),
@@ -35,6 +45,37 @@ const validateResetPassword = [
   }
 ]
 
+const validateCreateEvaluation = [
+  check('title').exists().notEmpty().isString().withMessage(ErrorMessages.TITLE_FORMAT),
+  check('subtitle').optional().isString().withMessage(ErrorMessages.SUBTITLE_FORMAT),
+  check('description').optional().isString().withMessage(ErrorMessages.DESCRIPTION_FORMAT),
+  check('feedback').exists().notEmpty().isBoolean().withMessage(ErrorMessages.FEEDBACK_ERROR),
+  check('activationDate').exists().isISO8601().toDate().withMessage(ErrorMessages.ACTIVATIONDATE_FORMAT),
+  check('activationTime').exists().isString().withMessage(ErrorMessages.ACTIVATIONTIME_FORMAT),
+  check('idDinamic').exists().withMessage(ErrorMessages.IDDINAMIC_FORMAT),
+  check('deactivationDate').optional().isISO8601().toDate().withMessage(ErrorMessages.BAD_DATE_FORMAT),
+  check('deactivationTime').optional().isString().withMessage(ErrorMessages.DEACTIVATIONTIME_FORMAT),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
+
+const validateAddLetter = [
+  check('letter').exists().notEmpty().isString().withMessage(ErrorMessages.LETTER_FORMAT),
+  check('idEvaluacion').exists().notEmpty().withMessage(ErrorMessages.GENERIC_NOT_NULL),
+  check('idDinamica').exists().notEmpty().withMessage(ErrorMessages.GENERIC_NOT_NULL),
+  check('questionNumber').exists().notEmpty().withMessage(ErrorMessages.GENERIC_NOT_NULL),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
+
+const validateGuestUser = [
+  check('userName').exists().notEmpty().isString().withMessage(ErrorMessages.LETTER_FORMAT),
+  (req, res, next) => {
+    return validateResult(req, res, next)
+  }
+]
 function validateName (value) {
   if (value && !REGEX_NAMES.test(value)) {
     throw new Error(ErrorMessages.FORMAT_NAMES)
@@ -42,4 +83,4 @@ function validateName (value) {
   return true
 }
 
-module.exports = { validateRegisterUser, validateLoginUser, validateForgotPassword, validateResetPassword }
+module.exports = { validateRegisterUser, validateLoginUser, validateUpdateUser, validateForgotPassword, validateResetPassword, validateCreateEvaluation, validateAddLetter, validateGuestUser }

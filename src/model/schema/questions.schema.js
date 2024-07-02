@@ -17,6 +17,10 @@ Questions.init({
   numero_respuestas: {
     type: DataTypes.INTEGER,
     allowNull: false
+  },
+  num_pregunta: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 },
 {

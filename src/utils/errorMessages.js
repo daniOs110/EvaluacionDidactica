@@ -1,4 +1,7 @@
 class ErrorMessages {
+  /**
+   * USER REGISTER
+   */
   static get NAME_REQUIRED () {
     return 'El nombre es obligatorio y debe contener unicamente letras.'
   }
@@ -53,6 +56,70 @@ class ErrorMessages {
 
   static get NOT_SESSION () {
     return 'No ha iniciado sesión o el token es invalido'
+  }
+
+  static get SERVER_ERROR () {
+    return 'Ocurrio un error en el servidor'
+  }
+
+  static get GUEST_USER () {
+    return 'Error al crear usuario invitado'
+  }
+
+  /**
+   * CREATE EVALUATION
+   */
+
+  static get TITLE_FORMAT () {
+    return 'El formato del titulo es incorrecto'
+  }
+
+  static get SUBTITLE_FORMAT () {
+    return 'El formato del subtitulo es incorrecto'
+  }
+
+  static get DESCRIPTION_FORMAT () {
+    return 'El formato de la descripción es incorrecto'
+  }
+
+  static get FEEDBACK_ERROR () {
+    return 'El campo retroalimetación es necesario'
+  }
+
+  static get ACTIVATIONDATE_FORMAT () {
+    return 'La fecha de activacion es necesaria y debe estar en el formato ISO 8601'
+  }
+
+  static get ACTIVATIONTIME_FORMAT () {
+    return 'La hora de activación es necesaria'
+  }
+
+  static get DEACTIVATIONTIME_FORMAT () {
+    return 'La hora de desactivación esta en formato incorrecto'
+  }
+
+  static get DURATION_FORMAT () {
+    return 'La duración de la actividad es necesaria y debe ser numerico'
+  }
+
+  static get IDDINAMIC_FORMAT () {
+    return 'El id de dinamica es necesario y debe ser una cadena'
+  }
+
+  static get CREATIONDATE_FORMAT () {
+    return 'La fecha de creación es necesaria y debe estar en el formato ISO 8601'
+  }
+
+  static get BAD_DATE_FORMAT () {
+    return 'La fecha esta en formato incorrecto, debe estar en el formato ISO 8601'
+  }
+
+  static get LETTER_FORMAT () {
+    return 'formato incorrecto valida que solo contenga letras'
+  }
+
+  static get GENERIC_NOT_NULL () {
+    return ' el atributo ingresado no puede ser nulo'
   }
 }
 

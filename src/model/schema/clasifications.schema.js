@@ -17,7 +17,8 @@ Clasification.init({
 {
   sequelize,
   modelName: 'clasificacion',
-  timestamps: false
+  timestamps: false,
+  freezeTableName: true
 })
 
 module.exports = Clasification

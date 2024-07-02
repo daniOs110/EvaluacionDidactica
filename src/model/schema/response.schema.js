@@ -23,6 +23,10 @@ Response.init({
   opcion_respuesta_imagen: {
     type: DataTypes.BLOB,
     allowNull: true
+  },
+  id_opcion: {
+    type: DataTypes.INTEGER,
+    allowNull: false
   }
 },
 {

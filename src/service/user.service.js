@@ -1,14 +1,21 @@
 const userInfo = require('../model/schema/user.info.schema')
 const userCredentials = require('../model/schema/user.crendentials.schema')
+const guestUser = require('../model/schema/guest.user.schema')
 const sequelize = require('../config/database')
 const { encrypt, compare } = require('../helpers/handler.bcrypt')
-const UserInfo = require('../model/schema/user.info.schema')
 const ErrorMessages = require('../utils/errorMessages')
-const { tokenSign, recoverToken } = require('../helpers/handlerJwt')
+const { tokenSign, recoverToken, tokenSignGuest } = require('../helpers/handlerJwt')
 const LOG = require('../app/logger')
 const { transport } = require('../app/mail')
-const CONFIRM_EMAIL = process.env.CONFIRM_EMAIL
-const RESET_PASSWORD_EMAIL = process.env.RESET_PASSWORD_EMAIL
+const UserInfo = require('../model/schema/user.info.schema')
+const CONFIRM_EMAIL = process.env.FRONTEND_CONFIRM_EMAIL
+const RESET_PASSWORD_EMAIL = process.env.FRONTEND_RESET_PASSWORD
+
+// --- En el archivo .env se deben agregar las siguientes direcciones ---
+// #FRONT-END URL
+// FRONTEND_URL = 'http://localhost:8080/'
+// FRONTEND_CONFIRM_EMAIL = 'http://localhost:8080/confirm-email/'
+// FRONTEND_RESET_PASSWORD = 'http://localhost:8080/user/reset-password/'
 
 class UserService {
   async createUser (userData) {
@@ -52,6 +59,29 @@ class UserService {
     }
   }
 
+  async createGuestUser (userName) {
+    let transaction
+
+    try {
+      transaction = await sequelize.transaction()
+
+      const newGuestUser = await guestUser.create({
+        nombre: userName,
+        id_roles_de_usuario_invitado: 1
+      }, { transaction })
+
+      await transaction.commit()
+
+      const token = await tokenSignGuest(newGuestUser)
+
+      return { guestUser: newGuestUser, token }
+    } catch (error) {
+      LOG.error(error)
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al crear el usuario:' + error.message)
+    }
+  }
+
   async login (userData) {
     try {
       LOG.info('verifying if the user and password match')
@@ -78,6 +108,7 @@ class UserService {
     try {
       LOG.info('finding email in DB')
       const user = await UserInfo.findOne({ where: { correo: email } })
+      // UserInfo.findOne({ where: { correo: email } })
       return user
     } catch (error) {
       LOG.error(error)
@@ -101,12 +132,45 @@ class UserService {
     try {
       const verificationLink = RESET_PASSWORD_EMAIL + `${token}` // este link me manda a la pagina donde ingresas la nueva contraseña
       await transport.sendMail({
-        from: '"reset password email 👻" <lernerapp2024@gmail.com>',
+        from: '"Correo de recuperación de contraseña 🎓" <lernerapp2024@gmail.com>',
         to: email,
-        subject: 'reset password email ✔',
-        html: `<p>Por favor, haz clic en el siguiente enlace para confirmar tu correo electrónico:</p>
-            <p><a href="${verificationLink}">${verificationLink}</a></p>`
-
+        subject: 'Correo de recuperación de contraseña ✔',
+        html:
+          `
+            <html>
+              <head>
+                <style>
+                  body, html {
+                    height: 100%;
+                    margin: 0;
+                    padding: 0;
+                  }
+                  body {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                  }
+                </style>
+              </head>
+              <body>
+                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                  <tr>
+                    <td align="center">
+                      <h2>Restablecer tu contraseña</h2>
+                      <p>¡Hola!</p>
+                      <p>Recibes este correo porque has solicitado restablecer la contraseña de tu cuenta. Si no has solicitado este cambio, puedes ignorar este mensaje de forma segura.</p>
+                      <p>Para restablecer tu contraseña, simplemente haz clic en el siguiente enlace:</p>
+                      <a href="${verificationLink}" style="display: inline-block; background-color: #EE6F57; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                        Restablecer tu contraseña
+                      </a>                      
+                      <p>Gracias</p>
+                      <p>El equipo de Donkademy</p>                      
+                    </td>
+                  </tr>
+                </table>
+              </body>
+            </html>
+          `
       })
       LOG.info(`Se envio el email a la siguiente ruta: ${verificationLink} `)
     } catch (error) {
@@ -119,11 +183,45 @@ class UserService {
     try {
       const confirmationUrl = CONFIRM_EMAIL + `${token}`
       await transport.sendMail({
-        from: '"Confirm email 👻" <lernerapp2024@gmail.com>',
+        from: '"Confirm email 🎓" <lernerapp2024@gmail.com>',
         to: email,
-        subject: 'Confirm email ✔',
-        html: `<p>Por favor, haz clic en el siguiente enlace para confirmar tu correo electrónico:</p>
-            <p><a href="${confirmationUrl}">${confirmationUrl}</a></p>`
+        subject: 'Confirma tu correo electrónico ✔',
+        html:
+        `
+          <html>
+            <head>
+              <style>
+                body, html {
+                  height: 100%;
+                  margin: 0;
+                  padding: 0;
+                }
+                body {
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                }
+              </style>
+            </head>
+
+            <body>
+              <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                <tr>
+                  <td align="center">
+                    <h2>¡Confirma tu correo electrónico!</h2>
+                    <p>¡Hola!</p>
+                    <p>Por favor, haz clic en el siguiente botón para confirmar tu correo electrónico:</p>   
+                    <a href="${confirmationUrl}" style="display: inline-block; background-color: #EE6F57; color: #ffffff; padding: 10px 20px; text-decoration: none; border-radius: 5px;">
+                      Verificar correo electrónico
+                    </a>                                 
+                    <p>Gracias</p>
+                    <p>El equipo de Donkademy</p>                      
+                  </td>
+                </tr>
+              </table>
+            </body>                        
+          </html>
+        `
 
       })
       LOG.info(`Se envio el email a la siguiente ruta: ${confirmationUrl} `)
@@ -171,6 +269,36 @@ class UserService {
       LOG.error(error)
       if (transaction) await transaction.rollback()
       throw new Error('Error al actualizar contraseña de usuario:' + error.message)
+    }
+  }
+
+  async updateUser (id, updatedUserData) {
+    let transaction
+    try {
+      transaction = await sequelize.transaction()
+      // const updatedUser = await UserInfo.update(editUserData, { where: { id_info_usuario: id } });
+      const [updatedData] = await userInfo.update(
+        {
+          nombre: updatedUserData.nombre,
+          apellido_paterno: updatedUserData.apellidoPaterno,
+          apellido_materno: updatedUserData.apellidoMaterno,
+          correo: updatedUserData.correo,
+          verificado: updatedUserData.verificado
+        }, {
+          where: { id_info_usuario: id }
+
+        }, { transaction })
+
+      if (updatedData === 0) {
+        LOG.info('Usuario no encontrado o no hay información para actualizar')
+        return null
+      }
+
+      await transaction.commit()
+      return { updatedData }
+    } catch (error) {
+      if (transaction) await transaction.rollback()
+      throw new Error('Error al actualizar el usuario: ' + error.message)
     }
   }
 }
