@@ -1,11 +1,13 @@
-CREATE SCHEMA IF NOT EXISTS `evaluaciones_didacticas` DEFAULT CHARACTER SET utf8mb4;
+CREATE SCHEMA IF NOT EXISTS `evaluaciones_didacticas` DEFAULT CHARACTER SET utf8mb4
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
 
 USE `evaluaciones_didacticas`;
 
 CREATE TABLE IF NOT EXISTS `roles_de_usuarios` (
   `id_roles_de_usuario` INT NOT NULL AUTO_INCREMENT,
   `rol_de_usuario` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id_roles_de_usuario`)
+  PRIMARY KEY (`id_roles_de_usuario`) 
 ) ENGINE = InnoDB;
 
 
@@ -22,8 +24,6 @@ CREATE TABLE IF NOT EXISTS `credenciales_usuarios` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 ) ENGINE = InnoDB;
-
-
 
 
 CREATE TABLE IF NOT EXISTS `clasificacion` (
@@ -162,7 +162,7 @@ CREATE TABLE IF NOT EXISTS `ordenamiento` (
   `id_evaluacion` INT NOT NULL,
   `num_pregunta` INT NOT NULL,
   `orden` INT NULL,
-  `instruccion` VARCHAR(255) NULL
+  `instruccion` VARCHAR(255) NULL,
   PRIMARY KEY (`id_ordenamiento`),
   UNIQUE INDEX `id_ordenamiento_UNIQUE` (`id_ordenamiento` ASC),
   INDEX `id_evaluacion_idx` (`id_evaluacion` ASC),
@@ -234,7 +234,7 @@ ENGINE = InnoDB;
     REFERENCES `ordenamiento` (`id_ordenamiento`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
-) ENGINE = InnoDB
+) ENGINE = InnoDB;
 
 
 
@@ -326,5 +326,3 @@ CREATE TABLE IF NOT EXISTS `calificacion_usuarios` (
 ENGINE = InnoDB; 
     
 
-DEFAULT CHARACTER SET = utf8mb4
-COLLATE = utf8mb4_0900_ai_ci;
